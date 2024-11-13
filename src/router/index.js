@@ -5,7 +5,7 @@ const router = createRouter({
     history: createWebHistory(),
     routes: [
         {
-            path: '/',
+            path: '/dashboard',
             component: AppLayout,
             children: [
                 {
@@ -110,6 +110,11 @@ const router = createRouter({
             path: '/landing',
             name: 'landing',
             component: () => import('@/views/pages/Landing.vue')
+        },
+        {
+            path: '/booking',
+            name: 'booking',
+            component: () => import('@/views/pages/Booking.vue')
         },
         {
             path: '/pages/notfound',

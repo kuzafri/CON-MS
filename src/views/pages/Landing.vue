@@ -8,7 +8,7 @@ function smoothScroll(id) {
 </script>
 
 <template>
-    <div class="bg-surface-0 dark:bg-surface-900">
+    <div class="bg-surface-0 dark:bg-surface-900">  
         <div id="home" class="landing-wrapper overflow-hidden">
             <div class="py-6 px-6 mx-0 md:mx-12 lg:mx-20 lg:px-20 flex items-center justify-between relative lg:static">
                 <a class="flex items-center" href="#">
@@ -29,7 +29,7 @@ function smoothScroll(id) {
                             />
                         </g>
                     </svg>
-                    <span class="text-surface-900 dark:text-surface-0 font-medium text-2xl leading-normal mr-20">SAKAI</span>
+                    <span class="text-surface-900 dark:text-surface-0 font-medium text-2xl leading-normal mr-20">ConcertSync</span>
                 </a>
                 <Button
                     class="lg:!hidden"
@@ -48,8 +48,8 @@ function smoothScroll(id) {
                             </a>
                         </li>
                         <li>
-                            <a @click="smoothScroll('#features')" class="px-0 py-4 text-surface-900 dark:text-surface-0 font-medium text-xl">
-                                <span>Features</span>
+                            <a @click="smoothScroll('#events')" class="px-0 py-4 text-surface-900 dark:text-surface-0 font-medium text-xl">
+                                <span>Events</span>
                             </a>
                         </li>
                         <li>
