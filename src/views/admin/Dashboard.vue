@@ -1,1 +1,3 @@
-sd
+<template>
+    <div>this is admin dashboard</div>
+</template>

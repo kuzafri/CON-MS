@@ -86,6 +86,11 @@ const router = createRouter({
                     component: () => import('@/views/uikit/MiscDoc.vue')
                 },
                 {
+                    path: '/admin/dashboard',
+                    name: 'Admin Dashboard',
+                    component: () => import('@/views/admin/Dashboard.vue')
+                },
+                {
                     path: '/uikit/timeline',
                     name: 'timeline',
                     component: () => import('@/views/uikit/TimelineDoc.vue')
