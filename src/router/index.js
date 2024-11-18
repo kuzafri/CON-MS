@@ -33,6 +33,7 @@ const router = createRouter({
                     name: 'table',
                     component: () => import('@/views/uikit/TableDoc.vue')
                 },
+
                 {
                     path: '/uikit/list',
                     name: 'list',

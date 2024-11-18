@@ -8,7 +8,7 @@ function smoothScroll(id) {
 </script>
 
 <template>
-    <div class="bg-surface-0 dark:bg-surface-900">  
+    <div class="bg-surface-0 dark:bg-surface-900">
         <div id="home" class="landing-wrapper overflow-hidden">
             <div class="py-6 px-6 mx-0 md:mx-12 lg:mx-20 lg:px-20 flex items-center justify-between relative lg:static">
                 <a class="flex items-center" href="#">
@@ -77,7 +77,7 @@ function smoothScroll(id) {
             >
                 <div class="mx-6 md:mx-20 mt-0 md:mt-6">
                     <h1 class="text-6xl font-bold text-gray-900 leading-tight"><span class="font-light block">Eu sem integer</span>eget magna fermentum</h1>
-                    <p class="font-normal text-2xl leading-normal md:mt-4 text-gray-700">Sed blandit libero volutpat sed cras. Fames ac turpis egestas integer. Placerat in egestas erat...</p>
+                    <p class="font-normal text-2xl leading-normal md:mt-4 text-gray-700">Choose your own peace and note</p>
                     <Button label="Get Started" as="router-link" to="/" rounded class="!text-xl mt-8 !px-4"></Button>
                 </div>
                 <div class="flex justify-center md:justify-end">
@@ -236,8 +236,8 @@ function smoothScroll(id) {
 
             <div id="highlights" class="py-6 px-6 lg:px-20 mx-0 my-12 lg:mx-20">
                 <div class="text-center">
-                    <div class="text-surface-900 dark:text-surface-0 font-normal mb-2 text-4xl">Powerful Everywhere</div>
-                    <span class="text-muted-color text-2xl">Amet consectetur adipiscing elit...</span>
+                    <div class="text-surface-900 dark:text-surface-0 font-normal mb-2 text-4xl">Book Anywhere</div>
+                    <span class="text-muted-color text-2xl">Anywhere. Anytime. </span>
                 </div>
 
                 <div class="grid grid-cols-12 gap-4 mt-20 pb-2 md:pb-20">
