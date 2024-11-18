@@ -1,18 +1,21 @@
 <script setup>
+import { useLayout } from '@/layout/composables/layout';
+
 function smoothScroll(id) {
     document.body.click();
     document.querySelector(id).scrollIntoView({
         behavior: 'smooth'
     });
 }
-</script>
 
+const { onMenuToggle, toggleDarkMode, isDarkTheme } = useLayout();
+</script>
 <template>
     <div class="bg-surface-0 dark:bg-surface-900">
         <div id="home" class="landing-wrapper overflow-hidden">
             <div class="py-6 px-6 mx-0 md:mx-12 lg:mx-20 lg:px-20 flex items-center justify-between relative lg:static">
                 <a class="flex items-center" href="#">
-                    <svg viewBox="0 0 54 40" fill="none" xmlns="http://www.w3.org/2000/svg" class="h-12 mr-2">
+                    <!-- <svg viewBox="0 0 54 40" fill="none" xmlns="http://www.w3.org/2000/svg" class="h-12 mr-2">
                         <path
                             fill-rule="evenodd"
                             clip-rule="evenodd"
@@ -28,8 +31,8 @@ function smoothScroll(id) {
                                 fill="var(--primary-color)"
                             />
                         </g>
-                    </svg>
-                    <span class="text-surface-900 dark:text-surface-0 font-medium text-2xl leading-normal mr-20">ConcertSync</span>
+                    </svg> -->
+                    <span class="text-surface-900 dark:text-surface-0 font-medium text-2xl leading-normal mr-20">Concertify</span>
                 </a>
                 <Button
                     class="lg:!hidden"
@@ -64,6 +67,9 @@ function smoothScroll(id) {
                         </li>
                     </ul>
                     <div class="flex border-t lg:border-t-0 border-surface py-4 lg:py-0 mt-4 lg:mt-0 gap-2">
+                        <button type="button" class="layout-topbar-action" @click="toggleDarkMode">
+                            <i :class="['pi', { 'pi-moon': isDarkTheme, 'pi-sun': !isDarkTheme }]"></i>
+                        </button>
                         <Button label="Login" text as="router-link" to="/auth/login" rounded></Button>
                         <Button label="Register" to="/auth/login" rounded></Button>
                     </div>
@@ -81,15 +87,15 @@ function smoothScroll(id) {
                     <Button label="Get Started" as="router-link" to="/" rounded class="!text-xl mt-8 !px-4"></Button>
                 </div>
                 <div class="flex justify-center md:justify-end">
-                    <img src="/demo/images/landing/screen-1.png" alt="Hero Image" class="w-9/12 md:w-auto" />
+                    <img src="/concert3.png" alt="Hero Image" class="w-3/12 md:w-auto" />
                 </div>
             </div>
 
             <div id="features" class="py-6 px-6 lg:px-20 mt-8 mx-0 lg:mx-20">
                 <div class="grid grid-cols-12 gap-4 justify-center">
                     <div class="col-span-12 text-center mt-20 mb-6">
-                        <div class="text-surface-900 dark:text-surface-0 font-normal mb-2 text-4xl">Marvelous Features</div>
-                        <span class="text-muted-color text-2xl">Placerat in egestas erat...</span>
+                        <div class="text-surface-900 dark:text-surface-0 font-normal mb-2 text-4xl">Our Previous Event</div>
+                        <span class="text-muted-color text-2xl">Take my money and give my ticket!</span>
                     </div>
 
                     <div class="col-span-12 md:col-span-12 lg:col-span-4 p-0 lg:pr-8 lg:pb-8 mt-6 lg:mt-0">
@@ -97,11 +103,14 @@ function smoothScroll(id) {
                             style="height: 160px; padding: 2px; border-radius: 10px; background: linear-gradient(90deg, rgba(253, 228, 165, 0.2), rgba(187, 199, 205, 0.2)), linear-gradient(180deg, rgba(253, 228, 165, 0.2), rgba(187, 199, 205, 0.2))"
                         >
                             <div class="p-4 bg-surface-0 dark:bg-surface-900 h-full" style="border-radius: 8px">
-                                <div class="flex items-center justify-center bg-yellow-200 mb-4" style="width: 3.5rem; height: 3.5rem; border-radius: 10px">
+                                <!-- <div class="flex items-center justify-center bg-yellow-200 mb-4" style="width: 3.5rem; height: 3.5rem; border-radius: 10px">
                                     <i class="pi pi-fw pi-users !text-2xl text-yellow-700"></i>
-                                </div>
-                                <h5 class="mb-2 text-surface-900 dark:text-surface-0">Easy to Use</h5>
-                                <span class="text-surface-600 dark:text-surface-200">Posuere morbi leo urna molestie.</span>
+                                </div> -->
+                                <h5 class="mb-2 text-surface-900 dark:text-surface-0">Taylor Swift</h5>
+                                <span class="text-surface-600 dark:text-surface-200">
+                                    <i class="pi pi-fw pi-map-marker !text-2xl text-yellow-700"></i>
+                                    Manila, Philipine</span
+                                >
                             </div>
                         </div>
                     </div>
@@ -111,11 +120,14 @@ function smoothScroll(id) {
                             style="height: 160px; padding: 2px; border-radius: 10px; background: linear-gradient(90deg, rgba(145, 226, 237, 0.2), rgba(251, 199, 145, 0.2)), linear-gradient(180deg, rgba(253, 228, 165, 0.2), rgba(172, 180, 223, 0.2))"
                         >
                             <div class="p-4 bg-surface-0 dark:bg-surface-900 h-full" style="border-radius: 8px">
-                                <div class="flex items-center justify-center bg-cyan-200 mb-4" style="width: 3.5rem; height: 3.5rem; border-radius: 10px">
+                                <!-- <div class="flex items-center justify-center bg-cyan-200 mb-4" style="width: 3.5rem; height: 3.5rem; border-radius: 10px">
                                     <i class="pi pi-fw pi-palette !text-2xl text-cyan-700"></i>
-                                </div>
-                                <h5 class="mb-2 text-surface-900 dark:text-surface-0">Fresh Design</h5>
-                                <span class="text-surface-600 dark:text-surface-200">Semper risus in hendrerit.</span>
+                                </div> -->
+                                <h5 class="mb-2 text-surface-900 dark:text-surface-0">Joji</h5>
+                                <span class="text-surface-600 dark:text-surface-200">
+                                    <i class="pi pi-fw pi-map-marker !text-2xl text-cyan-700"></i>
+                                    Penang, Malaysia</span
+                                >
                             </div>
                         </div>
                     </div>
@@ -125,11 +137,14 @@ function smoothScroll(id) {
                             style="height: 160px; padding: 2px; border-radius: 10px; background: linear-gradient(90deg, rgba(145, 226, 237, 0.2), rgba(172, 180, 223, 0.2)), linear-gradient(180deg, rgba(172, 180, 223, 0.2), rgba(246, 158, 188, 0.2))"
                         >
                             <div class="p-4 bg-surface-0 dark:bg-surface-900 h-full" style="border-radius: 8px">
-                                <div class="flex items-center justify-center bg-indigo-200" style="width: 3.5rem; height: 3.5rem; border-radius: 10px">
+                                <!-- <div class="flex items-center justify-center bg-indigo-200" style="width: 3.5rem; height: 3.5rem; border-radius: 10px">
                                     <i class="pi pi-fw pi-map !text-2xl text-indigo-700"></i>
-                                </div>
-                                <div class="mt-6 mb-1 text-surface-900 dark:text-surface-0 text-xl font-semibold">Well Documented</div>
-                                <span class="text-surface-600 dark:text-surface-200">Non arcu risus quis varius quam quisque.</span>
+                                </div> -->
+                                <h5 class="mb-2 text-surface-900 dark:text-surface-0">Dato Siti Nur Haliza</h5>
+                                <span class="text-surface-600 dark:text-surface-200">
+                                    <i class="pi pi-fw pi-map-marker !text-2xl text-indigo-700"></i>
+                                    Kuala Lumpur, Malaysia</span
+                                >
                             </div>
                         </div>
                     </div>
@@ -139,11 +154,14 @@ function smoothScroll(id) {
                             style="height: 160px; padding: 2px; border-radius: 10px; background: linear-gradient(90deg, rgba(187, 199, 205, 0.2), rgba(251, 199, 145, 0.2)), linear-gradient(180deg, rgba(253, 228, 165, 0.2), rgba(145, 210, 204, 0.2))"
                         >
                             <div class="p-4 bg-surface-0 dark:bg-surface-900 h-full" style="border-radius: 8px">
-                                <div class="flex items-center justify-center bg-slate-200 mb-4" style="width: 3.5rem; height: 3.5rem; border-radius: 10px">
+                                <!-- <div class="flex items-center justify-center bg-slate-200 mb-4" style="width: 3.5rem; height: 3.5rem; border-radius: 10px">
                                     <i class="pi pi-fw pi-id-card !text-2xl text-slate-700"></i>
-                                </div>
-                                <div class="mt-6 mb-1 text-surface-900 dark:text-surface-0 text-xl font-semibold">Responsive Layout</div>
-                                <span class="text-surface-600 dark:text-surface-200">Nulla malesuada pellentesque elit.</span>
+                                </div> -->
+                                <div class="mt-6 mb-1 text-surface-900 dark:text-surface-0 text-xl font-semibold">The Beatles</div>
+                                <span class="text-surface-600 dark:text-surface-200">
+                                    <i class="pi pi-fw pi-map-marker !text-2xl text-slate-700"></i>
+                                    Expo Hall, Singapore</span
+                                >
                             </div>
                         </div>
                     </div>
@@ -153,11 +171,14 @@ function smoothScroll(id) {
                             style="height: 160px; padding: 2px; border-radius: 10px; background: linear-gradient(90deg, rgba(187, 199, 205, 0.2), rgba(246, 158, 188, 0.2)), linear-gradient(180deg, rgba(145, 226, 237, 0.2), rgba(160, 210, 250, 0.2))"
                         >
                             <div class="p-4 bg-surface-0 dark:bg-surface-900 h-full" style="border-radius: 8px">
-                                <div class="flex items-center justify-center bg-orange-200 mb-4" style="width: 3.5rem; height: 3.5rem; border-radius: 10px">
+                                <!-- <div class="flex items-center justify-center bg-orange-200 mb-4" style="width: 3.5rem; height: 3.5rem; border-radius: 10px">
                                     <i class="pi pi-fw pi-star !text-2xl text-orange-700"></i>
-                                </div>
-                                <div class="mt-6 mb-1 text-surface-900 dark:text-surface-0 text-xl font-semibold">Clean Code</div>
-                                <span class="text-surface-600 dark:text-surface-200">Condimentum lacinia quis vel eros.</span>
+                                </div> -->
+                                <div class="mt-6 mb-1 text-surface-900 dark:text-surface-0 text-xl font-semibold">Keshi</div>
+                                <span class="text-surface-600 dark:text-surface-200">
+                                    <i class="pi pi-fw pi-map-marker !text-2xl text-orange-700"></i>
+                                    Mexico City, Mexico.</span
+                                >
                             </div>
                         </div>
                     </div>
@@ -167,11 +188,14 @@ function smoothScroll(id) {
                             style="height: 160px; padding: 2px; border-radius: 10px; background: linear-gradient(90deg, rgba(251, 199, 145, 0.2), rgba(246, 158, 188, 0.2)), linear-gradient(180deg, rgba(172, 180, 223, 0.2), rgba(212, 162, 221, 0.2))"
                         >
                             <div class="p-4 bg-surface-0 dark:bg-surface-900 h-full" style="border-radius: 8px">
-                                <div class="flex items-center justify-center bg-pink-200 mb-4" style="width: 3.5rem; height: 3.5rem; border-radius: 10px">
+                                <!-- <div class="flex items-center justify-center bg-pink-200 mb-4" style="width: 3.5rem; height: 3.5rem; border-radius: 10px">
                                     <i class="pi pi-fw pi-moon !text-2xl text-pink-700"></i>
-                                </div>
-                                <div class="mt-6 mb-1 text-surface-900 dark:text-surface-0 text-xl font-semibold">Dark Mode</div>
-                                <span class="text-surface-600 dark:text-surface-200">Convallis tellus id interdum velit laoreet.</span>
+                                </div> -->
+                                <div class="mt-6 mb-1 text-surface-900 dark:text-surface-0 text-xl font-semibold">Bernadya</div>
+                                <span class="text-surface-600 dark:text-surface-200">
+                                    <i class="pi pi-fw pi-map-marker !text-2xl text-pink-700"></i>
+                                    Stadium Nasional, Indonesia</span
+                                >
                             </div>
                         </div>
                     </div>
@@ -181,11 +205,14 @@ function smoothScroll(id) {
                             style="height: 160px; padding: 2px; border-radius: 10px; background: linear-gradient(90deg, rgba(145, 210, 204, 0.2), rgba(160, 210, 250, 0.2)), linear-gradient(180deg, rgba(187, 199, 205, 0.2), rgba(145, 210, 204, 0.2))"
                         >
                             <div class="p-4 bg-surface-0 dark:bg-surface-900 h-full" style="border-radius: 8px">
-                                <div class="flex items-center justify-center bg-teal-200 mb-4" style="width: 3.5rem; height: 3.5rem; border-radius: 10px">
+                                <!-- <div class="flex items-center justify-center bg-teal-200 mb-4" style="width: 3.5rem; height: 3.5rem; border-radius: 10px">
                                     <i class="pi pi-fw pi-shopping-cart !text-2xl text-teal-700"></i>
-                                </div>
-                                <div class="mt-6 mb-1 text-surface-900 dark:text-surface-0 text-xl font-semibold">Ready to Use</div>
-                                <span class="text-surface-600 dark:text-surface-200">Mauris sit amet massa vitae.</span>
+                                </div> -->
+                                <div class="mt-6 mb-1 text-surface-900 dark:text-surface-0 text-xl font-semibold">ASTN</div>
+                                <span class="text-surface-600 dark:text-surface-200">
+                                    <i class="pi pi-fw pi-map-marker !text-2xl text-teal-700"></i>
+                                    Melbourne, Australia</span
+                                >
                             </div>
                         </div>
                     </div>
@@ -195,11 +222,14 @@ function smoothScroll(id) {
                             style="height: 160px; padding: 2px; border-radius: 10px; background: linear-gradient(90deg, rgba(145, 210, 204, 0.2), rgba(212, 162, 221, 0.2)), linear-gradient(180deg, rgba(251, 199, 145, 0.2), rgba(160, 210, 250, 0.2))"
                         >
                             <div class="p-4 bg-surface-0 dark:bg-surface-900 h-full" style="border-radius: 8px">
-                                <div class="flex items-center justify-center bg-blue-200 mb-4" style="width: 3.5rem; height: 3.5rem; border-radius: 10px">
+                                <!-- <div class="flex items-center justify-center bg-blue-200 mb-4" style="width: 3.5rem; height: 3.5rem; border-radius: 10px">
                                     <i class="pi pi-fw pi-globe !text-2xl text-blue-700"></i>
-                                </div>
-                                <div class="mt-6 mb-1 text-surface-900 dark:text-surface-0 text-xl font-semibold">Modern Practices</div>
-                                <span class="text-surface-600 dark:text-surface-200">Elementum nibh tellus molestie nunc non.</span>
+                                </div> -->
+                                <div class="mt-6 mb-1 text-surface-900 dark:text-surface-0 text-xl font-semibold">Hijjaz</div>
+                                <span class="text-surface-600 dark:text-surface-200">
+                                    <i class="pi pi-fw pi-map-marker !text-2xl text-blue-700"></i>
+                                    London, UK</span
+                                >
                             </div>
                         </div>
                     </div>
@@ -209,11 +239,11 @@ function smoothScroll(id) {
                             style="height: 160px; padding: 2px; border-radius: 10px; background: linear-gradient(90deg, rgba(160, 210, 250, 0.2), rgba(212, 162, 221, 0.2)), linear-gradient(180deg, rgba(246, 158, 188, 0.2), rgba(212, 162, 221, 0.2))"
                         >
                             <div class="p-4 bg-surface-0 dark:bg-surface-900 h-full" style="border-radius: 8px">
-                                <div class="flex items-center justify-center bg-purple-200 mb-4" style="width: 3.5rem; height: 3.5rem; border-radius: 10px">
-                                    <i class="pi pi-fw pi-eye !text-2xl text-purple-700"></i>
-                                </div>
-                                <div class="mt-6 mb-1 text-surface-900 dark:text-surface-0 text-xl font-semibold">Privacy</div>
-                                <span class="text-surface-600 dark:text-surface-200">Neque egestas congue quisque.</span>
+                                <div class="mt-6 mb-1 text-surface-900 dark:text-surface-0 text-xl font-semibold">Cigarette After Sad</div>
+                                <span class="text-surface-600 dark:text-surface-200">
+                                    <i class="pi pi-fw pi-map-marker !text-2xl text-indigo-700"></i>
+                                    Kenya, Africa</span
+                                >
                             </div>
                         </div>
                     </div>
@@ -223,12 +253,10 @@ function smoothScroll(id) {
                         style="border-radius: 20px; background: linear-gradient(0deg, rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0.6)), radial-gradient(77.36% 256.97% at 77.36% 57.52%, #efe1af 0%, #c3dcfa 100%)"
                     >
                         <div class="flex flex-col justify-center items-center text-center px-4 py-4 md:py-0">
-                            <div class="text-gray-900 mb-2 text-3xl font-semibold">Joséphine Miller</div>
-                            <span class="text-gray-600 text-2xl">Peak Interactive</span>
-                            <p class="text-gray-900 sm:line-height-2 md:line-height-4 text-2xl mt-6" style="max-width: 800px">
-                                “Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.”
-                            </p>
-                            <img src="/demo/images/landing/peak-logo.svg" class="mt-6" alt="Company logo" />
+                            <div class="text-gray-900 mb-2 text-3xl font-semibold">Manager Sam</div>
+                            <span class="text-gray-600 text-2xl">Joji's Music Manager</span>
+                            <p class="text-gray-900 sm:line-height-2 md:line-height-4 text-2xl mt-6" style="max-width: 800px">"This is the best Concert Management System I have ever deal with. Smooth flow. Nice interface. Really recommended!"</p>
+                            <img src="/joji.webp" class="mt-6 w-24" alt="Company logo" />
                         </div>
                     </div>
                 </div>
@@ -275,19 +303,19 @@ function smoothScroll(id) {
 
             <div id="pricing" class="py-6 px-6 lg:px-20 my-2 md:my-6">
                 <div class="text-center mb-6">
-                    <div class="text-surface-900 dark:text-surface-0 font-normal mb-2 text-4xl">Matchless Pricing</div>
-                    <span class="text-muted-color text-2xl">Amet consectetur adipiscing elit...</span>
+                    <div class="text-surface-900 dark:text-surface-0 font-normal mb-2 text-4xl">Ticket Pricing</div>
+                    <span class="text-muted-color text-2xl">Choose your desire price</span>
                 </div>
 
                 <div class="grid grid-cols-12 gap-4 justify-between mt-20 md:mt-0">
                     <div class="col-span-12 lg:col-span-4 p-0 md:p-4">
                         <div class="p-4 flex flex-col border-surface-200 dark:border-surface-600 pricing-card cursor-pointer border-2 hover:border-primary duration-300 transition-all" style="border-radius: 10px">
-                            <div class="text-surface-900 dark:text-surface-0 text-center my-8 text-3xl">Free</div>
-                            <img src="/demo/images/landing/free.svg" class="w-10/12 mx-auto" alt="free" />
+                            <div class="text-surface-900 dark:text-surface-0 text-center my-8 text-3xl">Economy</div>
+                            <img src="/demo/images/landing/free.svg" class="w-10/12 mx-auto" alt="Economy" />
                             <div class="my-8 flex flex-col items-center gap-4">
                                 <div class="flex items-center">
-                                    <span class="text-5xl font-bold mr-2 text-surface-900 dark:text-surface-0">$0</span>
-                                    <span class="text-surface-600 dark:text-surface-200">per month</span>
+                                    <span class="text-5xl font-bold mr-2 text-surface-900 dark:text-surface-0">RM145</span>
+                                    <!-- <span class="text-surface-600 dark:text-surface-200">per month</span> -->
                                 </div>
                                 <Button label="Get Started" class="p-button-rounded border-0 ml-4 font-light leading-tight bg-blue-500 text-white"></Button>
                             </div>
@@ -295,19 +323,19 @@ function smoothScroll(id) {
                             <ul class="my-8 list-none p-0 flex text-surface-900 dark:text-surface-0 flex-col px-8">
                                 <li class="py-2">
                                     <i class="pi pi-fw pi-check text-xl text-cyan-500 mr-2"></i>
-                                    <span class="text-xl leading-normal">Responsive Layout</span>
+                                    <span class="text-xl leading-normal">Standing</span>
                                 </li>
                                 <li class="py-2">
                                     <i class="pi pi-fw pi-check text-xl text-cyan-500 mr-2"></i>
-                                    <span class="text-xl leading-normal">Unlimited Push Messages</span>
+                                    <span class="text-xl leading-normal">Near to fence</span>
                                 </li>
                                 <li class="py-2">
-                                    <i class="pi pi-fw pi-check text-xl text-cyan-500 mr-2"></i>
-                                    <span class="text-xl leading-normal">50 Support Ticket</span>
+                                    <i class="pi pi-fw pi-times text-xl text-red-500 mr-2"></i>
+                                    <span class="text-xl leading-normal">No refund</span>
                                 </li>
                                 <li class="py-2">
-                                    <i class="pi pi-fw pi-check text-xl text-cyan-500 mr-2"></i>
-                                    <span class="text-xl leading-normal">Free Shipping</span>
+                                    <i class="pi pi-fw pi-times text-xl text-red-500 mr-2"></i>
+                                    <span class="text-xl leading-normal">Express lane</span>
                                 </li>
                             </ul>
                         </div>
@@ -315,12 +343,12 @@ function smoothScroll(id) {
 
                     <div class="col-span-12 lg:col-span-4 p-0 md:p-4 mt-6 md:mt-0">
                         <div class="p-4 flex flex-col border-surface-200 dark:border-surface-600 pricing-card cursor-pointer border-2 hover:border-primary duration-300 transition-all" style="border-radius: 10px">
-                            <div class="text-surface-900 dark:text-surface-0 text-center my-8 text-3xl">Startup</div>
-                            <img src="/demo/images/landing/startup.svg" class="w-10/12 mx-auto" alt="startup" />
+                            <div class="text-surface-900 dark:text-surface-0 text-center my-8 text-3xl">VIP</div>
+                            <img src="/economy.png" class="w-10/12 mx-auto" alt="startup" />
                             <div class="my-8 flex flex-col items-center gap-4">
                                 <div class="flex items-center">
-                                    <span class="text-5xl font-bold mr-2 text-surface-900 dark:text-surface-0">$1</span>
-                                    <span class="text-surface-600 dark:text-surface-200">per month</span>
+                                    <span class="text-5xl font-bold mr-2 text-surface-900 dark:text-surface-0">RM360</span>
+                                    <!-- <span class="text-surface-600 dark:text-surface-200">per month</span> -->
                                 </div>
                                 <Button label="Get Started" class="p-button-rounded border-0 ml-4 font-light leading-tight bg-blue-500 text-white"></Button>
                             </div>
@@ -328,19 +356,19 @@ function smoothScroll(id) {
                             <ul class="my-8 list-none p-0 flex text-surface-900 dark:text-surface-0 flex-col px-8">
                                 <li class="py-2">
                                     <i class="pi pi-fw pi-check text-xl text-cyan-500 mr-2"></i>
-                                    <span class="text-xl leading-normal">Responsive Layout</span>
+                                    <span class="text-xl leading-normal">Plastic Seat</span>
                                 </li>
                                 <li class="py-2">
                                     <i class="pi pi-fw pi-check text-xl text-cyan-500 mr-2"></i>
-                                    <span class="text-xl leading-normal">Unlimited Push Messages</span>
+                                    <span class="text-xl leading-normal">Near to fence</span>
                                 </li>
                                 <li class="py-2">
                                     <i class="pi pi-fw pi-check text-xl text-cyan-500 mr-2"></i>
-                                    <span class="text-xl leading-normal">50 Support Ticket</span>
+                                    <span class="text-xl leading-normal">Refundable</span>
                                 </li>
                                 <li class="py-2">
                                     <i class="pi pi-fw pi-check text-xl text-cyan-500 mr-2"></i>
-                                    <span class="text-xl leading-normal">Free Shipping</span>
+                                    <span class="text-xl leading-normal">Express lane Available</span>
                                 </li>
                             </ul>
                         </div>
@@ -348,12 +376,12 @@ function smoothScroll(id) {
 
                     <div class="col-span-12 lg:col-span-4 p-0 md:p-4 mt-6 md:mt-0">
                         <div class="p-4 flex flex-col border-surface-200 dark:border-surface-600 pricing-card cursor-pointer border-2 hover:border-primary duration-300 transition-all" style="border-radius: 10px">
-                            <div class="text-surface-900 dark:text-surface-0 text-center my-8 text-3xl">Enterprise</div>
-                            <img src="/demo/images/landing/enterprise.svg" class="w-10/12 mx-auto" alt="enterprise" />
+                            <div class="text-surface-900 dark:text-surface-0 text-center my-8 text-3xl">VVIP</div>
+                            <img src="/economy.png" class="w-10/12 mx-auto" alt="enterprise" />
                             <div class="my-8 flex flex-col items-center gap-4">
                                 <div class="flex items-center">
-                                    <span class="text-5xl font-bold mr-2 text-surface-900 dark:text-surface-0">$5</span>
-                                    <span class="text-surface-600 dark:text-surface-200">per month</span>
+                                    <span class="text-5xl font-bold mr-2 text-surface-900 dark:text-surface-0">RM785</span>
+                                    <!-- <span class="text-surface-600 dark:text-surface-200">per month</span> -->
                                 </div>
                                 <Button label="Get Started" class="p-button-rounded border-0 ml-4 font-light leading-tight bg-blue-500 text-white"></Button>
                             </div>
@@ -361,19 +389,19 @@ function smoothScroll(id) {
                             <ul class="my-8 list-none p-0 flex text-surface-900 dark:text-surface-0 flex-col px-8">
                                 <li class="py-2">
                                     <i class="pi pi-fw pi-check text-xl text-cyan-500 mr-2"></i>
-                                    <span class="text-xl leading-normal">Responsive Layout</span>
+                                    <span class="text-xl leading-normal">Cushion Seat</span>
                                 </li>
                                 <li class="py-2">
                                     <i class="pi pi-fw pi-check text-xl text-cyan-500 mr-2"></i>
-                                    <span class="text-xl leading-normal">Unlimited Push Messages</span>
+                                    <span class="text-xl leading-normal">Near to fence</span>
                                 </li>
                                 <li class="py-2">
                                     <i class="pi pi-fw pi-check text-xl text-cyan-500 mr-2"></i>
-                                    <span class="text-xl leading-normal">50 Support Ticket</span>
+                                    <span class="text-xl leading-normal">Refundable</span>
                                 </li>
                                 <li class="py-2">
                                     <i class="pi pi-fw pi-check text-xl text-cyan-500 mr-2"></i>
-                                    <span class="text-xl leading-normal">Free Shipping</span>
+                                    <span class="text-xl leading-normal">Express lane Available</span>
                                 </li>
                             </ul>
                         </div>
