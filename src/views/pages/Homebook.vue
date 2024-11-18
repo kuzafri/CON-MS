@@ -8,7 +8,7 @@ export default {
     <div class="min-h-screen bg-gray-100 flex flex-col">
         <header class="bg-white shadow-sm">
             <div class="max-w-7xl mx-auto px-4 py-4 flex items-center">
-                <img src="/concert.png" alt="Tickety" class="h-8 mr-6" />
+                <img src="/logo.png" alt="Tickety" class="h-8 mr-6" />
                 <h1 class="text-2xl font-bold">Concertify</h1>
             </div>
         </header>
@@ -16,9 +16,9 @@ export default {
         <div class="flex-1 max-w-7xl mx-auto px-4 py-8">
             <div class="grid grid-cols-1 gap-8">
                 <div class="bg-white rounded-lg shadow p-6">
-                    <h2 class="text-xl font-semibold mb-4">Popular Categories</h2>
+                    <h2 class="text-xl font-semibold ">Popular Categories</h2>
                     <div class="overflow-x-auto">
-                        <div class="flex gap-8 min-w-max pb-4">
+                        <div class="flex gap-8 min-w-max ">
                             <a href="#" class="bg-gray-200 rounded-lg p-4 flex flex-col items-center hover:bg-gray-300">
                                 <i class="fas fa-music text-2xl mb-2"></i>
                                 <span>Ballad</span>
@@ -56,7 +56,7 @@ export default {
                 </div>
             </div>
         </div>
-
+        
         <main class="flex-1 max-w-7xl mx-auto px-4 py-8">
             <div class="grid grid-cols-2 md:grid-cols-2 gap-8">
                 <div class="col-span-2 bg-white rounded-lg shadow p-6">
