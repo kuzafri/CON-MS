@@ -181,7 +181,7 @@ watch(
         <div class="col-span-12 xl:col-span-4">
             <div class="card flex flex-col items-center">
                 <div class="font-semibold text-xl mb-4">User Demographic</div>
-                <div class="w-full max-w-[300px] pb-8">
+                <div class="w-full max-w-[300px] pb-2">
                     <Chart type="doughnut" :data="pieData" :options="pieOptions"></Chart>
                 </div>
             </div>
