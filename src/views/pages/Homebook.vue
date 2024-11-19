@@ -1,5 +1,32 @@
 <script setup>
+import { ref, onMounted } from 'vue';
 import { useLayout } from '@/layout/composables/layout';
+
+const categoriesContainer = ref(null);
+let scrollInterval = null;
+
+const startAutoScroll = () => {
+    if (!categoriesContainer.value) return;
+    
+    scrollInterval = setInterval(() => {
+        const container = categoriesContainer.value;
+        if (container.scrollLeft + container.clientWidth >= container.scrollWidth) {
+            container.scrollLeft = 0;
+        } else {
+            container.scrollLeft += 1;
+        }
+    }, 30);
+};
+
+const stopAutoScroll = () => {
+    if (scrollInterval) {
+        clearInterval(scrollInterval);
+    }
+};
+
+onMounted(() => {
+    startAutoScroll();
+});
 
 function smoothScroll(id) {
     document.body.click();
@@ -64,57 +91,23 @@ const { onMenuToggle, toggleDarkMode, isDarkTheme } = useLayout();
         <div>
             <div class="flex-1 max-w-7xl mx-auto px-4 pt-8">
                 <div class="grid grid-cols-1 gap-8">
-                    <div class="bg-surface-0 dark:bg-surface-900 rounded-lg shadow p-6">
+                    <div class="bg-surface-0 dark:bg-surface-900 rounded-lg shadow p-6 border-surface-0">
                         <h2 class="text-xl font-semibold mb-4 text-surface-900 dark:text-surface-0">Categories</h2>
-                        <div class="overflow-x-auto">
-                            <div class="flex gap-8 min-w-max">
-                                <a href="#" class="bg-surface-100 dark:bg-surface-800 rounded-lg p-4 flex flex-col items-center hover:bg-surface-200 dark:hover:bg-surface-700">
-                                    <i class="fas fa-music text-2xl mb-2 text-surface-900 dark:text-surface-0"></i>
-                                    <span class="text-surface-900 dark:text-surface-0">Ballad</span>
-                                </a>
-                                <a href="#" class="bg-surface-100 dark:bg-surface-800 rounded-lg p-4 flex flex-col items-center hover:bg-surface-200 dark:hover:bg-surface-700">
-                                    <i class="fas fa-theater-masks text-2xl mb-2 text-surface-900 dark:text-surface-0"></i>
-                                    <span class="text-surface-900 dark:text-surface-0">RnB</span>
-                                </a>
-                                <a href="#" class="bg-surface-100 dark:bg-surface-800 rounded-lg p-4 flex flex-col items-center hover:bg-surface-200 dark:hover:bg-surface-700">
-                                    <i class="fas fa-basketball-ball text-2xl mb-2 text-surface-900 dark:text-surface-0"></i>
-                                    <span class="text-surface-900 dark:text-surface-0">Rock</span>
-                                </a>
-                                <a href="#" class="bg-surface-100 dark:bg-surface-800 rounded-lg p-4 flex flex-col items-center hover:bg-surface-200 dark:hover:bg-surface-700">
-                                    <i class="fas fa-glass-cheers text-2xl mb-2 text-surface-900 dark:text-surface-0"></i>
-                                    <span class="text-surface-900 dark:text-surface-0">Indie</span>
-                                </a>
-                                <a href="#" class="bg-surface-100 dark:bg-surface-800 rounded-lg p-4 flex flex-col items-center hover:bg-surface-200 dark:hover:bg-surface-700">
-                                    <i class="fas fa-music text-2xl mb-2 text-surface-900 dark:text-surface-0"></i>
-                                    <span class="text-surface-900 dark:text-surface-0">Ballad</span>
-                                </a>
-                                <a href="#" class="bg-surface-100 dark:bg-surface-800 rounded-lg p-4 flex flex-col items-center hover:bg-surface-200 dark:hover:bg-surface-700">
-                                    <i class="fas fa-theater-masks text-2xl mb-2 text-surface-900 dark:text-surface-0"></i>
-                                    <span class="text-surface-900 dark:text-surface-0">RnB</span>
-                                </a>
-                                <a href="#" class="bg-surface-100 dark:bg-surface-800 rounded-lg p-4 flex flex-col items-center hover:bg-surface-200 dark:hover:bg-surface-700">
-                                    <i class="fas fa-basketball-ball text-2xl mb-2 text-surface-900 dark:text-surface-0"></i>
-                                    <span class="text-surface-900 dark:text-surface-0">Rock</span>
-                                </a>
-                                <a href="#" class="bg-surface-100 dark:bg-surface-800 rounded-lg p-4 flex flex-col items-center hover:bg-surface-200 dark:hover:bg-surface-700">
-                                    <i class="fas fa-glass-cheers text-2xl mb-2 text-surface-900 dark:text-surface-0"></i>
-                                    <span class="text-surface-900 dark:text-surface-0">Indie</span>
-                                </a>
-                                <a href="#" class="bg-surface-100 dark:bg-surface-800 rounded-lg p-4 flex flex-col items-center hover:bg-surface-200 dark:hover:bg-surface-700">
-                                    <i class="fas fa-music text-2xl mb-2 text-surface-900 dark:text-surface-0"></i>
-                                    <span class="text-surface-900 dark:text-surface-0">Ballad</span>
-                                </a>
-                                <a href="#" class="bg-surface-100 dark:bg-surface-800 rounded-lg p-4 flex flex-col items-center hover:bg-surface-200 dark:hover:bg-surface-700">
-                                    <i class="fas fa-theater-masks text-2xl mb-2 text-surface-900 dark:text-surface-0"></i>
-                                    <span class="text-surface-900 dark:text-surface-0">RnB</span>
-                                </a>
-                                <a href="#" class="bg-surface-100 dark:bg-surface-800 rounded-lg p-4 flex flex-col items-center hover:bg-surface-200 dark:hover:bg-surface-700">
-                                    <i class="fas fa-basketball-ball text-2xl mb-2 text-surface-900 dark:text-surface-0"></i>
-                                    <span class="text-surface-900 dark:text-surface-0">Rock</span>
-                                </a>
-                                <a href="#" class="bg-surface-100 dark:bg-surface-800 rounded-lg p-4 flex flex-col items-center hover:bg-surface-200 dark:hover:bg-surface-700">
-                                    <i class="fas fa-glass-cheers text-2xl mb-2 text-surface-900 dark:text-surface-0"></i>
-                                    <span class="text-surface-900 dark:text-surface-0">Indie</span>
+                        <div 
+                            ref="categoriesContainer"
+                            class="overflow-x-auto scrollbar-hide" 
+                            @mouseenter="stopAutoScroll"
+                            @mouseleave="startAutoScroll"
+                        >
+                            <div class="flex gap-4 md:gap-8 min-w-max pb-4">
+                                <a 
+                                    v-for="(category, index) in ['Ballad', 'RnB', 'Rock', 'Indie', 'Pop', 'Jazz', 'Classical', 'Electronic']" 
+                                    :key="index"
+                                    href="#" 
+                                    class="bg-surface-100 dark:bg-surface-800 rounded-lg p-3 md:p-4 flex flex-col items-center hover:bg-surface-200 dark:hover:bg-surface-700 min-w-[100px] md:min-w-[120px]"
+                                >
+                                    <i class="fas fa-music text-xl md:text-2xl mb-2 text-surface-900 dark:text-surface-0"></i>
+                                    <span class="text-sm md:text-base text-surface-900 dark:text-surface-0">{{ category }}</span>
                                 </a>
                             </div>
                         </div>
@@ -170,4 +163,20 @@ const { onMenuToggle, toggleDarkMode, isDarkTheme } = useLayout();
 
 <style>
 @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css');
+</style>
+
+<style scoped>
+.scrollbar-hide::-webkit-scrollbar {
+    display: none;
+}
+
+.scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+/* Add smooth scrolling */
+.overflow-x-auto {
+    scroll-behavior: smooth;
+}
 </style>
