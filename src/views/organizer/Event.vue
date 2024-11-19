@@ -30,7 +30,23 @@ const dropdownValues = ref([
         { name: 'World Music', code: 'WRM' },
         { name: 'Opera', code: 'OPR' },
         { name: 'Gospel', code: 'GOS' }
-])
+]);
+
+// New refs for performers
+const performers = ref(['']); // Initialize with one empty input
+
+// Function to add new performer input
+const addPerformer = () => {
+    performers.value.push('');
+};
+
+// Function to remove performer input
+const removePerformer = (index) => {
+    if (performers.value.length > 1) { // Keep at least one input field
+        performers.value.splice(index, 1);
+    }
+};
+
 const dropdownItem = ref(null);
 const calendarValue = ref(null);
 const startTime = ref(null);
@@ -65,10 +81,31 @@ const vipPrice = ref(null);
                     </div>
                 </div>
 
-                <div class="flex flex-wrap gap-2 w-full">
-                    <label for="concertTitle">Performer/Band</label>
-                    <InputText id="performer" type="text" />
-                    <button><i class="pi pi-plus-circle" style="font-size: 1.5rem"></i></button>
+                <div class="flex flex-col gap-2 w-full">
+                    <label>Performer(s)/Band(s)</label>
+                    <div v-for="(performer, index) in performers" :key="index" class="flex gap-2 items-center mb-2">
+                        <InputText 
+                            :id="'performer-' + index"
+                            v-model="performers[index]"
+                            placeholder="Enter performer name"
+                            class="flex-1"
+                        />
+                        <!-- Remove Button -->
+                        <Button 
+                            v-if="performers.length > 1"
+                            icon="pi pi-trash"
+                            severity="danger"
+                            @click="removePerformer(index)"
+                            class="p-button-rounded p-button-text"
+                        />
+                    </div>
+                    <!-- Add Button -->
+                    <Button 
+                        icon="pi pi-plus"
+                        label="Add Performer"
+                        @click="addPerformer"
+                        class="p-button-rounded p-button-outlined w-fit"
+                    />
                 </div>
 
                 <div class="flex flex-col flex-wrap gap-2 w-full">
