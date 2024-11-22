@@ -38,6 +38,11 @@ const router = createRouter({
                     name: 'table',
                     component: () => import('@/views/uikit/TableDoc.vue')
                 },
+                {
+                    path: '/organizer/viewevent',
+                    name: 'table',
+                    component: () => import('@/views/organizer/ViewEvent.vue')
+                },
 
                 {
                     path: '/uikit/list',
