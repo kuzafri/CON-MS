@@ -78,12 +78,6 @@ export default {
 };
 </script>
 
-<style>
-.seat {
-    transition: fill 0.2s ease;
-}
-</style>
-
 <template>
     <div class="min-h-screen bg-gray-100">
         <!-- Header -->
@@ -193,3 +187,10 @@ export default {
         </main>
     </div>
 </template>
+
+
+<style>
+.seat {
+    transition: fill 0.2s ease;
+}
+</style>
