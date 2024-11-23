@@ -96,6 +96,11 @@ const router = createRouter({
                     component: () => import('@/views/admin/Dashboard.vue')
                 },
                 {
+                    path: '/admin/events',
+                    name: 'Events',
+                    component: () => import('@/views/admin/Events.vue')
+                },
+                {
                     path: '/uikit/timeline',
                     name: 'timeline',
                     component: () => import('@/views/uikit/TimelineDoc.vue')
