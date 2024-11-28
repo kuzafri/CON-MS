@@ -20,9 +20,9 @@ const router = createRouter({
                     component: () => import('@/views/uikit/FormLayout.vue')
                 },
                 {
-                    path: '/organizer/event',
-                    name: 'eventorganizer',
-                    component: () => import('@/views/organizer/Event.vue')
+                    path: '/organizer/viewevent',
+                    name: 'table',
+                    component: () => import('@/views/organizer/ViewEvent.vue')
                 },
                 {
                     path: '/uikit/input',
@@ -38,11 +38,6 @@ const router = createRouter({
                     path: '/uikit/table',
                     name: 'table',
                     component: () => import('@/views/uikit/TableDoc.vue')
-                },
-                {
-                    path: '/organizer/viewevent',
-                    name: 'table',
-                    component: () => import('@/views/organizer/ViewEvent.vue')
                 },
                 {
                     path: '/uikit/list',
@@ -131,17 +126,17 @@ const router = createRouter({
             component: AppLayoutOrganizer,
             children: [
                 {
-                    path: 'organizer/event',
+                    path: 'event',
                     name: 'eventorganizer',
                     component: () => import('@/views/organizer/Event.vue')
                 },
                 {
-                    path: 'organizer/test',
+                    path: 'test',
                     name: 'test',
                     component: () => import('@/views/organizer/Test.vue')
                 },
                 {
-                    path: 'organizer/viewevent',
+                    path: 'viewevent',
                     name: 'viewevent',
                     component: () => import('@/views/organizer/ViewEvent.vue')
                 }
