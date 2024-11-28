@@ -1,4 +1,5 @@
 import AppLayout from '@/layout/AppLayout.vue';
+import AppLayoutOrganizer from '@/views/organizer/AppLayout.vue';
 import { createRouter, createWebHistory } from 'vue-router';
 
 const router = createRouter({
@@ -43,7 +44,6 @@ const router = createRouter({
                     name: 'table',
                     component: () => import('@/views/organizer/ViewEvent.vue')
                 },
-
                 {
                     path: '/uikit/list',
                     name: 'list',
@@ -59,7 +59,6 @@ const router = createRouter({
                     name: 'panel',
                     component: () => import('@/views/uikit/PanelsDoc.vue')
                 },
-
                 {
                     path: '/uikit/overlay',
                     name: 'overlay',
@@ -124,6 +123,27 @@ const router = createRouter({
                     path: '/documentation',
                     name: 'documentation',
                     component: () => import('@/views/pages/Documentation.vue')
+                }
+            ]
+        },
+        {
+            path: '/organizer',
+            component: AppLayoutOrganizer,
+            children: [
+                {
+                    path: 'organizer/event',
+                    name: 'eventorganizer',
+                    component: () => import('@/views/organizer/Event.vue')
+                },
+                {
+                    path: 'organizer/test',
+                    name: 'test',
+                    component: () => import('@/views/organizer/Test.vue')
+                },
+                {
+                    path: 'organizer/viewevent',
+                    name: 'viewevent',
+                    component: () => import('@/views/organizer/ViewEvent.vue')
                 }
             ]
         },
