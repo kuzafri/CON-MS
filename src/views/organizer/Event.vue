@@ -12,53 +12,90 @@ const dropdownValue = ref(null);
 const dropdownValues = ref([
     { name: 'Rock', code: 'ROK' },
     { name: 'Pop', code: 'POP' },
-    { name: 'Jazz', code: 'JAZ' },
-    { name: 'Classical', code: 'CLS' },
-    { name: 'Hip-Hop/Rap', code: 'HHR' },
-    { name: 'Electronic/Dance', code: 'EDM' },
-    { name: 'Country', code: 'CNT' },
-    { name: 'Reggae', code: 'REG' },
-    { name: 'Blues', code: 'BLU' },
-    { name: 'Folk', code: 'FLK' },
-    { name: 'Metal', code: 'MTL' },
-    { name: 'Punk', code: 'PNK' },
-    { name: 'R&B/Soul', code: 'RBS' },
-    { name: 'Indie', code: 'IND' },
-    { name: 'Alternative', code: 'ALT' },
-    { name: 'Latin', code: 'LAT' },
-    { name: 'K-Pop', code: 'KPP' },
-    { name: 'World Music', code: 'WRM' },
-    { name: 'Opera', code: 'OPR' },
-    { name: 'Gospel', code: 'GOS' }
+    // ... other genres
 ]);
 
-// Refs for performers
 const performers = ref(['']);
-const addPerformer = () => {
-    performers.value.push('');
-};
-const removePerformer = (index) => {
-    if (performers.value.length > 1) {
-        performers.value.splice(index, 1);
-    }
-};
-
-const dropdownItem = ref(null);
 const calendarValue = ref(null);
 const startTime = ref(null);
 const endTime = ref(null);
 const standardPrice = ref(null);
 const vipPrice = ref(null);
+const concertTitle = ref('');
+const policies = ref('');
+
+// Validation state
+const errors = ref({
+    concertTitle: '',
+    calendarValue: '',
+    startTime: '',
+    endTime: '',
+    performers: '',
+    dropdownValue: '',
+    standardPrice: '',
+    vipPrice: '',
+    policies: ''
+});
 
 // Modal visibility state
 const showModal = ref(false);
 
-// Function to handle submit
-const handleSubmit = () => {
-    showModal.value = true;
+const validateForm = () => {
+    // Reset errors
+    Object.keys(errors.value).forEach(key => (errors.value[key] = ''));
+
+    let isValid = true;
+
+    if (!concertTitle.value.trim()) {
+        errors.value.concertTitle = 'Concert title is required';
+        isValid = false;
+    }
+    if (!calendarValue.value) {
+        errors.value.calendarValue = 'Date is required';
+        isValid = false;
+    }
+    if (!startTime.value) {
+        errors.value.startTime = 'Start time is required';
+        isValid = false;
+    }
+    if (!endTime.value) {
+        errors.value.endTime = 'End time is required';
+        isValid = false;
+    }
+    if (startTime.value && endTime.value && endTime.value <= startTime.value) {
+        errors.value.endTime = 'End time must be later than start time';
+        isValid = false;
+    }
+    if (performers.value.some(performer => !performer.trim())) {
+        errors.value.performers = 'All performers must be filled';
+        isValid = false;
+    }
+    if (!dropdownValue.value) {
+        errors.value.dropdownValue = 'Genre is required';
+        isValid = false;
+    }
+    if (!standardPrice.value) {
+        errors.value.standardPrice = 'Standard seat price is required';
+        isValid = false;
+    }
+    if (!vipPrice.value) {
+        errors.value.vipPrice = 'VIP seat price is required';
+        isValid = false;
+    }
+    if (!policies.value.trim()) {
+        errors.value.policies = 'Event policies are required';
+        isValid = false;
+    }
+
+    return isValid;
 };
 
-// Function to close the modal
+const handleSubmit = () => {
+    if (validateForm()) {
+        showModal.value = true;
+    }
+};
+
 const closeModal = () => {
     showModal.value = false;
 };
@@ -72,21 +109,35 @@ const closeModal = () => {
                 <div class="flex flex-col md:flex-row gap-4">
                     <div class="flex flex-wrap gap-2 w-full">
                         <label for="concertTitle">Concert Title</label>
-                        <InputText id="concertTitle" type="text" />
+                        <InputText id="concertTitle" type="text" v-model="concertTitle" />
+                        <small class="text-red-500">{{ errors.concertTitle }}</small>
                     </div>
                     <div class="flex flex-col flex-wrap gap-2 w-full">
                         <label for="date">Date</label>
                         <DatePicker :showIcon="true" :showButtonBar="true" v-model="calendarValue"></DatePicker>
+                        <small class="text-red-500">{{ errors.calendarValue }}</small>
                     </div>
                 </div>
                 <div class="flex flex-col md:flex-row gap-4">
                     <div class="flex flex-col flex-wrap gap-2 w-full">
                         <label for="startTime">Start Time</label>
-                        <input type="time" id="startTime" v-model="startTime" class="w-full h-8 p-5 border rounded-md border-zinc-300" required />
+                        <input 
+                            type="time" 
+                            id="startTime" 
+                            v-model="startTime" 
+                            class="w-full h-8 p-5 border rounded-md border-zinc-300" 
+                        />
+                        <small class="text-red-500">{{ errors.startTime }}</small>
                     </div>
                     <div class="flex flex-col flex-wrap gap-2 w-full">
-                        <label for="lastname2">End Time</label>
-                        <input type="time" id="endTime" v-model="endTime" class="w-full h-8 p-5 border rounded-md border-zinc-300" required />
+                        <label for="endTime">End Time</label>
+                        <input 
+                            type="time" 
+                            id="endTime" 
+                            v-model="endTime" 
+                            class="w-full h-8 p-5 border rounded-md border-zinc-300" 
+                        />
+                        <small class="text-red-500">{{ errors.endTime }}</small>
                     </div>
                 </div>
 
@@ -103,37 +154,42 @@ const closeModal = () => {
                             v-if="performers.length > 1"
                             icon="pi pi-trash"
                             severity="danger"
-                            @click="removePerformer(index)"
+                            @click="performers.splice(index, 1)"
                             class="p-button-rounded p-button-text"
                         />
                     </div>
                     <Button 
                         icon="pi pi-plus"
                         label="Add Performer"
-                        @click="addPerformer"
+                        @click="performers.push('')"
                         class="p-button-rounded p-button-outlined w-fit"
                     />
+                    <small class="text-red-500">{{ errors.performers }}</small>
                 </div>
 
                 <div class="flex flex-col flex-wrap gap-2 w-full">
                     <label for="concertTitle">Genre</label>
                     <Select v-model="dropdownValue" :options="dropdownValues" optionLabel="name" placeholder="Select" />
+                    <small class="text-red-500">{{ errors.dropdownValue }}</small>
                 </div>
 
                 <div class="flex flex-col md:flex-row gap-4">
                     <div class="flex flex-col flex-wrap gap-2 w-full">
-                        <label for="startTime">Standard Seat Price (RM)</label>
+                        <label for="standardPrice">Standard Seat Price (RM)</label>
                         <InputNumber id="standardPrice" type="text" v-model="standardPrice"/>
+                        <small class="text-red-500">{{ errors.standardPrice }}</small>
                     </div>
                     <div class="flex flex-col flex-wrap gap-2 w-full">
-                        <label for="lastname2">VIP Seat Price (RM)</label>
+                        <label for="vipPrice">VIP Seat Price (RM)</label>
                         <InputNumber id="vipPrice" type="text" v-model="vipPrice"/>
+                        <small class="text-red-500">{{ errors.vipPrice }}</small>
                     </div>
                 </div>
 
                 <div class="flex flex-wrap">
-                    <label for="address">Event Policies</label>
-                    <Textarea id="address" rows="4" placeholder="e.g: safety guideline, COVID-19 safety guideline" />
+                    <label for="policies">Event Policies</label>
+                    <Textarea id="policies" rows="4" placeholder="e.g: safety guideline, COVID-19 safety guideline" v-model="policies" />
+                    <small class="text-red-500">{{ errors.policies }}</small>
                 </div>
                 
                 <Button label="Submit" @click="handleSubmit"></Button>
