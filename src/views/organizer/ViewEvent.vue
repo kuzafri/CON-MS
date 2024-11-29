@@ -1,153 +1,227 @@
 <script setup>
-import { ref } from 'vue';
-import { PrimeIcons } from '@primevue/core/api';
+import { useLayout } from '@/layout/composables/layout';
+import { onMounted, ref, watch } from 'vue';
+import { Chart as ChartJS, ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement } from 'chart.js';
 
-const dropdownItems = ref([
-    { name: 'Option 1', code: 'Option 1' },
-    { name: 'Option 2', code: 'Option 2' },
-    { name: 'Option 3', code: 'Option 3' }
-]);
+// Register the required Chart.js components
+ChartJS.register(ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement);
 
-const dropdownValue = ref(null);
-const dropdownValues = ref([
-    { name: 'Rock', code: 'ROK' },
-    { name: 'Pop', code: 'POP' },
-    { name: 'Jazz', code: 'JAZ' },
-    { name: 'Classical', code: 'CLS' },
-    { name: 'Hip-Hop/Rap', code: 'HHR' },
-    { name: 'Electronic/Dance', code: 'EDM' },
-    { name: 'Country', code: 'CNT' },
-    { name: 'Reggae', code: 'REG' },
-    { name: 'Blues', code: 'BLU' },
-    { name: 'Folk', code: 'FLK' },
-    { name: 'Metal', code: 'MTL' },
-    { name: 'Punk', code: 'PNK' },
-    { name: 'R&B/Soul', code: 'RBS' },
-    { name: 'Indie', code: 'IND' },
-    { name: 'Alternative', code: 'ALT' },
-    { name: 'Latin', code: 'LAT' },
-    { name: 'K-Pop', code: 'KPP' },
-    { name: 'World Music', code: 'WRM' },
-    { name: 'Opera', code: 'OPR' },
-    { name: 'Gospel', code: 'GOS' }
-]);
+// Define the plugin specifically for donut chart
+const donutCenterPlugin = {
+    id: 'donutCenter',
+    afterDraw(chart, args, options) {
+        // Only apply to donut chart
+        if (chart.config.type !== 'doughnut') return;
 
-// Refs for performers
-const performers = ref(['']);
-const addPerformer = () => {
-    performers.value.push('');
-};
-const removePerformer = (index) => {
-    if (performers.value.length > 1) {
-        performers.value.splice(index, 1);
+        const { ctx, chartArea } = chart;
+        if (!chartArea) return;
+
+        const documentStyle = getComputedStyle(document.documentElement);
+        const textColor = documentStyle.getPropertyValue('--text-color');
+        const textColorSecondary = documentStyle.getPropertyValue('--text-color-secondary');
+
+        const total = chart.data.datasets[0].data.reduce((sum, value) => sum + value, 0);
+
+        const centerX = (chartArea.left + chartArea.right) / 2;
+        const centerY = (chartArea.top + chartArea.bottom) / 2;
+
+        ctx.save();
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+
+        // Draw total count
+        ctx.font = 'bold 16px Arial';
+        ctx.fillStyle = textColor;
+        ctx.fillText(total.toString(), centerX, centerY + 10);
+
+        // Draw "Total Users"
+        ctx.font = '12px Arial';
+        ctx.fillStyle = textColorSecondary;
+        ctx.fillText('Total Users', centerX, centerY - 10);
+
+        ctx.restore();
     }
 };
 
-const dropdownItem = ref(null);
-const calendarValue = ref(null);
-const startTime = ref(null);
-const endTime = ref(null);
-const standardPrice = ref(null);
-const vipPrice = ref(null);
+// Register the custom plugin
+ChartJS.register(donutCenterPlugin);
 
-// Modal visibility state
-const showModal = ref(false);
+const { getPrimary, getSurface, isDarkTheme } = useLayout();
+const pieData = ref(null);
+const barData = ref(null);
+const pieOptions = ref(null);
+const barOptions = ref(null);
+const legendData = ref([]);
 
-// Function to handle submit
-const handleSubmit = () => {
-    showModal.value = true;
-};
+function updateLegendData(data, labels, colors) {
+    legendData.value = labels.map((label, index) => ({
+        label,
+        value: data[index],
+        color: colors[index]
+    }));
+}
 
-// Function to close the modal
-const closeModal = () => {
-    showModal.value = false;
-};
+function setColorOptions() {
+    const documentStyle = getComputedStyle(document.documentElement);
+    const textColor = documentStyle.getPropertyValue('--text-color');
+    const textColorSecondary = documentStyle.getPropertyValue('--text-color-secondary');
+    const surfaceBorder = documentStyle.getPropertyValue('--surface-border');
+
+    barData.value = {
+        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+        datasets: [
+            {
+                label: 'Registered Users',
+                backgroundColor: documentStyle.getPropertyValue('--p-primary-500'),
+                borderColor: documentStyle.getPropertyValue('--p-primary-500'),
+                data: [750, 750, 750, 750, 750, 750, 750, 750, 750, 750, 750, 750]
+            }
+        ]
+    };
+
+    barOptions.value = {
+        maintainAspectRatio: false,
+        responsive: true,
+        plugins: {
+            legend: {
+                display: false
+            }
+        },
+        scales: {
+            x: {
+                ticks: {
+                    color: textColorSecondary,
+                    font: {
+                        weight: 500
+                    }
+                },
+                grid: {
+                    display: false,
+                    drawBorder: false
+                }
+            },
+            y: {
+                ticks: {
+                    color: textColorSecondary
+                },
+                grid: {
+                    color: surfaceBorder,
+                    drawBorder: false
+                }
+            }
+        }
+    };
+
+    const pieColors = ['#4169e1', '#b0c4de', '#ffa07a'];
+    const pieLabels = ['Organiser', 'USM', 'Others'];
+    const pieValues = [100, 300, 105];
+
+    // Pie chart data
+    pieData.value = {
+        labels: pieLabels,
+        datasets: [
+            {
+                data: pieValues,
+                backgroundColor: pieColors,
+                hoverBackgroundColor: pieColors,
+                borderWidth: 0
+            }
+        ]
+    };
+
+    // Update legend data
+    updateLegendData(pieValues, pieLabels, pieColors);
+
+    // Pie chart options
+    pieOptions.value = {
+        cutout: '70%',
+        plugins: {
+            legend: {
+                display: false
+            },
+            tooltip: {
+                enabled: true
+            }
+        },
+        animation: {
+            animateRotate: true,
+            animateScale: false
+        }
+    };
+}
+
+onMounted(() => {
+    setColorOptions();
+});
+
+watch(
+    [getPrimary, getSurface, isDarkTheme],
+    () => {
+        setColorOptions();
+    },
+    { immediate: true }
+);
+
+// Event Creation Request Data
+const EventRequest = ref({
+    id: 'R-KL-58/42',
+    title: 'REBEL 3.0: Because of You',
+    date: '13th January 2025',
+    time: '3:00 PM - 4:00 PM',
+    audience: '1500 pax',
+    type: 'Paid Entry',
+    submittedBy: 'USM Jazz Band'
+});
+
+const Organiser = ref({
+    name: 'USM Jazz Band',
+    id: 'OH461B18UMJSN',
+    email: 'usmjazzband@student.usm.my',
+    phone: '019-514-0014'
+});
 </script>
 
 <template>
-    <Fluid>
-        <div class="flex">
-            <div class="card flex flex-col gap-4 w-full">
-                <div class="font-semibold text-xl">List of concert application</div>
-                <div class="flex flex-col md:flex-row gap-4">
-                    <div class="flex flex-wrap gap-2 w-full">
-                        <label for="concertTitle">Concert Title</label>
-                        <InputText id="concertTitle" type="text" />
-                    </div>
-                    <div class="flex flex-col flex-wrap gap-2 w-full">
-                        <label for="date">Date</label>
-                        <DatePicker :showIcon="true" :showButtonBar="true" v-model="calendarValue"></DatePicker>
-                    </div>
+    <div class="card h-full">
+    <div class="space-y-4">
+        <div v-for="i in 4" :key="i" class="border border-gray-300 rounded p-4 flex flex-col justify-between h-full">
+            <div class="flex justify-between items-center mb-3">
+                <div class="mb-4">
+                    <p class="text-base font-extrabold">Event ID:</p>
+                    <p class="text-sm mb-2">{{ EventRequest.id }}</p>
+                    <p class="text-base font-extrabold">Title:</p>
+                    <p class="text-sm">{{ EventRequest.title }}</p>
                 </div>
-                <div class="flex flex-col md:flex-row gap-4">
-                    <div class="flex flex-col flex-wrap gap-2 w-full">
-                        <label for="startTime">Start Time</label>
-                        <input type="time" id="startTime" v-model="startTime" class="w-full h-8 p-5 border rounded-md border-zinc-300" required />
+                <div class="flex items-center space-x-2">
+                    <div class="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center">
+                        <i class="text-sm text-black">👤</i>
                     </div>
-                    <div class="flex flex-col flex-wrap gap-2 w-full">
-                        <label for="lastname2">End Time</label>
-                        <input type="time" id="endTime" v-model="endTime" class="w-full h-8 p-5 border rounded-md border-zinc-300" required />
-                    </div>
+                    <p class="text-base font-extrabold">{{ EventRequest.submittedBy }}</p>
                 </div>
+            </div>
 
-                <div class="flex flex-col gap-2 w-full">
-                    <label>Performer(s)/Band(s)</label>
-                    <div v-for="(performer, index) in performers" :key="index" class="flex gap-2 items-center mb-2">
-                        <InputText 
-                            :id="'performer-' + index"
-                            v-model="performers[index]"
-                            placeholder="Enter performer name"
-                            class="flex-1"
-                        />
-                        <Button 
-                            v-if="performers.length > 1"
-                            icon="pi pi-trash"
-                            severity="danger"
-                            @click="removePerformer(index)"
-                            class="p-button-rounded p-button-text"
-                        />
-                    </div>
-                    <Button 
-                        icon="pi pi-plus"
-                        label="Add Performer"
-                        @click="addPerformer"
-                        class="p-button-rounded p-button-outlined w-fit"
-                    />
+            <div class="flex justify-between text-sm">
+                <div class="flex flex-col items-start">
+                    <p class="text-base font-extrabold">Date</p>
+                    <p>{{ EventRequest.date }}</p>
                 </div>
-
-                <div class="flex flex-col flex-wrap gap-2 w-full">
-                    <label for="concertTitle">Genre</label>
-                    <Select v-model="dropdownValue" :options="dropdownValues" optionLabel="name" placeholder="Select" />
+                <div class="flex flex-col items-start">
+                    <p class="text-base font-extrabold">Time</p>
+                    <p>{{ EventRequest.time }}</p>
                 </div>
-
-                <div class="flex flex-col md:flex-row gap-4">
-                    <div class="flex flex-col flex-wrap gap-2 w-full">
-                        <label for="startTime">Standard Seat Price (RM)</label>
-                        <InputNumber id="standardPrice" type="text" v-model="standardPrice"/>
-                    </div>
-                    <div class="flex flex-col flex-wrap gap-2 w-full">
-                        <label for="lastname2">VIP Seat Price (RM)</label>
-                        <InputNumber id="vipPrice" type="text" v-model="vipPrice"/>
-                    </div>
+                <div class="flex flex-col items-start">
+                    <p class="text-base font-extrabold">Audience</p>
+                    <p>{{ EventRequest.audience }}</p>
                 </div>
-
-                <div class="flex flex-wrap">
-                    <label for="address">Event Policies</label>
-                    <Textarea id="address" rows="4" placeholder="e.g: safety guideline, COVID-19 safety guideline" />
+                <div class="flex flex-col items-start">
+                    <p class="text-base font-extrabold">Type</p>
+                    <p>{{ EventRequest.type }}</p>
                 </div>
-                
-                <Button label="Submit" @click="handleSubmit"></Button>
+                <div class="flex justify-end mt-5">
+                    <a href="#" class="text-blue-600 text-base font-extrabold">View &gt;&gt;</a>
+                </div>
             </div>
         </div>
-
-        <!-- Modal -->
-        <div v-if="showModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-99">
-            <div class="bg-white rounded-lg shadow-lg p-8 w-96 ">
-                <h2 class="text-xl font-semibold mb-4">Success</h2>
-                <p class="mb-6">Your concert event application has been submitted!</p>
-                <p class="mb-6">Please wait for system admin to approve your application</p>
-                <Button label="Close" @click="closeModal"></Button>
-            </div>
-        </div>
-    </Fluid>
+    </div>
+</div>
 </template>
