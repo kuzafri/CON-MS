@@ -10,39 +10,35 @@ const dropdownItems = ref([
 
 const dropdownValue = ref(null);
 const dropdownValues = ref([
-        { name: 'Rock', code: 'ROK' },
-        { name: 'Pop', code: 'POP' },
-        { name: 'Jazz', code: 'JAZ' },
-        { name: 'Classical', code: 'CLS' },
-        { name: 'Hip-Hop/Rap', code: 'HHR' },
-        { name: 'Electronic/Dance', code: 'EDM' },
-        { name: 'Country', code: 'CNT' },
-        { name: 'Reggae', code: 'REG' },
-        { name: 'Blues', code: 'BLU' },
-        { name: 'Folk', code: 'FLK' },
-        { name: 'Metal', code: 'MTL' },
-        { name: 'Punk', code: 'PNK' },
-        { name: 'R&B/Soul', code: 'RBS' },
-        { name: 'Indie', code: 'IND' },
-        { name: 'Alternative', code: 'ALT' },
-        { name: 'Latin', code: 'LAT' },
-        { name: 'K-Pop', code: 'KPP' },
-        { name: 'World Music', code: 'WRM' },
-        { name: 'Opera', code: 'OPR' },
-        { name: 'Gospel', code: 'GOS' }
+    { name: 'Rock', code: 'ROK' },
+    { name: 'Pop', code: 'POP' },
+    { name: 'Jazz', code: 'JAZ' },
+    { name: 'Classical', code: 'CLS' },
+    { name: 'Hip-Hop/Rap', code: 'HHR' },
+    { name: 'Electronic/Dance', code: 'EDM' },
+    { name: 'Country', code: 'CNT' },
+    { name: 'Reggae', code: 'REG' },
+    { name: 'Blues', code: 'BLU' },
+    { name: 'Folk', code: 'FLK' },
+    { name: 'Metal', code: 'MTL' },
+    { name: 'Punk', code: 'PNK' },
+    { name: 'R&B/Soul', code: 'RBS' },
+    { name: 'Indie', code: 'IND' },
+    { name: 'Alternative', code: 'ALT' },
+    { name: 'Latin', code: 'LAT' },
+    { name: 'K-Pop', code: 'KPP' },
+    { name: 'World Music', code: 'WRM' },
+    { name: 'Opera', code: 'OPR' },
+    { name: 'Gospel', code: 'GOS' }
 ]);
 
-// New refs for performers
-const performers = ref(['']); // Initialize with one empty input
-
-// Function to add new performer input
+// Refs for performers
+const performers = ref(['']);
 const addPerformer = () => {
     performers.value.push('');
 };
-
-// Function to remove performer input
 const removePerformer = (index) => {
-    if (performers.value.length > 1) { // Keep at least one input field
+    if (performers.value.length > 1) {
         performers.value.splice(index, 1);
     }
 };
@@ -53,6 +49,19 @@ const startTime = ref(null);
 const endTime = ref(null);
 const standardPrice = ref(null);
 const vipPrice = ref(null);
+
+// Modal visibility state
+const showModal = ref(false);
+
+// Function to handle submit
+const handleSubmit = () => {
+    showModal.value = true;
+};
+
+// Function to close the modal
+const closeModal = () => {
+    showModal.value = false;
+};
 </script>
 
 <template>
@@ -90,7 +99,6 @@ const vipPrice = ref(null);
                             placeholder="Enter performer name"
                             class="flex-1"
                         />
-                        <!-- Remove Button -->
                         <Button 
                             v-if="performers.length > 1"
                             icon="pi pi-trash"
@@ -99,7 +107,6 @@ const vipPrice = ref(null);
                             class="p-button-rounded p-button-text"
                         />
                     </div>
-                    <!-- Add Button -->
                     <Button 
                         icon="pi pi-plus"
                         label="Add Performer"
@@ -115,7 +122,7 @@ const vipPrice = ref(null);
 
                 <div class="flex flex-col md:flex-row gap-4">
                     <div class="flex flex-col flex-wrap gap-2 w-full">
-                        <label for="startTime">Starndard Seat Price (RM)</label>
+                        <label for="startTime">Standard Seat Price (RM)</label>
                         <InputNumber id="standardPrice" type="text" v-model="standardPrice"/>
                     </div>
                     <div class="flex flex-col flex-wrap gap-2 w-full">
@@ -124,15 +131,23 @@ const vipPrice = ref(null);
                     </div>
                 </div>
 
-
                 <div class="flex flex-wrap">
                     <label for="address">Event Policies</label>
                     <Textarea id="address" rows="4" placeholder="e.g: safety guideline, COVID-19 safety guideline" />
                 </div>
                 
-                <Button label="Submit"></Button>
+                <Button label="Submit" @click="handleSubmit"></Button>
             </div>
         </div>
-        
+
+        <!-- Modal -->
+        <div v-if="showModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-99">
+            <div class="bg-white rounded-lg shadow-lg p-8 w-96 ">
+                <h2 class="text-xl font-semibold mb-4">Success</h2>
+                <p class="mb-6">Your concert event application has been submitted!</p>
+                <p class="mb-6">Please wait for system admin to approve your application</p>
+                <Button label="Close" @click="closeModal"></Button>
+            </div>
+        </div>
     </Fluid>
 </template>
