@@ -1,4 +1,5 @@
 import AppLayout from '@/layout/AppLayout.vue';
+import AppLayoutOrganizer from '@/views/organizer/AppLayout.vue';
 import { createRouter, createWebHistory } from 'vue-router';
 
 const router = createRouter({
@@ -19,11 +20,6 @@ const router = createRouter({
                     component: () => import('@/views/uikit/FormLayout.vue')
                 },
                 {
-                    path: '/organizer/event',
-                    name: 'eventorganizer',
-                    component: () => import('@/views/organizer/Event.vue')
-                },
-                {
                     path: '/uikit/input',
                     name: 'input',
                     component: () => import('@/views/uikit/InputDoc.vue')
@@ -38,7 +34,6 @@ const router = createRouter({
                     name: 'table',
                     component: () => import('@/views/uikit/TableDoc.vue')
                 },
-
                 {
                     path: '/uikit/list',
                     name: 'list',
@@ -54,7 +49,6 @@ const router = createRouter({
                     name: 'panel',
                     component: () => import('@/views/uikit/PanelsDoc.vue')
                 },
-
                 {
                     path: '/uikit/overlay',
                     name: 'overlay',
@@ -119,6 +113,22 @@ const router = createRouter({
                     path: '/documentation',
                     name: 'documentation',
                     component: () => import('@/views/pages/Documentation.vue')
+                }
+            ]
+        },
+        {
+            path: '/organizer',
+            component: AppLayoutOrganizer,
+            children: [
+                {
+                    path: 'event',
+                    name: 'eventorganizer',
+                    component: () => import('@/views/organizer/Event.vue')
+                },
+                {
+                    path: 'viewevent',
+                    name: 'viewevent',
+                    component: () => import('@/views/organizer/ViewEvent.vue')
                 }
             ]
         },

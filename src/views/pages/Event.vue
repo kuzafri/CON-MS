@@ -101,7 +101,7 @@ const { onMenuToggle, toggleDarkMode, isDarkTheme } = useLayout();
                                     <p class="text-surface-600 dark:text-surface-400">The Strokes Band</p>
                                     <div class="flex flex-row mt-4">
                                         <div class="font-bold"><span class="text-sm">Starting from </span>RM450</div>
-                                        <Button label="Book Now" to="/" rounded class="bottom-0 right-0 ml-auto"></Button>
+                                        <Button label="Book Now" as="router-link" to="/booking" rounded class="bottom-0 right-0 ml-auto"></Button>
                                     </div>
                                 </div>
                             </a>
@@ -112,7 +112,7 @@ const { onMenuToggle, toggleDarkMode, isDarkTheme } = useLayout();
                                     <p class="text-surface-600 dark:text-surface-400">Suicide Band</p>
                                     <div class="flex flex-row mt-4">
                                         <div class="font-bold"><span class="text-sm">Starting from </span>RM450</div>
-                                        <Button label="Book Now" to="/" rounded class="bottom-0 right-0 ml-auto"></Button>
+                                        <Button label="Book Now" as="router-link" to="/booking" rounded class="bottom-0 right-0 ml-auto"></Button>
                                     </div>
                                 </div>
                             </a>
@@ -128,6 +128,4 @@ const { onMenuToggle, toggleDarkMode, isDarkTheme } = useLayout();
 @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css');
 </style>
 
-<style scoped>
-
-</style>
+<style scoped></style>
