@@ -1,5 +1,6 @@
 import AppLayout from '@/layout/AppLayout.vue';
 import AppLayoutOrganizer from '@/views/organizer/AppLayout.vue';
+import AppLayoutAdmin from '@/views/admin/AppLayout.vue';
 import { createRouter, createWebHistory } from 'vue-router';
 
 const router = createRouter({
@@ -85,16 +86,6 @@ const router = createRouter({
                     component: () => import('@/views/uikit/MiscDoc.vue')
                 },
                 {
-                    path: '/admin/dashboard',
-                    name: 'Admin Dashboard',
-                    component: () => import('@/views/admin/Dashboard.vue')
-                },
-                {
-                    path: '/admin/events',
-                    name: 'Events',
-                    component: () => import('@/views/admin/Events.vue')
-                },
-                {
                     path: '/uikit/timeline',
                     name: 'timeline',
                     component: () => import('@/views/uikit/TimelineDoc.vue')
@@ -113,6 +104,27 @@ const router = createRouter({
                     path: '/documentation',
                     name: 'documentation',
                     component: () => import('@/views/pages/Documentation.vue')
+                }
+            ]
+        },
+        {
+            path: '/admin',
+            component: AppLayoutAdmin,
+            children: [
+                {
+                    path: 'dashboard',
+                    name: 'Admin Dashboard',
+                    component: () => import('@/views/admin/Dashboard.vue')
+                },
+                {
+                    path: 'events',
+                    name: 'Events',
+                    component: () => import('@/views/admin/Events.vue')
+                },
+                {
+                    path: 'users',
+                    name: 'Users',
+                    component: () => import('@/views/admin/Users.vue')
                 }
             ]
         },
