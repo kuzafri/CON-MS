@@ -5,7 +5,6 @@ const events = ref([]);
 const loading = ref(true);
 
 onMounted(() => {
-    // Simulate fetching data with dummy event requests
     events.value = [
         {
             id: 1,
@@ -18,7 +17,6 @@ onMounted(() => {
             createdAt: '2024-09-30 23:59:59',
             status: 'Pending',
         },
-        // Repeat data to simulate multiple rows
         ...Array(9).fill({
             id: 1,
             poster: 'https://via.placeholder.com/150',
@@ -95,7 +93,9 @@ function getStatusClass(status) {
             <Column field="createdAt" header="Created At" sortable />
             <Column field="status" header="Status">
                 <template #body="slotProps">
-                    <span :class="`badge ${getStatusClass(slotProps.data.status)}`">{{ slotProps.data.status }}</span>
+                    <span :class="`badge ${getStatusClass(slotProps.data.status)}`">
+                        {{ slotProps.data.status }}
+                    </span>
                 </template>
             </Column>
         </DataTable>
@@ -105,26 +105,24 @@ function getStatusClass(status) {
 <style scoped>
 .card {
     padding: 1rem;
-    background-color: #fff;
+    background-color: var(--surface-card);
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    color: var(--text-color);
 }
 
 .btn {
     padding: 0.5rem 1rem;
-    background-color: #007bff;
-    color: #fff;
+    background-color: var(--primary-color);
+    color: var(--primary-color-text);
     border: none;
     border-radius: 4px;
     cursor: pointer;
-}
-
-.btn-primary {
-    background-color: #007bff;
+    transition: background-color 0.2s ease-in-out;
 }
 
 .btn-primary:hover {
-    background-color: #0056b3;
+    background-color: var(--primary-color-hover);
 }
 
 .badge {
@@ -137,16 +135,18 @@ function getStatusClass(status) {
     white-space: nowrap;
     vertical-align: baseline;
     border-radius: 0.375rem;
-}
-
-.badge-warning {
-    background-color: #ffc107;
-    color: #212529;
+    background-color: var(--gray-500);
+    color: var(--surface-card);
 }
 
 .badge-success {
     background-color: #28a745;
     color: #fff;
+}
+
+.badge-warning {
+    background-color: #ffc107;
+    color: #212529;
 }
 
 .badge-danger {
@@ -166,5 +166,13 @@ function getStatusClass(status) {
     overflow: hidden;
     text-overflow: ellipsis;
     vertical-align: middle;
+}
+
+.text-primary {
+    color: var(--primary-color);
+}
+
+.text-primary:hover {
+    color: var(--primary-color-hover);
 }
 </style>
