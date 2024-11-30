@@ -82,7 +82,7 @@ const { onMenuToggle, toggleDarkMode, isDarkTheme } = useLayout();
                         <button type="button" class="layout-topbar-action" @click="toggleDarkMode">
                             <i :class="['pi', { 'pi-moon': isDarkTheme, 'pi-sun': !isDarkTheme }]"></i>
                         </button>
-                        <Button label="Logout" to="/auth/login" rounded></Button>
+                        <Button label="Logout" as="router-link" to="/auth/login" rounded></Button>
                     </div>
                 </div>
             </div>
@@ -96,7 +96,7 @@ const { onMenuToggle, toggleDarkMode, isDarkTheme } = useLayout();
                         <div ref="categoriesContainer" class="overflow-x-auto scrollbar-hide" @mouseenter="stopAutoScroll" @mouseleave="startAutoScroll">
                             <div class="flex gap-4 md:gap-8 min-w-max pb-4">
                                 <a
-                                    v-for="(category, index) in ['Ballad', 'RnB', 'Rock', 'Indie', 'Pop', 'Jazz', 'Classical', 'Electronic', 'K-Pop', 'Hip-Hop', 'Malay Pop','Chill', 'Folk', 'Punk', 'Instrumental','Afro','Classical']"
+                                    v-for="(category, index) in ['Ballad', 'RnB', 'Rock', 'Indie', 'Pop', 'Jazz', 'Classical', 'Electronic', 'K-Pop', 'Hip-Hop', 'Malay Pop', 'Chill', 'Folk', 'Punk', 'Instrumental', 'Afro', 'Classical']"
                                     :key="index"
                                     href="#"
                                     class="bg-surface-100 dark:bg-surface-800 rounded-lg p-3 md:p-4 flex flex-col items-center hover:bg-surface-200 dark:hover:bg-surface-700 min-w-[100px] md:min-w-[120px]"
@@ -122,7 +122,10 @@ const { onMenuToggle, toggleDarkMode, isDarkTheme } = useLayout();
                                     <p class="text-surface-600 dark:text-surface-400">The Strokes Band</p>
                                     <div class="flex flex-row mt-4">
                                         <div class="font-bold"><span class="text-sm">Starting from </span>RM450</div>
-                                        <Button label="Book Now" to="/" rounded class="bottom-0 right-0 ml-auto"></Button>
+                                        <div class="bottom-0 right-0 ml-auto">
+                                            <Button label="See Detail" as="router-link" to="/eventdetail" rounded class="seedetail mr-4"></Button>
+                                            <Button label="Book Now" as="router-link" to="/booking" rounded></Button>
+                                        </div>
                                     </div>
                                 </div>
                             </a>
@@ -133,8 +136,10 @@ const { onMenuToggle, toggleDarkMode, isDarkTheme } = useLayout();
                                     <p class="text-surface-600 dark:text-surface-400">Suicide Band</p>
                                     <div class="flex flex-row mt-4">
                                         <div class="font-bold"><span class="text-sm">Starting from </span>RM450</div>
-                                        <Button label="Book Now" to="/" rounded class="bottom-0 right-0 ml-auto"></Button>
-                                    </div>
+                                        <div class="bottom-0 right-0 ml-auto">
+                                            <Button label="See Detail" as="router-link" to="/eventdetail" rounded class="seedetail mr-4"></Button>
+                                            <Button label="Book Now" as="router-link" to="/booking" rounded></Button>
+                                        </div>                                    </div>
                                 </div>
                             </a>
                         </div>
@@ -162,5 +167,10 @@ const { onMenuToggle, toggleDarkMode, isDarkTheme } = useLayout();
 /* Add smooth scrolling */
 .overflow-x-auto {
     scroll-behavior: smooth;
+}
+
+.seedetail {
+    background-color: rgb(226, 226, 226);
+    border-color: rgb(162, 162, 162) ;
 }
 </style>

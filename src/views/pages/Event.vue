@@ -1,8 +1,35 @@
 <script setup>
 import { useLayout } from '@/layout/composables/layout';
-import { onMounted, ref } from 'vue';
+import { onMounted, onUnmounted, ref } from 'vue';
 
 const categoriesContainer = ref(null);
+const email = ref('');
+const events = ref([
+    {
+        id: 1,
+        image: 'concert.png',
+        title: 'Thriller',
+        date: '24/5/2025',
+        description: 'Dewan Tuanku Syed Putra, USM',
+        price: 235
+    },
+    {
+        id: 2,
+        image: 'concert.png',
+        title: 'Thriller',
+        date: '24/5/2025',
+        description: 'Dewan Tuanku Syed Putra, USM',
+        price: 320
+    },
+    {
+        id: 3,
+        image: 'concert.png',
+        title: 'Thriller',
+        date: '24/5/2025',
+        description: 'Dewan Tuanku Syed Putra, USM',
+        price: 450
+    }
+]);
 let scrollInterval = null;
 
 const startAutoScroll = () => {
@@ -24,22 +51,39 @@ const stopAutoScroll = () => {
     }
 };
 
-onMounted(() => {
-    startAutoScroll();
-});
-
-function smoothScroll(id) {
+const smoothScroll = (id) => {
     document.body.click();
     document.querySelector(id).scrollIntoView({
         behavior: 'smooth'
     });
-}
+};
 
+const clearFilters = () => {
+    console.log('Filters cleared!');
+};
+
+const subscribe = () => {
+    if (email.value.trim() !== '') {
+        alert(`Subscribed with email: ${email.value}`);
+        email.value = ''; // Clear the email input field
+    } else {
+        alert('Please enter a valid email!');
+    }
+};
+
+// Layout actions
 const { onMenuToggle, toggleDarkMode, isDarkTheme } = useLayout();
+
+onMounted(() => {
+    startAutoScroll();
+});
+
+onUnmounted(() => {
+    stopAutoScroll();
+});
 </script>
 
 <template>
-    <!-- <div class="min-h-screen bg-gray-100 flex flex-col"> -->
     <div class="bg-surface-0 dark:bg-surface-900 min-h-screen flex flex-col">
         <header class="bg-surface-0 dark:bg-surface-900 border-b-[1px] border-gray-400 shadow-lg">
             <div class="py-6 px-6 mx-0 md:mx-12 lg:mx-20 lg:px-20 flex items-center justify-between relative lg:static">
@@ -87,35 +131,38 @@ const { onMenuToggle, toggleDarkMode, isDarkTheme } = useLayout();
                 </div>
             </div>
         </header>
+        <div class="container mx-auto p-6">
+            <div class="flex space-x-4">
+                <!-- Sidebar -->
+                <aside class="w-1/4 bg-gray-50 p-4 rounded-lg">
+                    <h2 class="text-lg font-semibold mb-4">Locations</h2>
+                    <button class="bg-gray-200 text-sm py-1 px-4 rounded w-full" @click="clearFilters">Clear filters</button>
+                    <div class="mt-6">
+                        <h2 class="text-lg font-semibold mb-2">Stay in the loop</h2>
+                        <input v-model="email" type="email" placeholder="your@email.com" class="border w-full p-2 rounded mb-2" />
+                        <button class="bg-blue-500 text-white px-4 py-2 rounded w-full" @click="subscribe">Create alerts</button>
+                    </div>
+                </aside>
 
-        <div>
-            <div class="flex-1 max-w-7xl mx-auto px-4">
-                <div class="grid grid-cols-2 md:grid-cols-2 gap-8">
-                    <div class="col-span-2 bg-surface-0 dark:bg-surface-900 rounded-lg shadow p-6">
-                        <h2 class="text-xl font-semibold mb-4 text-surface-900 dark:text-surface-0">Featured Events</h2>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                            <a href="#" class="bg-surface-100 dark:bg-surface-800 rounded-lg overflow-hidden hover:bg-surface-200 dark:hover:bg-surface-700">
-                                <img src="/concert.jpeg" alt="Happy Holiday Music Concert" class="w-full h-48 object-cover" />
-                                <div class="p-4">
-                                    <h3 class="text-lg font-semibold text-surface-900 dark:text-surface-0">Happy Holiday Music Concert Festival Indonesia Region</h3>
-                                    <p class="text-surface-600 dark:text-surface-400">The Strokes Band</p>
-                                    <div class="flex flex-row mt-4">
-                                        <div class="font-bold"><span class="text-sm">Starting from </span>RM450</div>
-                                        <Button label="Book Now" as="router-link" to="/booking" rounded class="bottom-0 right-0 ml-auto"></Button>
-                                    </div>
-                                </div>
-                            </a>
-                            <a href="#" class="bg-surface-100 dark:bg-surface-800 rounded-lg overflow-hidden hover:bg-surface-200 dark:hover:bg-surface-700">
-                                <img src="/concert.png" alt="Suicide Band summer Bali Island" class="w-full h-48 object-cover" />
-                                <div class="p-4">
-                                    <h3 class="text-lg font-semibold text-surface-900 dark:text-surface-0">Suicide Band summer Bali Island</h3>
-                                    <p class="text-surface-600 dark:text-surface-400">Suicide Band</p>
-                                    <div class="flex flex-row mt-4">
-                                        <div class="font-bold"><span class="text-sm">Starting from </span>RM450</div>
-                                        <Button label="Book Now" as="router-link" to="/booking" rounded class="bottom-0 right-0 ml-auto"></Button>
-                                    </div>
-                                </div>
-                            </a>
+                <!-- Event Cards -->
+                <div class="flex-1 grid grid-cols-3 gap-6">
+                    <div v-for="event in events" :key="event.id" class="p-6 bg-white shadow-lg rounded-lg">
+                        <div class="relative">
+                            <img :src="event.image" alt="Event Image" class="w-full h-48 object-cover rounded-lg" />
+                            <!-- <div class="absolute top-2 left-2 bg-white rounded-full p-2 shadow">
+                <i class="text-xl text-blue-500 material-icons">music_note</i>
+              </div> -->
+                        </div>
+                        <h2 class="text-xl font-semibold mt-4">{{ event.title }}</h2>
+                        <p class="text-gray-500">{{ event.description }}</p>
+                        <p class="text-gray-700 font-bold">{{ event.date }}</p>
+                        <div class="flex flex-wrap mt-2 space-x-2">
+                            <span class="bg-gray-200 text-sm py-1 px-2 rounded">Music</span>
+                            <!-- <span class="bg-gray-200 text-sm py-1 px-2 rounded">Min 1 year</span> -->
+                        </div>
+                        <div class="flex justify-between items-center mt-4">
+                            <span class="text-lg font-bold">RM{{ event.price }}</span>
+                            <Button as="router-link" to="/booking" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Buy now</Button>
                         </div>
                     </div>
                 </div>
@@ -124,8 +171,6 @@ const { onMenuToggle, toggleDarkMode, isDarkTheme } = useLayout();
     </div>
 </template>
 
-<style>
-@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css');
+<style scoped>
+/* Add custom styles if needed. */
 </style>
-
-<style scoped></style>

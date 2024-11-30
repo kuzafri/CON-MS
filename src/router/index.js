@@ -139,8 +139,13 @@ const router = createRouter({
         },
         {
             path: '/booking',
-            name: 'booking',
+            name: 'Booking',
             component: () => import('@/views/pages/Booking.vue')
+        },
+        {
+            path: '/eventdetail',
+            name: 'EventDetail',
+            component: () => import('@/views/pages/EventDetail.vue')
         },
         {
             path: '/event',

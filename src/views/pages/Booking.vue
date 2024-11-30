@@ -1,5 +1,8 @@
 <script setup>
+import { useLayout } from '@/layout/composables/layout';
 import { computed, ref } from 'vue';
+
+const { onMenuToggle, toggleDarkMode, isDarkTheme } = useLayout();
 
 // State
 const selectedSeats = ref([]);
