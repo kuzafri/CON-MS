@@ -139,7 +139,8 @@ const { onMenuToggle, toggleDarkMode, isDarkTheme } = useLayout();
                                         <div class="bottom-0 right-0 ml-auto">
                                             <Button label="See Detail" as="router-link" to="/eventdetail" rounded class="seedetail mr-4"></Button>
                                             <Button label="Book Now" as="router-link" to="/booking" rounded></Button>
-                                        </div>                                    </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </a>
                         </div>
@@ -171,6 +172,7 @@ const { onMenuToggle, toggleDarkMode, isDarkTheme } = useLayout();
 
 .seedetail {
     background-color: rgb(226, 226, 226);
-    border-color: rgb(162, 162, 162) ;
+    border-color: rgba(162, 162, 162, 0);
+    /* color: var(text-primary-400); */
 }
 </style>

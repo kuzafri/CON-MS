@@ -147,7 +147,7 @@ const { onMenuToggle, toggleDarkMode, isDarkTheme } = useLayout();
                     </div>
 
                     <div class="mt-8 flex flex-col items-center">
-                        <div class="text-4xl font-bold text-pink-500">Event Countdown</div>
+                        <div class="text-4xl font-bold text-primary dark:text-primary">Event Countdown</div>
                         <div class="flex space-x-8 gap-6 mt-4 text-center text-2xl font-semibold text-surface-900 dark:text-surface-0">
                             <div>
                                 <div class="text-8xl">{{ days }}</div>
@@ -174,21 +174,21 @@ const { onMenuToggle, toggleDarkMode, isDarkTheme } = useLayout();
                             <button
                                 @click="activeTab = 'about'"
                                 :class="{
-                                    'border-b-2 border-pink-500 text-pink-500': activeTab === 'about'
+                                    'border-b-2 border-primary text-primary dark:text-primary': activeTab === 'about'
                                 }"
                                 class="py-2 px-4 font-medium text-gray-600 dark:text-gray-300 focus:outline-none"
                             >
-                            <i :class="['pi', 'pi-info-circle', { 'text-pink-500': activeTab === 'about', 'text-gray-500 dark:text-gray-400': activeTab !== 'about' }]"></i>
+                                <i :class="['pi', 'pi-info-circle', { 'text-primary dark:text-primary': activeTab === 'about', 'text-gray-500 dark:text-gray-400': activeTab !== 'about' }]"></i>
                                 About
                             </button>
                             <button
                                 @click="activeTab = 'buyTicket'"
                                 :class="{
-                                    'border-b-2 border-pink-500 text-pink-500': activeTab === 'buyTicket'
+                                    'border-b-2 border-primary text-primary dark:text-primary': activeTab === 'buyTicket'
                                 }"
                                 class="py-2 px-4 font-medium text-gray-600 dark:text-gray-300 focus:outline-none"
                             >
-                            <i :class="['pi', 'pi-ticket', { 'text-pink-500': activeTab === 'buyTicket', 'text-gray-500 dark:text-gray-400': activeTab !== 'buyTicket' }]"></i>
+                                <i :class="['pi', 'pi-ticket', { 'text-primary dark:text-primary': activeTab === 'buyTicket', 'text-gray-500 dark:text-gray-400': activeTab !== 'buyTicket' }]"></i>
                                 Buy Ticket
                             </button>
                         </div>
@@ -197,8 +197,9 @@ const { onMenuToggle, toggleDarkMode, isDarkTheme } = useLayout();
                                 Hammersonic Festival is a metal and rock international festival, held annually in Jakarta, Indonesia since 2012. It is the biggest metal and rock festival in Southeast Asia and even in Asia Pacific.
                             </p>
                         </div>
-                        <div v-if="activeTab === 'buyTicket'" class="mt-4">
-                            <p class="text-gray-600 dark:text-gray-300">Ticket purchase functionality coming soon!</p>
+                        <div v-if="activeTab === 'buyTicket'" class="mt-4 relative">
+                            <!-- <p class="text-gray-600 dark:text-gray-300">Ticket purchase functionality coming soon!</p> -->
+                            <Button class="right-0 absolute" label="Book Now" as="router-link" to="/booking" rounded></Button>
                         </div>
                     </div>
 
