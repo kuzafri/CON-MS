@@ -10,11 +10,11 @@ const router = createRouter({
             path: '/dashboard',
             component: AppLayout,
             children: [
-                {
-                    path: '/',
-                    name: 'dashboard',
-                    component: () => import('@/views/Dashboard.vue')
-                },
+                // {
+                //     path: '/',
+                //     name: 'dashboard',
+                //     component: () => import('@/views/Dashboard.vue')
+                // },
                 {
                     path: '/uikit/formlayout',
                     name: 'formlayout',
@@ -151,14 +151,24 @@ const router = createRouter({
             ]
         },
         {
-            path: '/landing',
+            path: '/',
             name: 'landing',
             component: () => import('@/views/pages/Landing.vue')
         },
         {
             path: '/booking',
-            name: 'booking',
+            name: 'Booking',
             component: () => import('@/views/pages/Booking.vue')
+        },
+        {
+            path: '/eventdetail',
+            name: 'EventDetail',
+            component: () => import('@/views/pages/EventDetail.vue')
+        },
+        {
+            path: '/payment',
+            name: 'Payment',
+            component: () => import('@/views/pages/Payment.vue')
         },
         {
             path: '/event',

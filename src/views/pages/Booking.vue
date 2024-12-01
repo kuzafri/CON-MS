@@ -1,5 +1,10 @@
 <script setup>
+import { useLayout } from '@/layout/composables/layout';
 import { computed, ref } from 'vue';
+import { useRouter } from 'vue-router';
+
+const { onMenuToggle, toggleDarkMode, isDarkTheme } = useLayout();
+const router = useRouter();
 
 // State
 const selectedSeats = ref([]);
@@ -87,7 +92,14 @@ const isSeatSelected = (seatId) => {
 };
 
 const proceedToCheckout = () => {
-    console.log('Proceeding to checkout with seats:', selectedSeats.value);
+    // Navigate to payment with selected seats data
+    router.push({
+        path: '/payment',
+        query: {
+            seats: JSON.stringify(selectedSeats.value),
+            totalPrice: totalPrice.value
+        }
+    });
 };
 </script>
 
@@ -245,13 +257,15 @@ const proceedToCheckout = () => {
                                     <span class="text-xl font-bold text-primary-600 dark:text-primary-400"> RM {{ totalPrice }} </span>
                                 </div>
 
-                                <button
+                                <Button
+                                    to="/payment"
+                                    as="router-link"
                                     @click="proceedToCheckout"
                                     :disabled="selectedSeats.length === 0"
                                     class="w-full bg-primary-600 text-white py-3 rounded-lg font-medium disabled:bg-surface-400 disabled:cursor-not-allowed hover:bg-primary-700 dark:disabled:bg-surface-600"
                                 >
                                     Proceed to Checkout
-                                </button>
+                                </Button>
                             </div>
                         </template>
                     </div>

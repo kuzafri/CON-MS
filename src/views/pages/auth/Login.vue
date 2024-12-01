@@ -32,7 +32,7 @@ const checked = ref(false);
                             </div>
                             <span class="font-medium no-underline ml-2 text-right cursor-pointer text-primary">Forgot password?</span>
                         </div>
-                        <Button label="Sign In" class="w-full" as="router-link" to="/event"></Button>
+                        <Button label="Sign In" class="w-full" as="router-link" to="/homebook"></Button>
                     </div>
                 </div>
             </div>
