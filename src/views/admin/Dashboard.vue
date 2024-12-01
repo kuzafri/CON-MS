@@ -2,6 +2,8 @@
 import { useLayout } from '@/layout/composables/layout';
 import { onMounted, ref, watch } from 'vue';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement } from 'chart.js';
+import { useRouter } from 'vue-router';
+const router = useRouter();
 
 // Register the required Chart.js components
 ChartJS.register(
@@ -187,6 +189,16 @@ const Organiser = ref({
     phone: "019-514-0014",
 });
 
+const handleViewRequest = () => {
+    console.log('handleViewRequest called');
+    router.push({
+        name: 'EventsRequest',  // Use the named route
+        params: {
+            id: EventRequest.value.id
+        },
+        state: EventRequest.value  // Pass full event data in state
+    });
+};
 </script>
 
 <template>
@@ -282,7 +294,12 @@ const Organiser = ref({
                                     <p>{{ EventRequest.type }}</p>
                                 </div>
                                 <div class="flex justify-end mt-5">
-                                <a href="#" class="text-blue-600 text-sm font-semibold">View &gt;&gt;</a>
+                                    <button
+                                        class="text-blue-600 text-sm font-semibold cursor-pointer"
+                                        @click="handleViewRequest"
+                                    >
+                                        View >>
+                                    </button>
                                 </div>
                             </div>
                         </div>
