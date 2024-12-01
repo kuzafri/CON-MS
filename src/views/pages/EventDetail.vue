@@ -148,7 +148,7 @@ const { onMenuToggle, toggleDarkMode, isDarkTheme } = useLayout();
 
                     <div class="mt-8 flex flex-col items-center">
                         <div class="text-4xl font-bold text-primary dark:text-primary">Event Countdown</div>
-                        <div class="flex space-x-8 gap-6 mt-4 text-center text-2xl font-semibold text-surface-900 dark:text-surface-0">
+                        <div class="flex md:space-x-8 sm:space-x-2 gap-6 mt-4 text-center md:text-2xl font-semibold text-surface-900 dark:text-surface-0">
                             <div>
                                 <div class="text-8xl">{{ days }}</div>
                                 <div class="text-gray-500">Days</div>
