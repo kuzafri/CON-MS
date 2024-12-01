@@ -110,16 +110,16 @@ const handleBack = () => {
                 <div class="card p-6 mt-8">
                     <h3 class="text-xl font-semibold mb-4">Statistics</h3>
                     <div class="grid grid-cols-2 gap-4">
-                        <div class="bg-blue-50 p-4 rounded-lg">
-                            <p class="text-sm text-gray-600">Events Organized</p>
+                        <div class="bg-blue-500/10 dark:bg-blue-950/50 p-4 rounded-lg">
+                            <p class="text-sm text-gray-600 dark:text-gray-300">Events Organized</p>
                             <p class="text-2xl font-bold">{{ organiser.eventsOrganized }}</p>
                         </div>
-                        <div class="bg-green-50 p-4 rounded-lg">
-                            <p class="text-sm text-gray-600">Upcoming Events</p>
+                        <div class="bg-green-500/10 dark:bg-green-950/50 p-4 rounded-lg">
+                            <p class="text-sm text-gray-600 dark:text-gray-300">Upcoming Events</p>
                             <p class="text-2xl font-bold">{{ organiser.upcomingEvents }}</p>
                         </div>
-                        <div class="bg-purple-50 p-4 rounded-lg col-span-2">
-                            <p class="text-sm text-gray-600">Total Participants</p>
+                        <div class="bg-purple-500/10 dark:bg-purple-950/50 p-4 rounded-lg col-span-2">
+                            <p class="text-sm text-gray-600 dark:text-gray-300">Total Participants</p>
                             <p class="text-2xl font-bold">{{ organiser.totalParticipants }}</p>
                         </div>
                     </div>
