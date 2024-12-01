@@ -127,9 +127,15 @@ const router = createRouter({
                     component: () => import('@/views/admin/Users.vue')
                 },
                 {
-                    path: 'events-request/:id',
-                    name: 'EventsRequest',
-                    component: () => import('@/views/admin/EventsRequest.vue'),
+                    path: 'events-detail/:id',
+                    name: 'EventsDetails',
+                    component: () => import('@/views/admin/EventsDetails.vue'),
+                    props: true
+                },
+                {
+                    path: 'organiser-detail/:id',
+                    name: 'OrganiserDetails',
+                    component: () => import('@/views/admin/OrganiserDetails.vue'),
                     props: true
                 }
             ]

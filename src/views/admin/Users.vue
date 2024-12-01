@@ -1,37 +1,105 @@
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, computed } from 'vue';
 
-const users = ref([]);
-const loading = ref(true);
+const users = ref([
+    // Original Audience users
+    {
+        id: 1,
+        image: 'https://via.placeholder.com/150',
+        name: 'Irshad Bin Abdul Razak',
+        userID: 'CFY-A-2907762-T',
+        role: 'Audience',
+        email: 'irshadrazak@student.usm.my',
+        contact: '019-514 0014',
+        lastActive: '2024-09-30 23:59:59',
+        status: 'Active',
+    },
+    {
+        id: 2,
+        image: 'https://via.placeholder.com/150',
+        name: 'Sarah Abdullah',
+        userID: 'CFY-A-2907763-T',
+        role: 'Audience',
+        email: 'sarahabd@student.usm.my',
+        contact: '019-555 1234',
+        lastActive: '2024-09-29 14:30:00',
+        status: 'Active',
+    },
+    {
+        id: 3,
+        image: 'https://via.placeholder.com/150',
+        name: 'Ahmad Zakaria',
+        userID: 'CFY-A-2907764-T',
+        role: 'Audience',
+        email: 'ahmadz@student.usm.my',
+        contact: '019-666 5678',
+        lastActive: '2024-09-28 09:15:00',
+        status: 'Inactive',
+    },
+    // Additional Organiser users
+    {
+        id: 4,
+        image: 'https://via.placeholder.com/150',
+        name: 'Dr. Fatimah Rahman',
+        userID: 'CFY-O-1234567-T',
+        role: 'Organiser',
+        email: 'fatimah.rahman@usm.my',
+        contact: '019-777 8899',
+        lastActive: '2024-09-30 22:45:00',
+        status: 'Active',
+    },
+    {
+        id: 5,
+        image: 'https://via.placeholder.com/150',
+        name: 'Prof. Ali Hassan',
+        userID: 'CFY-O-1234568-T',
+        role: 'Organiser',
+        email: 'ali.hassan@usm.my',
+        contact: '019-888 9900',
+        lastActive: '2024-09-30 20:30:00',
+        status: 'Active',
+    },
+    {
+        id: 6,
+        image: 'https://via.placeholder.com/150',
+        name: 'Dr. Linda Tan',
+        userID: 'CFY-O-1234569-T',
+        role: 'Organiser',
+        email: 'linda.tan@usm.my',
+        contact: '019-999 0011',
+        lastActive: '2024-09-29 18:15:00',
+        status: 'Active',
+    },
+    {
+        id: 7,
+        image: 'https://via.placeholder.com/150',
+        name: 'Prof. Kamal Ibrahim',
+        userID: 'CFY-O-1234570-T',
+        role: 'Organiser',
+        email: 'kamal.ibrahim@usm.my',
+        contact: '019-000 1122',
+        lastActive: '2024-09-28 16:00:00',
+        status: 'Inactive',
+    },
+    {
+        id: 8,
+        image: 'https://via.placeholder.com/150',
+        name: 'Dr. Chen Wei',
+        userID: 'CFY-O-1234571-T',
+        role: 'Organiser',
+        email: 'chen.wei@usm.my',
+        contact: '019-111 2233',
+        lastActive: '2024-09-27 14:45:00',
+        status: 'Active',
+    }
+]);
+
+const loading = ref(false);
 const activeTab = ref('Audience'); // Default active tab
 
-onMounted(() => {
-    // Dummy data for users
-    users.value = [
-        {
-            id: 1,
-            image: 'https://via.placeholder.com/150',
-            name: 'Irshad Bin Abdul Razak',
-            userID: 'CFY-A-2907762-T',
-            role: 'Audience',
-            email: 'irshadrazak@student.usm.my',
-            contact: '019-514 0014',
-            lastActive: '2024-09-30 23:59:59',
-            status: 'Active',
-        },
-        ...Array(9).fill({
-            id: 1,
-            image: 'https://via.placeholder.com/150',
-            name: 'Irshad Bin Abdul Razak',
-            userID: 'CFY-A-2907762-T',
-            role: 'Audience',
-            email: 'irshadrazak@student.usm.my',
-            contact: '019-514 0014',
-            lastActive: '2024-09-30 23:59:59',
-            status: 'Active',
-        }),
-    ];
-    loading.value = false;
+// Computed property to filter users based on active tab
+const filteredUsers = computed(() => {
+    return users.value.filter(user => user.role === activeTab.value);
 });
 
 function getStatusClass(status) {
@@ -84,7 +152,7 @@ function getStatusClass(status) {
             </div>
         </div>
 
-        <DataTable :value="users" :loading="loading" :rows="10" paginator>
+        <DataTable :value="filteredUsers" :loading="loading" :rows="10" paginator>
             <Column field="image" header="#">
                 <template #body="slotProps">
                     <img
@@ -112,6 +180,7 @@ function getStatusClass(status) {
 </template>
 
 <style scoped>
+/* Keeping your original styles */
 .card {
     padding: 1rem;
     background-color: var(--surface-card);
@@ -134,8 +203,8 @@ function getStatusClass(status) {
 
 .btn {
     padding: 0.5rem 1rem;
-    background-color: var(--surface-ground); /* Inactive button color */
-    color: var(--text-color); /* Inactive text color */
+    background-color: var(--surface-ground);
+    color: var(--text-color);
     border: 1px solid var(--primary-color);
     border-radius: 4px;
     cursor: pointer;
@@ -148,8 +217,8 @@ function getStatusClass(status) {
 }
 
 .btn-primary {
-    background-color: var(--primary-color); /* Active button color */
-    color: var(--primary-color-text); /* Active text color */
+    background-color: var(--primary-color);
+    color: var(--primary-color-text);
     border: 1px solid var(--primary-color);
     font-weight: bold;
 }
@@ -187,7 +256,7 @@ function getStatusClass(status) {
     text-align: center;
     white-space: nowrap;
     border-radius: 0.375rem;
-    color: var(--surface-card); /* Ensure the text is visible */
+    color: var(--surface-card);
 }
 
 .badge-success {

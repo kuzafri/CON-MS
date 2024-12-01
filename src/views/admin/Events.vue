@@ -1,6 +1,8 @@
 <script setup>
 import { ref, onMounted } from 'vue';
+import { useRouter } from 'vue-router';
 
+const router = useRouter();
 const events = ref([]);
 const loading = ref(true);
 
@@ -12,7 +14,8 @@ onMounted(() => {
             eventID: '#280924-PLT-B04-A0087',
             title: 'REBEL 3.0: Because of You',
             organiser: 'USM Jazz Band',
-            dateTime: '2025-01-13 3:00 PM - 4:00 PM',
+            date: '2025-01-13',
+            time: '3:00 PM - 4:00 PM',
             type: 'Paid Entry',
             createdAt: '2024-09-30 23:59:59',
             status: 'Pending',
@@ -23,7 +26,8 @@ onMounted(() => {
             eventID: '#280924-PLT-B04-A0087',
             title: 'REBEL 3.0: Because of You',
             organiser: 'USM Jazz Band',
-            dateTime: '2025-01-13 3:00 PM - 4:00 PM',
+            date: '2025-01-13',
+            time: '3:00 PM - 4:00 PM',
             type: 'Paid Entry',
             createdAt: '2024-09-30 23:59:59',
             status: 'Pending',
@@ -44,6 +48,22 @@ function getStatusClass(status) {
             return 'badge-secondary';
     }
 }
+
+const handleViewRequest = (event) => {
+    console.log('handleViewRequest called with event:', event);
+    router.push({
+        name: 'EventsDetails',
+        params: { id: event.eventID },
+        query: {
+            title: event.title,
+            date: event.date,
+            time: event.time,
+            audience: '1500 pax',
+            type: event.type,
+            submittedBy: event.organiser
+        }
+    });
+};
 </script>
 
 <template>
@@ -66,8 +86,8 @@ function getStatusClass(status) {
             <Column field="eventID" header="Event ID" sortable>
                 <template #body="slotProps">
                     <a
-                        href="#"
-                        @click.prevent="console.log(slotProps.data.eventID)"
+                                href="#"
+                        @click.prevent="handleViewRequest(slotProps.data)"
                         class="text-blue-600 hover:underline truncate-ellipsis"
                     >
                         {{ slotProps.data.eventID }}
@@ -84,7 +104,13 @@ function getStatusClass(status) {
                     <span class="truncate-ellipsis">{{ slotProps.data.organiser }}</span>
                 </template>
             </Column>
-            <Column field="dateTime" header="Date & Time" sortable />
+            <Column header="Date & Time" sortable>
+                <template #body="slotProps">
+                    <span class="truncate-ellipsis">
+                        {{ slotProps.data.date }} {{ slotProps.data.time }}
+                    </span>
+                </template>
+            </Column>
             <Column field="type" header="Type" sortable>
                 <template #body="slotProps">
                     <span class="truncate-ellipsis">{{ slotProps.data.type }}</span>
