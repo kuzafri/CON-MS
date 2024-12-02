@@ -141,7 +141,7 @@ const closeModal = () => {
         </div>
 
         <!-- Modal -->
-        <div v-if="showModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-99">
+        <div v-if="showModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
             <div class="bg-white rounded-lg shadow-lg p-8 w-96 ">
                 <h2 class="text-xl font-semibold mb-4">Success</h2>
                 <p class="mb-6">Your concert event application has been submitted!</p>
