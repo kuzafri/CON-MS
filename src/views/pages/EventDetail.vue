@@ -84,8 +84,8 @@ const { onMenuToggle, toggleDarkMode, isDarkTheme } = useLayout();
     <div class="bg-surface-0 dark:bg-surface-900 min-h-screen flex flex-col">
         <header class="bg-surface-0 dark:bg-surface-900 border-b-[1px] border-gray-400 shadow-lg">
             <div class="py-6 px-6 mx-0 md:mx-12 lg:mx-20 lg:px-20 flex items-center justify-between relative lg:static">
-                <a class="flex items-center" href="#">
-                    <span class="text-surface-900 dark:text-surface-0 font-medium text-2xl leading-normal mr-20">Concertify</span>
+                <a class="flex items-center mx-4" href="#">
+                    <img :src="logoSrc" alt="logo" class="w-full h-8" />
                 </a>
                 <Button
                     class="lg:!hidden"
@@ -99,22 +99,22 @@ const { onMenuToggle, toggleDarkMode, isDarkTheme } = useLayout();
                 <div class="items-center bg-surface-0 dark:bg-surface-900 grow justify-between hidden lg:flex absolute lg:static w-full left-0 top-full px-12 lg:px-0 z-20 rounded-border">
                     <ul class="list-none p-0 m-0 flex lg:items-center select-none flex-col lg:flex-row cursor-pointer gap-8">
                         <li>
-                            <a @click="smoothScroll('#hero')" class="px-0 py-4 text-surface-900 dark:text-surface-0 font-medium text-xl">
+                            <a href="/homebook" class="px-0 py-4 text-surface-900 dark:text-surface-0 font-medium text-xl">
                                 <span>Home</span>
                             </a>
                         </li>
                         <li>
-                            <a @click="smoothScroll('#events')" class="px-0 py-4 text-surface-900 dark:text-surface-0 font-medium text-xl">
+                            <a href="/event" class="px-0 py-4 text-surface-900 dark:text-surface-0 font-medium text-xl">
                                 <span>Events</span>
                             </a>
                         </li>
                         <li>
-                            <a @click="smoothScroll('#highlights')" class="px-0 py-4 text-surface-900 dark:text-surface-0 font-medium text-xl">
+                            <a href="/ticket" class="px-0 py-4 text-surface-900 dark:text-surface-0 font-medium text-xl">
                                 <span>My Ticket</span>
                             </a>
                         </li>
                         <li>
-                            <a @click="smoothScroll('#pricing')" class="px-0 py-4 text-surface-900 dark:text-surface-0 font-medium text-xl">
+                            <a href="/favourite" class="px-0 py-4 text-surface-900 dark:text-surface-0 font-medium text-xl">
                                 <span>Favourite</span>
                             </a>
                         </li>
@@ -138,9 +138,9 @@ const { onMenuToggle, toggleDarkMode, isDarkTheme } = useLayout();
                     </div>
                     <div class="p-4">
                         <!-- Event Details -->
-                        <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Hammersonic Festival 2020</h1>
+                        <h1 class="text-2xl font-bold text-gray-900 dark:text-white">REBEL 3.0: Because of you</h1>
                         <p class="text-gray-600 dark:text-gray-300">
-                            <span class="block">Carnaval Beach Ancol, Jakarta, Indonesia</span>
+                            <span class="block">Dewan Tuanku Syed Putra, USM</span>
                             <span>May 16-17, 2020 | Open Gate at 10:00 AM</span>
                         </p>
                         <p class="mt-2 text-gray-600 dark:text-gray-300">100+ Artists</p>
@@ -148,21 +148,21 @@ const { onMenuToggle, toggleDarkMode, isDarkTheme } = useLayout();
 
                     <div class="mt-8 flex flex-col items-center">
                         <div class="text-4xl font-bold text-primary dark:text-primary">Event Countdown</div>
-                        <div class="flex md:space-x-8 sm:space-x-2 gap-6 mt-4 text-center md:text-2xl font-semibold text-surface-900 dark:text-surface-0">
-                            <div>
-                                <div class="text-8xl">{{ days }}</div>
+                        <div class="flex flex-wrap justify-center gap-4 text-center">
+                            <div class="flex-1 min-w-[80px] p-2 bg-white/10 rounded-md shadow-md">
+                                <div class="text-6xl sm:text-8xl">{{ days }}</div>
                                 <div class="text-gray-500">Days</div>
                             </div>
-                            <div>
-                                <div class="text-8xl">{{ hours }}</div>
+                            <div class="flex-1 min-w-[80px] p-2 bg-white/10 rounded-md shadow-md">
+                                <div class="text-6xl sm:text-8xl">{{ hours }}</div>
                                 <div class="text-gray-500">Hours</div>
                             </div>
-                            <div>
-                                <div class="text-8xl">{{ minutes }}</div>
+                            <div class="flex-1 min-w-[80px] p-2 bg-white/10 rounded-md shadow-md">
+                                <div class="text-6xl sm:text-8xl">{{ minutes }}</div>
                                 <div class="text-gray-500">Minutes</div>
                             </div>
-                            <div>
-                                <div class="text-8xl">{{ seconds }}</div>
+                            <div class="flex-1 min-w-[80px] p-2 bg-white/10 rounded-md shadow-md">
+                                <div class="text-6xl sm:text-8xl">{{ seconds }}</div>
                                 <div class="text-gray-500">Seconds</div>
                             </div>
                         </div>
@@ -194,12 +194,12 @@ const { onMenuToggle, toggleDarkMode, isDarkTheme } = useLayout();
                         </div>
                         <div v-if="activeTab === 'about'" class="mt-4">
                             <p class="text-gray-600 dark:text-gray-300">
-                                Hammersonic Festival is a metal and rock international festival, held annually in Jakarta, Indonesia since 2012. It is the biggest metal and rock festival in Southeast Asia and even in Asia Pacific.
+                                Tickets for USM Jazz Band's 26th Annual Charity Concert are now available for purchase, shadowed by the intriguing theme of 𝗧𝗛𝗥𝗜𝗟𝗟𝗘𝗥, offering you the chance to experience a pulse-pounding melodic adventure.
                             </p>
                         </div>
                         <div v-if="activeTab === 'buyTicket'" class="mt-4 relative">
                             <!-- <p class="text-gray-600 dark:text-gray-300">Ticket purchase functionality coming soon!</p> -->
-                            <Button class="right-0 absolute" label="Book Now" as="router-link" to="/booking" rounded></Button>
+                            <Button class="button_buy right-0 absolute" label="Book Now" as="router-link" to="/booking" rounded></Button>
                         </div>
                     </div>
 
@@ -258,10 +258,33 @@ const { onMenuToggle, toggleDarkMode, isDarkTheme } = useLayout();
     scroll-behavior: smooth;
 }
 
+.countdown {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1rem; /* Adjust spacing between items */
+}
 .countdown div {
     padding: 0.5rem;
-    border-radius: 0.5rem;
-    background: rgba(255, 255, 255, 0.1);
-    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
+    flex: 1 1 calc(25% - 1rem); /* Adjusts to 25% of the container width minus the gap */
+    min-width: 80px; /* Ensures a minimum size */
+    text-align: center;
+}
+
+.button_buy {
+    position: absolute;
+    right: 0px;
+}
+
+@media (max-width: 768px) {
+    .countdown div {
+        flex: 1 1 50%; /* Two items per row on smaller screens */
+    }
+}
+
+@media (max-width: 480px) {
+    .countdown div {
+        flex: 1 1 100%; /* One item per row on very small screens */
+    }
 }
 </style>

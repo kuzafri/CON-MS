@@ -5,6 +5,7 @@ import { useRouter } from 'vue-router';
 
 const { onMenuToggle, toggleDarkMode, isDarkTheme } = useLayout();
 const router = useRouter();
+const logoSrc = computed(() => (isDarkTheme.value ? '/logo_dark.png' : '/logo_light.png'));
 
 // State
 const selectedSeats = ref([]);
@@ -108,8 +109,8 @@ const proceedToCheckout = () => {
         <!-- Header with dark mode support -->
         <header class="bg-surface-0 dark:bg-surface-900 border-b-[1px] border-gray-400 shadow-lg">
             <div class="py-6 px-6 mx-0 md:mx-12 lg:mx-20 lg:px-20 flex items-center justify-between relative lg:static">
-                <a class="flex items-center" href="#">
-                    <span class="text-surface-900 dark:text-surface-0 font-medium text-2xl leading-normal mr-20">Concertify</span>
+                <a class="flex items-center mx-4" href="#">
+                    <img :src="logoSrc" alt="logo" class="w-full h-8 mb-1" />
                 </a>
                 <Button
                     class="lg:!hidden"
@@ -123,12 +124,12 @@ const proceedToCheckout = () => {
                 <div class="items-center bg-surface-0 dark:bg-surface-900 grow justify-between hidden lg:flex absolute lg:static w-full left-0 top-full px-12 lg:px-0 z-20 rounded-border">
                     <ul class="list-none p-0 m-0 flex lg:items-center select-none flex-col lg:flex-row cursor-pointer gap-8">
                         <li>
-                            <a href="/" class="px-0 py-4 text-surface-900 dark:text-surface-0 font-medium text-xl">
+                            <a href="/homebook" class="px-0 py-4 text-surface-900 dark:text-surface-0 font-medium text-xl">
                                 <span>Home</span>
                             </a>
                         </li>
                         <li>
-                            <a href="/events" class="px-0 py-4 text-surface-900 dark:text-surface-0 font-medium text-xl">
+                            <a href="/event" class="px-0 py-4 text-surface-900 dark:text-surface-0 font-medium text-xl">
                                 <span>Events</span>
                             </a>
                         </li>
@@ -278,5 +279,9 @@ const proceedToCheckout = () => {
 <style>
 .seat {
     transition: fill 0.2s ease;
+}
+
+img {
+    transition: opacity 0.3s ease-in-out;
 }
 </style>
