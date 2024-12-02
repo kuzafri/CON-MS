@@ -137,6 +137,12 @@ const router = createRouter({
                     name: 'OrganiserDetails',
                     component: () => import('@/views/admin/OrganiserDetails.vue'),
                     props: true
+                },
+                {
+                    path: 'admin-profile/:id',
+                    name: 'AdminProfile',
+                    component: () => import('@/views/admin/Profile.vue'),
+                    props: true
                 }
             ]
         },
