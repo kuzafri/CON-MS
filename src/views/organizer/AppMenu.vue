@@ -3,6 +3,7 @@ import { ref } from 'vue';
 
 import AppMenuItem from './AppMenuItem.vue';
 
+const currentPrefix = '/organizer';
 const model = ref([
     // {
     //     label: 'Organizer',
@@ -11,10 +12,10 @@ const model = ref([
     {
         label: 'Organizer',
         items: [
-            { label: 'Create New Concert', icon: 'pi pi-fw pi-id-card', to: 'event' },
-            { label: 'View All Concert', icon: 'pi pi-fw pi-check-square', to: 'viewevent' },
-            // { label: 'Button', icon: 'pi pi-fw pi-mobile', to: '/uikit/button', class: 'rotated-icon' },
-            // { label: 'Table', icon: 'pi pi-fw pi-table', to: '/uikit/table' },
+            { label: 'Create New Concert', icon: 'pi pi-fw pi-id-card', to: `${currentPrefix}/event` },
+            { label: 'View All Concert', icon: 'pi pi-fw pi-check-square', to: `${currentPrefix}/viewevent` },
+            { label: 'Complaint', icon: 'pi pi-fw pi-mobile', to: `${currentPrefix}/complaint`, class: 'rotated-icon' },
+            { label: 'Help', icon: 'pi pi-fw pi-table', to: `${currentPrefix}/help` },
             // { label: 'List', icon: 'pi pi-fw pi-list', to: '/uikit/list' },
             // { label: 'Tree', icon: 'pi pi-fw pi-share-alt', to: '/uikit/tree' },
             // { label: 'Panel', icon: 'pi pi-fw pi-tablet', to: '/uikit/panel' },
