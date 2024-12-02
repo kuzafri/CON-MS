@@ -173,8 +173,8 @@ watch(
 
 // Event Creation Request Data
 const EventRequest = ref({
-    id: "R-KL-58/42",
-    title: "REBEL 3.0: Because of You",
+    id: "R-KL-58/43",
+    title: "REBEL 4.0: Because of You",
     date: "13th January 2025",
     time: "3:00 PM - 4:00 PM",
     audience: "1500 pax",
@@ -192,11 +192,31 @@ const Organiser = ref({
 const handleViewRequest = () => {
     console.log('handleViewRequest called');
     router.push({
-        name: 'EventsRequest',  // Use the named route
-        params: {
-            id: EventRequest.value.id
+        name: 'EventsDetails',
+        params: { id: EventRequest.value.id },
+        query: {
+            title: EventRequest.value.title,
+            date: EventRequest.value.date,
+            time: EventRequest.value.time,
+            audience: EventRequest.value.audience,
+            type: EventRequest.value.type,
+            submittedBy: EventRequest.value.submittedBy
+        }
+    });
+};
+
+const handleViewRequestOrganiser = () => {
+    console.log('handleViewRequestOrganiser called');
+    router.push({
+        name: 'OrganiserDetails',
+        params: { 
+            id: Organiser.value.id
         },
-        state: EventRequest.value  // Pass full event data in state
+        query: {
+            name: Organiser.value.name,
+            email: Organiser.value.email,
+            phone: Organiser.value.phone
+        }
     });
 };
 </script>
@@ -341,7 +361,13 @@ const handleViewRequest = () => {
                                 <p>{{ Organiser.email }}</p>
                                 <div class="flex justify-between items-center">
                                     <p>{{ Organiser.phone }}</p>
-                                    <a href="#" class="text-blue-600 text-sm font-semibold cursor-pointer">View &gt;&gt;</a>
+                                    <button 
+                                        @click="handleViewRequestOrganiser"
+                                        type="button"
+                                        class="text-blue-600 text-sm font-semibold cursor-pointer hover:text-blue-800"
+                                    >
+                                        View >>
+                                    </button>
                                 </div>
                             </div>
                         </div>
