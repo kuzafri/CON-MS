@@ -1,6 +1,6 @@
 <script setup>
 import { useLayout } from '@/layout/composables/layout';
-import { onMounted, ref, computed } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 
 const { onMenuToggle, toggleDarkMode, isDarkTheme } = useLayout();
 const logoSrc = computed(() => (isDarkTheme.value ? '/logo_dark.png' : '/logo_light.png'));
@@ -36,7 +36,6 @@ function smoothScroll(id) {
         behavior: 'smooth'
     });
 }
-
 </script>
 
 <template>
@@ -89,6 +88,16 @@ function smoothScroll(id) {
             </div>
         </header>
 
+        <div class="hero-section relative flex flex-col items-center justify-center text-center h-[50vh] text-white">
+            <h1 class="relative text-4xl md:text-6xl font-thin mb-6 text-white">Discover concert <br class="md:none" />around you.</h1>
+            <div class="relative w-full max-w-xl flex items-center gap-4">
+                <div class="mx-auto flex">
+                    <input type="text" placeholder="Search for Events Nearby..." class="max-w-xl glass-search w-[50vw] px-6 py-3 text-lg placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-400" />
+                    <button class="px-6 py-3 sm:mr-0 left-0 rounded-full">Search</button>
+                </div>
+            </div>
+        </div>
+
         <div>
             <div class="flex-1 max-w-7xl mx-auto px-4 pt-8">
                 <div class="grid grid-cols-1 gap-8">
@@ -113,7 +122,7 @@ function smoothScroll(id) {
 
             <div class="flex-1 max-w-7xl mx-auto px-4">
                 <div class="grid grid-cols-2 md:grid-cols-2 gap-8">
-                    <div class="col-span-2 bg-surface-0 dark:bg-surface-900 rounded-lg shadow p-6">
+                    <div class="col-span-2 bg-surface-0 dark:bg-surface-900 rounded-lg shadow md:p-6 sm:p-3">
                         <h2 class="text-xl font-semibold mb-4 text-surface-900 dark:text-surface-0">Featured Events</h2>
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
                             <a href="#" class="bg-surface-100 dark:bg-surface-800 rounded-lg overflow-hidden hover:bg-surface-200 dark:hover:bg-surface-700">
@@ -123,8 +132,8 @@ function smoothScroll(id) {
                                     <p class="text-surface-600 dark:text-surface-400">MPP USM</p>
                                     <div class="flex flex-row mt-4">
                                         <div class="font-bold"><span class="text-sm">Starting from </span>RM50</div>
-                                        <div class="bottom-0 right-0 ml-auto">
-                                            <Button label="See Detail" as="router-link" to="/eventdetail" rounded class="seedetail mr-4"></Button>
+                                        <div class="bottom-0 right-0 ml-auto flex sm:flex-row">
+                                            <Button label="See Detail" as="router-link" to="/eventdetail" rounded class="seedetail flex mr-4"></Button>
                                             <Button label="Book Now" as="router-link" to="/booking" rounded></Button>
                                         </div>
                                     </div>
@@ -174,6 +183,48 @@ function smoothScroll(id) {
 .seedetail {
     background-color: rgb(226, 226, 226);
     border-color: rgba(162, 162, 162, 0);
+    color: rgb(96, 96, 96);
     /* display: flex; */
+}
+
+.hero-section {
+    background: linear-gradient(135deg, #61d1bf, #8ac4ff, #eec8ff, #ffc6a3);
+    background-size: 200% 200%; /* For a soft transition effect */
+    animation: gradient-animation 10s ease infinite; /* Optional animation */
+}
+@keyframes gradient-animation {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+.glass-search {
+    background: rgba(255, 255, 255, 0.2); /* Semi-transparent white */
+    border: 1px solid rgba(255, 255, 255, 0.4); /* Subtle border for better visibility */
+    backdrop-filter: blur(10px); /* Creates the frosted glass effect */
+    -webkit-backdrop-filter: blur(10px); /* Safari support */
+    border-radius: 50px; /* Rounded corners */
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2); /* Soft shadow for depth */
+    color: #fff;
+}
+
+/* Premium Gradient Title */
+.text-gradient {
+    background-clip: text;
+    text-fill-color: transparent; /* For cross-browser support */
+    font-weight: bold;
+    letter-spacing: 1px;
+}
+
+/* Hover effect for search button */
+button:hover {
+    transform: scale(1.05);
+    transition: transform 0.2s ease-in-out;
 }
 </style>
