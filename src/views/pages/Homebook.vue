@@ -1,7 +1,9 @@
 <script setup>
 import { useLayout } from '@/layout/composables/layout';
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, computed } from 'vue';
 
+const { onMenuToggle, toggleDarkMode, isDarkTheme } = useLayout();
+const logoSrc = computed(() => (isDarkTheme.value ? '/logo_dark.png' : '/logo_light.png'));
 const categoriesContainer = ref(null);
 let scrollInterval = null;
 
@@ -35,7 +37,6 @@ function smoothScroll(id) {
     });
 }
 
-const { onMenuToggle, toggleDarkMode, isDarkTheme } = useLayout();
 </script>
 
 <template>
@@ -43,8 +44,8 @@ const { onMenuToggle, toggleDarkMode, isDarkTheme } = useLayout();
     <div class="bg-surface-0 dark:bg-surface-900 min-h-screen flex flex-col">
         <header class="bg-surface-0 dark:bg-surface-900 border-b-[1px] border-gray-400 shadow-lg">
             <div class="py-6 px-6 mx-0 md:mx-12 lg:mx-20 lg:px-20 flex items-center justify-between relative lg:static">
-                <a class="flex items-center" href="#">
-                    <span class="text-surface-900 dark:text-surface-0 font-medium text-2xl leading-normal mr-20">Concertify</span>
+                <a class="flex items-center mx-4" href="#">
+                    <img :src="logoSrc" alt="logo" class="w-full h-8" />
                 </a>
                 <Button
                     class="lg:!hidden"

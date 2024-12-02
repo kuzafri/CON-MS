@@ -1,10 +1,11 @@
 <script setup>
 import { useLayout } from '@/layout/composables/layout';
-import { onMounted, onUnmounted, ref } from 'vue';
+import { computed, onMounted, onUnmounted, ref } from 'vue';
 
 // Target event date
 const eventDate = new Date('2024-12-25T00:00:00'); // Replace with your event date
 const activeTab = ref('about');
+const logoSrc = computed(() => (isDarkTheme.value ? '/logo_dark.png' : '/logo_light.png'));
 
 const days = ref(0);
 const hours = ref(0);
