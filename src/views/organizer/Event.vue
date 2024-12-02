@@ -111,7 +111,7 @@ const closeModal = () => {
                         icon="pi pi-plus"
                         label="Add Performer"
                         @click="addPerformer"
-                        class="p-button-rounded p-button-outlined w-fit"
+                        class="p-button-2xl p-button-outlined w-fit"
                     />
                 </div>
 
