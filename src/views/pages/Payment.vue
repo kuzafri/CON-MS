@@ -1,10 +1,22 @@
 <script setup>
 import { onMounted, ref } from 'vue';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 
 const route = useRoute();
+const router = useRouter();
 const selectedSeats = ref([]);
 const totalPrice = ref(0);
+
+// Add handlePayment function
+const handlePayment = () => {
+    router.push({
+        path: '/ticket',
+        query: {
+            seats: route.query.seats, // Pass through the seats data
+            totalPrice: route.query.totalPrice // Pass through the total price
+        }
+    });
+};
 
 onMounted(() => {
     // Get seat data from route query
@@ -97,7 +109,11 @@ onMounted(() => {
                             <input type="text" placeholder="CVV" class="border border-gray-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" />
                         </div>
                         <button class="w-full bg-indigo-500 hover:bg-indigo-600 text-white font-bold py-3 rounded-lg">Save Card</button>
-                        <button class="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-3 rounded-lg">Pay</button>
+                        <button 
+                            @click="handlePayment"
+                            class="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-3 rounded-lg">
+                            Pay
+                        </button>
                     </div>
                 </div>
             </div>

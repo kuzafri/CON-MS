@@ -1,6 +1,6 @@
 import AppLayout from '@/layout/AppLayout.vue';
-import AppLayoutOrganizer from '@/views/organizer/AppLayout.vue';
 import AppLayoutAdmin from '@/views/admin/AppLayout.vue';
+import AppLayoutOrganizer from '@/views/organizer/AppLayout.vue';
 import { createRouter, createWebHistory } from 'vue-router';
 
 const router = createRouter({

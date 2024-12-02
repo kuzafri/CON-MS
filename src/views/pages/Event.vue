@@ -103,7 +103,7 @@ onUnmounted(() => {
                     <ul class="list-none p-0 m-0 flex lg:items-center select-none flex-col lg:flex-row cursor-pointer gap-8">
                         <li>
                             <a @click="smoothScroll('#hero')" class="px-0 py-4 text-surface-900 dark:text-surface-0 font-medium text-xl">
-                                <span to="/">Home</span>
+                                <span to="/homebook">Home</span>
                             </a>
                         </li>
                         <li>
