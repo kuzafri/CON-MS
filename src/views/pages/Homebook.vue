@@ -58,22 +58,22 @@ const { onMenuToggle, toggleDarkMode, isDarkTheme } = useLayout();
                 <div class="items-center bg-surface-0 dark:bg-surface-900 grow justify-between hidden lg:flex absolute lg:static w-full left-0 top-full px-12 lg:px-0 z-20 rounded-border">
                     <ul class="list-none p-0 m-0 flex lg:items-center select-none flex-col lg:flex-row cursor-pointer gap-8">
                         <li>
-                            <a @click="smoothScroll('#hero')" class="px-0 py-4 text-surface-900 dark:text-surface-0 font-medium text-xl">
+                            <a href="/homebook" class="px-0 py-4 text-surface-900 dark:text-surface-0 font-medium text-xl">
                                 <span>Home</span>
                             </a>
                         </li>
                         <li>
-                            <a @click="smoothScroll('#events')" class="px-0 py-4 text-surface-900 dark:text-surface-0 font-medium text-xl">
+                            <a href="/event" class="px-0 py-4 text-surface-900 dark:text-surface-0 font-medium text-xl">
                                 <span>Events</span>
                             </a>
                         </li>
                         <li>
-                            <a @click="smoothScroll('#highlights')" class="px-0 py-4 text-surface-900 dark:text-surface-0 font-medium text-xl">
+                            <a href="/ticket" class="px-0 py-4 text-surface-900 dark:text-surface-0 font-medium text-xl">
                                 <span>My Ticket</span>
                             </a>
                         </li>
                         <li>
-                            <a @click="smoothScroll('#pricing')" class="px-0 py-4 text-surface-900 dark:text-surface-0 font-medium text-xl">
+                            <a href="/favourite" class="px-0 py-4 text-surface-900 dark:text-surface-0 font-medium text-xl">
                                 <span>Favourite</span>
                             </a>
                         </li>
@@ -118,10 +118,10 @@ const { onMenuToggle, toggleDarkMode, isDarkTheme } = useLayout();
                             <a href="#" class="bg-surface-100 dark:bg-surface-800 rounded-lg overflow-hidden hover:bg-surface-200 dark:hover:bg-surface-700">
                                 <img src="/concert.jpeg" alt="Happy Holiday Music Concert" class="w-full h-48 object-cover" />
                                 <div class="p-4">
-                                    <h3 class="text-lg font-semibold text-surface-900 dark:text-surface-0">Happy Holiday Music Concert Festival Indonesia Region</h3>
-                                    <p class="text-surface-600 dark:text-surface-400">The Strokes Band</p>
+                                    <h3 class="text-lg font-semibold text-surface-900 dark:text-surface-0">Malam Citra Budaya</h3>
+                                    <p class="text-surface-600 dark:text-surface-400">MPP USM</p>
                                     <div class="flex flex-row mt-4">
-                                        <div class="font-bold"><span class="text-sm">Starting from </span>RM450</div>
+                                        <div class="font-bold"><span class="text-sm">Starting from </span>RM50</div>
                                         <div class="bottom-0 right-0 ml-auto">
                                             <Button label="See Detail" as="router-link" to="/eventdetail" rounded class="seedetail mr-4"></Button>
                                             <Button label="Book Now" as="router-link" to="/booking" rounded></Button>
@@ -132,10 +132,10 @@ const { onMenuToggle, toggleDarkMode, isDarkTheme } = useLayout();
                             <a href="#" class="bg-surface-100 dark:bg-surface-800 rounded-lg overflow-hidden hover:bg-surface-200 dark:hover:bg-surface-700">
                                 <img src="/concert.png" alt="Suicide Band summer Bali Island" class="w-full h-48 object-cover" />
                                 <div class="p-4">
-                                    <h3 class="text-lg font-semibold text-surface-900 dark:text-surface-0">Suicide Band summer Bali Island</h3>
-                                    <p class="text-surface-600 dark:text-surface-400">Suicide Band</p>
+                                    <h3 class="text-lg font-semibold text-surface-900 dark:text-surface-0">REBEL 3.0: Because of you</h3>
+                                    <p class="text-surface-600 dark:text-surface-400">USM Jazz Band</p>
                                     <div class="flex flex-row mt-4">
-                                        <div class="font-bold"><span class="text-sm">Starting from </span>RM450</div>
+                                        <div class="font-bold"><span class="text-sm">Starting from </span>RM80</div>
                                         <div class="bottom-0 right-0 ml-auto">
                                             <Button label="See Detail" as="router-link" to="/eventdetail" rounded class="seedetail mr-4"></Button>
                                             <Button label="Book Now" as="router-link" to="/booking" rounded></Button>
@@ -173,6 +173,6 @@ const { onMenuToggle, toggleDarkMode, isDarkTheme } = useLayout();
 .seedetail {
     background-color: rgb(226, 226, 226);
     border-color: rgba(162, 162, 162, 0);
-    /* color: var(text-primary-400); */
+    /* display: flex; */
 }
 </style>
