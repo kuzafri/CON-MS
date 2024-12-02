@@ -1,5 +1,5 @@
 <script setup>
-import { ProductService } from '@/service/ProductService';
+import { ProductService } from '@/service/ProductService'; //all the product template stored here
 import { FilterMatchMode } from '@primevue/core/api';
 import { useToast } from 'primevue/usetoast';
 import { onMounted, ref } from 'vue';
@@ -31,6 +31,18 @@ function formatCurrency(value) {
     return;
 }
 
+function changeQuantity(product, change) {
+    // Ensure quantity doesn't go below 0
+    product.quantity = Math.max(0, (product.quantity || 0) + change);
+    
+    // Optional: Add a toast notification for quantity change
+    if (change > 0) {
+        toast.add({ severity: 'info', summary: 'Quantity Increased', detail: `${product.name} quantity updated`, life: 2000 });
+    } else if (change < 0) {
+        toast.add({ severity: 'info', summary: 'Quantity Decreased', detail: `${product.name} quantity updated`, life: 2000 });
+    }
+}
+
 function openNew() {
     product.value = {};
     submitted.value = false;
@@ -52,8 +64,8 @@ function saveProduct() {
             toast.add({ severity: 'success', summary: 'Successful', detail: 'Product Updated', life: 3000 });
         } else {
             product.value.id = createId();
-            product.value.code = createId();
-            product.value.image = 'product-placeholder.svg';
+            // product.value.code = createId();
+            // product.value.image = 'product-placeholder.svg';
             product.value.inventoryStatus = product.value.inventoryStatus ? product.value.inventoryStatus.value : 'INSTOCK';
             products.value.push(product.value);
             toast.add({ severity: 'success', summary: 'Successful', detail: 'Product Created', life: 3000 });
@@ -173,29 +185,49 @@ function getStatusLabel(status) {
                 </template>
 
                 <Column selectionMode="multiple" style="width: 3rem" :exportable="false"></Column>
-                <Column field="code" header="Code" sortable style="min-width: 12rem"></Column>
+                <!-- <Column field="code" header="Code" sortable style="min-width: 12rem"></Column> -->
                 <Column field="name" header="Name" sortable style="min-width: 16rem"></Column>
-                <Column header="Image">
+                <!-- <Column header="Image">
                     <template #body="slotProps">
                         <img :src="`https://primefaces.org/cdn/primevue/images/product/${slotProps.data.image}`" :alt="slotProps.data.image" class="rounded" style="width: 64px" />
                     </template>
-                </Column>
-                <Column field="price" header="Price" sortable style="min-width: 8rem">
+                </Column> -->
+                <!-- <Column field="price" header="Price" sortable style="min-width: 8rem">
                     <template #body="slotProps">
                         {{ formatCurrency(slotProps.data.price) }}
                     </template>
-                </Column>
+                </Column> -->
                 <Column field="category" header="Category" sortable style="min-width: 10rem"></Column>
-                <Column field="rating" header="Reviews" sortable style="min-width: 12rem">
+                <!-- <Column field="rating" header="Reviews" sortable style="min-width: 12rem">
                     <template #body="slotProps">
                         <Rating :modelValue="slotProps.data.rating" :readonly="true" />
                     </template>
-                </Column>
-                <Column field="inventoryStatus" header="Status" sortable style="min-width: 12rem">
+                </Column> -->
+                <!-- <Column field="inventoryStatus" header="Status" sortable style="min-width: 12rem">
                     <template #body="slotProps">
                         <Tag :value="slotProps.data.inventoryStatus" :severity="getStatusLabel(slotProps.data.inventoryStatus)" />
                     </template>
+                </Column> -->
+
+                <Column header="Quantity" style="min-width: 12rem">
+                    <template #body="slotProps">
+                        <div class="flex items-center gap-2">
+                            <Button 
+                                icon="pi pi-minus" 
+                                class="p-button-rounded p-button-text p-button-sm" 
+                                @click="changeQuantity(slotProps.data, -1)"
+                            />
+                            <span class="font-bold">{{ slotProps.data.quantity || 0 }}</span>
+                            <Button 
+                                icon="pi pi-plus" 
+                                class="p-button-rounded p-button-text p-button-sm" 
+                                @click="changeQuantity(slotProps.data, 1)"
+                            />
+                        </div>
+                    </template>
                 </Column>
+
+
                 <Column :exportable="false" style="min-width: 12rem">
                     <template #body="slotProps">
                         <Button icon="pi pi-pencil" outlined rounded class="mr-2" @click="editProduct(slotProps.data)" />
@@ -207,7 +239,7 @@ function getStatusLabel(status) {
 
         <Dialog v-model:visible="productDialog" :style="{ width: '450px' }" header="Product Details" :modal="true">
             <div class="flex flex-col gap-6">
-                <img v-if="product.image" :src="`https://primefaces.org/cdn/primevue/images/product/${product.image}`" :alt="product.image" class="block m-auto pb-4" />
+                <!-- <img v-if="product.image" :src="`https://primefaces.org/cdn/primevue/images/product/${product.image}`" :alt="product.image" class="block m-auto pb-4" /> -->
                 <div>
                     <label for="name" class="block font-bold mb-3">Name</label>
                     <InputText id="name" v-model.trim="product.name" required="true" autofocus :invalid="submitted && !product.name" fluid />
