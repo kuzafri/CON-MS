@@ -84,8 +84,8 @@ const { onMenuToggle, toggleDarkMode, isDarkTheme } = useLayout();
     <div class="bg-surface-0 dark:bg-surface-900 min-h-screen flex flex-col">
         <header class="bg-surface-0 dark:bg-surface-900 border-b-[1px] border-gray-400 shadow-lg">
             <div class="py-6 px-6 mx-0 md:mx-12 lg:mx-20 lg:px-20 flex items-center justify-between relative lg:static">
-                <a class="flex items-center" href="#">
-                    <span class="text-surface-900 dark:text-surface-0 font-medium text-2xl leading-normal mr-20">Concertify</span>
+                <a class="flex items-center mx-4" href="#">
+                    <img :src="logoSrc" alt="logo" class="w-full h-8" />
                 </a>
                 <Button
                     class="lg:!hidden"
@@ -99,22 +99,22 @@ const { onMenuToggle, toggleDarkMode, isDarkTheme } = useLayout();
                 <div class="items-center bg-surface-0 dark:bg-surface-900 grow justify-between hidden lg:flex absolute lg:static w-full left-0 top-full px-12 lg:px-0 z-20 rounded-border">
                     <ul class="list-none p-0 m-0 flex lg:items-center select-none flex-col lg:flex-row cursor-pointer gap-8">
                         <li>
-                            <a @click="smoothScroll('#hero')" class="px-0 py-4 text-surface-900 dark:text-surface-0 font-medium text-xl">
+                            <a href="/homebook" class="px-0 py-4 text-surface-900 dark:text-surface-0 font-medium text-xl">
                                 <span>Home</span>
                             </a>
                         </li>
                         <li>
-                            <a @click="smoothScroll('#events')" class="px-0 py-4 text-surface-900 dark:text-surface-0 font-medium text-xl">
+                            <a href="/event" class="px-0 py-4 text-surface-900 dark:text-surface-0 font-medium text-xl">
                                 <span>Events</span>
                             </a>
                         </li>
                         <li>
-                            <a @click="smoothScroll('#highlights')" class="px-0 py-4 text-surface-900 dark:text-surface-0 font-medium text-xl">
+                            <a href="/ticket" class="px-0 py-4 text-surface-900 dark:text-surface-0 font-medium text-xl">
                                 <span>My Ticket</span>
                             </a>
                         </li>
                         <li>
-                            <a @click="smoothScroll('#pricing')" class="px-0 py-4 text-surface-900 dark:text-surface-0 font-medium text-xl">
+                            <a href="/favourite" class="px-0 py-4 text-surface-900 dark:text-surface-0 font-medium text-xl">
                                 <span>Favourite</span>
                             </a>
                         </li>
@@ -199,7 +199,7 @@ const { onMenuToggle, toggleDarkMode, isDarkTheme } = useLayout();
                         </div>
                         <div v-if="activeTab === 'buyTicket'" class="mt-4 relative">
                             <!-- <p class="text-gray-600 dark:text-gray-300">Ticket purchase functionality coming soon!</p> -->
-                            <Button class="right-0 absolute" label="Book Now" as="router-link" to="/booking" rounded></Button>
+                            <Button class="button_buy right-0 absolute" label="Book Now" as="router-link" to="/booking" rounded></Button>
                         </div>
                     </div>
 
@@ -269,6 +269,11 @@ const { onMenuToggle, toggleDarkMode, isDarkTheme } = useLayout();
     flex: 1 1 calc(25% - 1rem); /* Adjusts to 25% of the container width minus the gap */
     min-width: 80px; /* Ensures a minimum size */
     text-align: center;
+}
+
+.button_buy {
+    position: absolute;
+    right: 0px;
 }
 
 @media (max-width: 768px) {

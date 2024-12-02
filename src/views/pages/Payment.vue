@@ -109,11 +109,7 @@ onMounted(() => {
                             <input type="text" placeholder="CVV" class="border border-gray-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" />
                         </div>
                         <button class="w-full bg-indigo-500 hover:bg-indigo-600 text-white font-bold py-3 rounded-lg">Save Card</button>
-                        <button 
-                            @click="handlePayment"
-                            class="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-3 rounded-lg">
-                            Pay
-                        </button>
+                        <button @click="handlePayment" class="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-3 rounded-lg">Pay</button>
                     </div>
                 </div>
             </div>
