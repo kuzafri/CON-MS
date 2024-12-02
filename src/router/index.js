@@ -147,6 +147,34 @@ const router = createRouter({
                     path: 'viewevent',
                     name: 'viewevent',
                     component: () => import('@/views/organizer/ViewEvent.vue')
+                },
+                {
+                    path: 'event-details/:id',
+                    name: 'EventDetails',
+                    component: () => import('@/views/organizer/EventDetails.vue'),
+                    props: true
+                },
+                {
+                    path: 'event-details/:id/event-inventory',
+                    name: 'EventInventory',
+                    component: () => import('@/views/organizer/EventInventory.vue'),
+                    props: true
+                },
+                {
+                    path: 'event-details/:id/event-audiences',
+                    name: 'EventAudiences',
+                    component: () => import('@/views/organizer/EventAudiences.vue'),
+                    props: true
+                },
+                {
+                    path: 'complaint',
+                    name: 'complaint',
+                    component: () => import('@/views/organizer/Complaint.vue')
+                },
+                {
+                    path: 'help',
+                    name: 'help',
+                    component: () => import('@/views/organizer/Help.vue')
                 }
             ]
         },
