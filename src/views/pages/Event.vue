@@ -1,7 +1,8 @@
 <script setup>
 import { useLayout } from '@/layout/composables/layout';
-import { onMounted, onUnmounted, ref } from 'vue';
+import { computed, onMounted, onUnmounted, ref } from 'vue';
 
+const logoSrc = computed(() => (isDarkTheme.value ? '/logo_dark.png' : '/logo_light.png'));
 const categoriesContainer = ref(null);
 const email = ref('');
 const events = ref([
@@ -87,8 +88,8 @@ onUnmounted(() => {
     <div class="bg-surface-0 dark:bg-surface-900 min-h-screen flex flex-col">
         <header class="bg-surface-0 dark:bg-surface-900 border-b-[1px] border-gray-400 shadow-lg">
             <div class="py-6 px-6 mx-0 md:mx-12 lg:mx-20 lg:px-20 flex items-center justify-between relative lg:static">
-                <a class="flex items-center" href="#">
-                    <span class="text-surface-900 dark:text-surface-0 font-medium text-2xl leading-normal mr-20">Concertify</span>
+                <a class="flex items-center mx-4" href="#">
+                    <img :src="logoSrc" alt="logo" class="w-full h-8" />
                 </a>
                 <Button
                     class="lg:!hidden"
@@ -132,9 +133,9 @@ onUnmounted(() => {
             </div>
         </header>
         <div class="container mx-auto p-6">
-            <div class="flex space-x-4">
+            <div class="flex flex-col md:flex-row space-x-4">
                 <!-- Sidebar -->
-                <aside class="w-1/4 bg-gray-50 p-4 rounded-lg">
+                <div class="sm:w-auto bg-gray-50 p-4 rounded-lg">
                     <h2 class="text-lg font-semibold mb-4">Locations</h2>
                     <button class="bg-gray-200 text-sm py-1 px-4 rounded w-full" @click="clearFilters">Clear filters</button>
                     <div class="mt-6">
@@ -142,11 +143,11 @@ onUnmounted(() => {
                         <input v-model="email" type="email" placeholder="your@email.com" class="border w-full p-2 rounded mb-2" />
                         <button class="bg-blue-500 text-white px-4 py-2 rounded w-full" @click="subscribe">Create alerts</button>
                     </div>
-                </aside>
+                </div>
 
                 <!-- Event Cards -->
-                <div class="flex-1 grid grid-cols-3 gap-6">
-                    <div v-for="event in events" :key="event.id" class="p-6 bg-white shadow-lg rounded-lg">
+                <div class="flex flex-col md:flex-row">
+                    <div v-for="event in events" :key="event.id" class="p-6 mx-auto bg-white shadow-lg rounded-lg">
                         <div class="relative">
                             <img :src="event.image" alt="Event Image" class="w-full h-48 object-cover rounded-lg" />
                             <!-- <div class="absolute top-2 left-2 bg-white rounded-full p-2 shadow">

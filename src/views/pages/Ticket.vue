@@ -1,12 +1,13 @@
 <script setup>
 import { useRoute } from 'vue-router';
 import { useLayout } from '@/layout/composables/layout';
-import { onMounted, onUnmounted, ref } from 'vue';
+import { onMounted, ref, computed } from 'vue';
 
 const route = useRoute();
 const selectedSeats = ref([]);
 const totalPrice = ref(0);
 const { onMenuToggle, toggleDarkMode, isDarkTheme } = useLayout();
+const logoSrc = computed(() => (isDarkTheme.value ? '/logo_dark.png' : '/logo_light.png'));
 
 onMounted(() => {
     // Get seat data from route query
