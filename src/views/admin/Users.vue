@@ -95,11 +95,15 @@ const users = ref([
 ]);
 
 const loading = ref(false);
-const activeTab = ref('Audience'); // Default active tab
+const activeTab = ref('Audience');
+const searchQuery = ref('');
 
-// Computed property to filter users based on active tab
 const filteredUsers = computed(() => {
-    return users.value.filter(user => user.role === activeTab.value);
+    return users.value
+        .filter(user => user.role === activeTab.value)
+        .filter(user => 
+            user.name.toLowerCase().includes(searchQuery.value.toLowerCase())
+        );
 });
 
 function getStatusClass(status) {
@@ -117,7 +121,6 @@ function getStatusClass(status) {
 <template>
     <div class="card">
         <div class="flex justify-between items-center mb-4">
-            <!-- Title and Tabs -->
             <div class="flex items-center gap-4">
                 <h2 class="text-2xl font-bold">Users</h2>
                 <div class="flex items-center gap-2">
@@ -138,12 +141,12 @@ function getStatusClass(status) {
                 </div>
             </div>
 
-            <!-- Search Bar and Create Button -->
             <div class="flex items-center gap-4">
                 <div class="search-bar">
                     <input
+                        v-model="searchQuery"
                         type="text"
-                        placeholder="Search..."
+                        placeholder="Search by name..."
                         class="search-input"
                     />
                     <i class="pi pi-search search-icon"></i>
