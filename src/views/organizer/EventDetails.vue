@@ -56,6 +56,10 @@ const handleAudiences = () => {
     });
 };
 
+const handleBack = () => {
+    router.push('/organizer/viewevent');
+};
+
 // For debugging
 // console.log('Props:', props);
 // console.log('Route params:', route.params);
@@ -73,9 +77,12 @@ const handleAudiences = () => {
 
 <template>
     <div class="p-4">  <!-- Added padding -->
-        <div class="flex justify-between items-center mb-4">
-            <h1 class="text-2xl font-bold">Event Details</h1>
-        </div>
+        <button 
+                @click="handleBack"
+                class="flex items-center text-blue-600 hover:text-blue-700 pb-4"
+            >
+                <span class="mr-2">←</span> Back to All Concerts
+            </button>
 
         <div class="card p-6 bg-white shadow rounded">  <!-- Added background and shadow -->
             <div class="flex items-center justify-between mb-4">

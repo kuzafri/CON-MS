@@ -7,6 +7,13 @@ import { useRoute, useRouter } from 'vue-router';
 const route = useRoute();
 const router = useRouter();
 
+function handleLogout() {
+    // Add any logout logic here (e.g., clearing tokens, user session)
+    
+    // Navigate to login page
+    router.push('/organizer/login')
+}
+
 const organiser = ref({
     //use below when have a proper backend
     // id: route.params.id,
@@ -44,7 +51,7 @@ function toggleProfileModal() {
             <button class="layout-menu-button layout-topbar-action" @click="onMenuToggle">
                 <i class="pi pi-bars"></i>
             </button>
-            <router-link to="/" class="layout-topbar-logo">
+            <router-link to="/organizer/event" class="layout-topbar-logo">
                 <span>Concertify</span>
             </router-link>
         </div>
@@ -145,11 +152,13 @@ function toggleProfileModal() {
 
             <!-- Action Buttons -->
             <div class="p-4 border-t bg-white">
-                <button 
-                    class="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600 transition"
+                <Button 
+                    class="w-full transition"
+                    label="Log out"
+                    @click="handleLogout"
                 >
-                    Log out
-                </button>
+                </Button>
+                
             </div>
         </div>
     </div>
