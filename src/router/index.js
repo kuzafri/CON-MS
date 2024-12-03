@@ -217,23 +217,28 @@ const router = createRouter({
                 },
                 {
                     path: '/event',
-                    name: 'event',
+                    name: 'Event',
                     component: () => import('@/views/pages/Event.vue')
                 },
                 {
                     path: '/ticket',
-                    name: 'ticket',
+                    name: 'Ticket',
                     component: () => import('@/views/pages/Ticket.vue')
                 },
                 {
                     path: '/homebook',
-                    name: 'homebook',
+                    name: 'Homebook',
                     component: () => import('@/views/pages/Homebook.vue')
                 },
                 {
                     path: '/profile',
-                    name: 'profile',
+                    name: 'Profile',
                     component: () => import('@/views/pages/Profile.vue')
+                },
+                {
+                    path: '/complaint',
+                    name: 'Complaint',
+                    component: () => import('@/views/pages/Complaint.vue')
                 }
             ]
         },

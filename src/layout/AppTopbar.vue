@@ -42,7 +42,7 @@ const toggleMenu = () => {
             </button>
 
             <!-- Mobile Navigation Menu -->
-            <div class="hidden absolute left-0 top-full mt-2 w-48 bg-white dark:bg-gray-900 rounded-lg shadow-lg z-50">
+            <div class="hidden absolute left-0 top-full mt-2 w-48 bg-white dark:bg-surface-900 rounded-lg shadow-lg z-50">
                 <div class="py-2">
                     <router-link to="/homebook" class="flex items-center px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-800">
                         <i class="pi pi-home mr-2"></i>
