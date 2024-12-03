@@ -16,7 +16,11 @@ const router = createRouter({
                 //     name: 'dashboard',
                 //     component: () => import('@/views/Dashboard.vue')
                 // },
-               
+                {
+                    path: '/',
+                    name: 'landing',
+                    component: () => import('@/views/pages/Landing.vue')
+                },
                 {
                     path: '/uikit/formlayout',
                     name: 'formlayout',
@@ -239,11 +243,7 @@ const router = createRouter({
                 }
             ]
         },
-        {
-            path: '/',
-            name: 'landing',
-            component: () => import('@/views/pages/Landing.vue')
-        },
+
         {
             path: '/pages/notfound',
             name: 'notfound',
