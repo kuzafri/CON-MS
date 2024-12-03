@@ -200,10 +200,10 @@ const proceedToCheckout = () => {
                                                 rx="2"
                                                 @click="handleSeatClick({ ...seat, rowLabel: row.rowLabel, seatNumber: seatIndex + 1 })"
                                                 :class="{
-                                                    'fill-red-600 cursor-pointer hover:fill-red-700': !seat.isReserved && !isSeatSelected(seat.id) && seat.tier === 'VIP',
-                                                    'fill-yellow-500 cursor-pointer hover:fill-yellow-600': !seat.isReserved && !isSeatSelected(seat.id) && seat.tier === 'Standard',
-                                                    'fill-green-500 cursor-pointer hover:fill-green-600': !seat.isReserved && !isSeatSelected(seat.id) && seat.tier === 'Economy',
-                                                    'fill-primary-500': isSeatSelected(seat.id),
+                                                    'fill-orange-400 cursor-pointer hover:fill-orange-700': !seat.isReserved && !isSeatSelected(seat.id) && seat.tier === 'VIP',
+                                                    'fill-yellow-400 cursor-pointer hover:fill-yellow-700': !seat.isReserved && !isSeatSelected(seat.id) && seat.tier === 'Standard',
+                                                    'fill-green-400 cursor-pointer hover:fill-green-700': !seat.isReserved && !isSeatSelected(seat.id) && seat.tier === 'Economy',
+                                                    'fill-red-500': isSeatSelected(seat.id),
                                                     'fill-surface-400 cursor-not-allowed': seat.isReserved
                                                 }"
                                             />
@@ -219,7 +219,7 @@ const proceedToCheckout = () => {
                             <!-- Legend -->
                             <div class="lg:absolute bottom-1 right-1 bg-surface-0 dark:bg-surface-900 p-3 rounded shadow">
                                 <div class="flex items-center mb-2">
-                                    <div class="w-4 h-4 bg-red-600 rounded mr-2"></div>
+                                    <div class="w-4 h-4 bg-orange-400 rounded mr-2"></div>
                                     <span class="text-surface-900 dark:text-surface-0">VIP (RM150)</span>
                                 </div>
                                 <div class="flex items-center mb-2">
@@ -229,6 +229,10 @@ const proceedToCheckout = () => {
                                 <div class="flex items-center mb-2">
                                     <div class="w-4 h-4 bg-green-500 rounded mr-2"></div>
                                     <span class="text-surface-900 dark:text-surface-0">Economy (RM80)</span>
+                                </div>
+                                <div class="flex items-center mb-2">
+                                    <div class="w-4 h-4 bg-red-500 rounded mr-2"></div>
+                                    <span class="text-surface-900 dark:text-surface-0">Selected</span>
                                 </div>
                                 <div class="flex items-center mb-2">
                                     <div class="w-4 h-4 bg-surface-400 rounded mr-2"></div>
