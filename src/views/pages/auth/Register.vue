@@ -38,7 +38,7 @@ const checked = ref(false);
                             <label for="rememberme1">Remember me</label>
                         </div>
                     </div>
-                    <Button label="Register Account" class="w-full" as="router-link" to="/Booking"></Button>
+                    <Button label="Register Account" class="w-full" as="router-link" to="/auth/login"></Button>
                 </div>
             </div>
         </div>

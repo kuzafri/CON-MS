@@ -30,7 +30,7 @@ onMounted(() => {
 </script>
 
 <template>
-    <div class="bg-surface-0 dark:bg-surface-900 min-h-screen flex justify-center items-center p-6">
+    <div class="bg-surface-0 dark:bg-surface-900 min-h-screen flex justify-center items-center p-6 mt-14">
         <div class="max-w-4xl w-full bg-white rounded-2xl shadow-xl p-8">
             <h2 class="text-3xl font-extrabold text-gray-800 text-center">Select Payment Method</h2>
 
