@@ -16,6 +16,7 @@ const router = createRouter({
                 //     name: 'dashboard',
                 //     component: () => import('@/views/Dashboard.vue')
                 // },
+               
                 {
                     path: '/uikit/formlayout',
                     name: 'formlayout',
@@ -156,6 +157,7 @@ const router = createRouter({
             path: '/organizer',
             component: AppLayoutOrganizer,
             children: [
+                
                 {
                     path: 'event',
                     name: 'eventorganizer',
@@ -167,19 +169,19 @@ const router = createRouter({
                     component: () => import('@/views/organizer/ViewEvent.vue')
                 },
                 {
-                    path: 'event-details/:id',
+                    path: 'viewevent/event-details/:id',
                     name: 'EventDetails',
                     component: () => import('@/views/organizer/EventDetails.vue'),
                     props: true
                 },
                 {
-                    path: 'event-details/:id/event-inventory',
+                    path: 'viewevent/event-details/:id/event-inventory',
                     name: 'EventInventory',
                     component: () => import('@/views/organizer/EventInventory.vue'),
                     props: true
                 },
                 {
-                    path: 'event-details/:id/event-audiences',
+                    path: 'viewevent/event-details/:id/event-audiences',
                     name: 'EventAudiences',
                     component: () => import('@/views/organizer/EventAudiences.vue'),
                     props: true
@@ -188,11 +190,6 @@ const router = createRouter({
                     path: 'complaint',
                     name: 'complaint',
                     component: () => import('@/views/organizer/Complaint.vue')
-                },
-                {
-                    path: 'help',
-                    name: 'help',
-                    component: () => import('@/views/organizer/Help.vue')
                 }
             ]
         },
@@ -271,6 +268,11 @@ const router = createRouter({
             path: '/auth/error',
             name: 'error',
             component: () => import('@/views/pages/auth/Error.vue')
+        },
+        {
+            path: '/organizer/login',
+            name: 'organizerLogin',
+            component: () => import('@/views/organizer/Login.vue')
         }
     ]
 });

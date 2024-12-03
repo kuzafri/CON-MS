@@ -15,7 +15,7 @@ const model = ref([
             { label: 'Create New Concert', icon: 'pi pi-fw pi-id-card', to: `${currentPrefix}/event` },
             { label: 'View All Concert', icon: 'pi pi-fw pi-check-square', to: `${currentPrefix}/viewevent` },
             { label: 'Complaint', icon: 'pi pi-fw pi-mobile', to: `${currentPrefix}/complaint`, class: 'rotated-icon' },
-            { label: 'Help', icon: 'pi pi-fw pi-table', to: `${currentPrefix}/help` },
+            // { label: 'Help', icon: 'pi pi-fw pi-table', to: `${currentPrefix}/help` },
             // { label: 'List', icon: 'pi pi-fw pi-list', to: '/uikit/list' },
             // { label: 'Tree', icon: 'pi pi-fw pi-share-alt', to: '/uikit/tree' },
             // { label: 'Panel', icon: 'pi pi-fw pi-tablet', to: '/uikit/panel' },
