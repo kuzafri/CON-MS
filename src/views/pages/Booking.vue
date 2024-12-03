@@ -9,41 +9,45 @@ const logoSrc = computed(() => (isDarkTheme.value ? '/logo_dark.png' : '/logo_li
 
 // State
 const selectedSeats = ref([]);
-const seatPrice = ref(80);
+const seatPrices = {
+    VIP: 150, // Rows A-B (first 2 rows)
+    Standard: 100, // Rows C-E (middle 3 rows)
+    Economy: 80 // Rows F-H (last 3 rows)
+};
 
 // Computed total price
 const totalPrice = computed(() => {
-    return selectedSeats.value.length * seatPrice.value;
+    return selectedSeats.value.reduce((total, seat) => {
+        return total + seatPrices[seat.tier];
+    }, 0);
 });
 
-// Generate curved row coordinates with seat groups
 const generateCurvedRow = (rowIndex, centerX, startY, radius, spreadAngle) => {
     const seats = [];
-    const seatsPerGroup = 12; // Each section has 12 seats
-    const numGroups = 3; // Three distinct groups of seats
-    const gapBetweenGroups = 4; // Gap between groups in pixels
+    const seatsPerGroup = 12;
+    const numGroups = 3;
+    const gapBetweenGroups = 4;
 
-    // Calculate total seats and angle steps
+    let tier = rowIndex < 2 ? 'VIP' : rowIndex < 5 ? 'Standard' : 'Economy';
+
     const totalSeats = seatsPerGroup * numGroups;
-    const angleStep = spreadAngle / (totalSeats + (numGroups - 2)); // Account for gaps
-    const startAngle = -spreadAngle / 1.8;
+    const angleStep = spreadAngle / (totalSeats + gapBetweenGroups * (numGroups - 1));
+    const startAngle = -spreadAngle / 2;
 
-    // Generate seats for each group
     for (let group = 0; group < numGroups; group++) {
         for (let i = 0; i < seatsPerGroup; i++) {
             const seatIndex = group * seatsPerGroup + i;
-            // Add gap between groups by adjusting the angle
-            const gapOffset = group * (gapBetweenGroups * (Math.PI / 180));
-            const angle = startAngle + seatIndex * angleStep + gapOffset;
-
+            const angle = startAngle + seatIndex * angleStep + group * gapBetweenGroups * (Math.PI / 180);
             const x = centerX + radius * Math.sin(angle);
             const y = startY - radius * Math.cos(angle);
+
             seats.push({
                 x,
                 y,
                 id: `row-${rowIndex}-seat-${seatIndex}`,
                 isReserved: Math.random() < 0.6,
-                group: group + 1
+                group: group + 1,
+                tier
             });
         }
     }
@@ -71,7 +75,6 @@ const generateSections = () => {
 
 const sections = generateSections();
 
-// Handle seat selection
 const handleSeatClick = (seat) => {
     if (seat.isReserved) return;
 
@@ -81,7 +84,9 @@ const handleSeatClick = (seat) => {
             id: seat.id,
             rowLabel: seat.rowLabel,
             seatNumber: seat.seatNumber,
-            group: seat.group
+            group: seat.group,
+            tier: seat.tier,
+            price: seatPrices[seat.tier]
         });
     } else {
         selectedSeats.value.splice(seatIndex, 1);
@@ -93,11 +98,10 @@ const isSeatSelected = (seatId) => {
 };
 
 const proceedToCheckout = () => {
-    // Navigate to payment with selected seats data
     router.push({
         path: '/payment',
         query: {
-            seats: JSON.stringify(selectedSeats.value),
+            seats: JSON.stringify(selectedSeats.value), // Includes price for each seat
             totalPrice: totalPrice.value
         }
     });
@@ -175,9 +179,9 @@ const proceedToCheckout = () => {
                     <p class="text-surface-600 dark:text-surface-400">Select your seats for the event</p>
                 </div>
 
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div class="gap-8 flex lg:flex-row flex-col">
                     <!-- Seating Map -->
-                    <div class="bg-surface-50 dark:bg-surface-800 rounded-lg shadow-lg p-10">
+                    <div class="bg-surface-50 lg:w-2/3 dark:bg-surface-800 rounded-lg shadow-lg p-10">
                         <div class="relative">
                             <svg viewBox="0 0 800 600" class="w-full">
                                 <!-- Stage -->
@@ -196,7 +200,9 @@ const proceedToCheckout = () => {
                                                 rx="2"
                                                 @click="handleSeatClick({ ...seat, rowLabel: row.rowLabel, seatNumber: seatIndex + 1 })"
                                                 :class="{
-                                                    'fill-primary-500 cursor-pointer hover:fill-primary-600': !seat.isReserved && !isSeatSelected(seat.id),
+                                                    'fill-orange-400 cursor-pointer hover:fill-orange-700': !seat.isReserved && !isSeatSelected(seat.id) && seat.tier === 'VIP',
+                                                    'fill-yellow-400 cursor-pointer hover:fill-yellow-700': !seat.isReserved && !isSeatSelected(seat.id) && seat.tier === 'Standard',
+                                                    'fill-green-400 cursor-pointer hover:fill-green-700': !seat.isReserved && !isSeatSelected(seat.id) && seat.tier === 'Economy',
                                                     'fill-red-500': isSeatSelected(seat.id),
                                                     'fill-surface-400 cursor-not-allowed': seat.isReserved
                                                 }"
@@ -211,16 +217,24 @@ const proceedToCheckout = () => {
                             </svg>
 
                             <!-- Legend -->
-                            <div class="absolute bottom-1 right-1 bg-surface-0 dark:bg-surface-900 p-3 rounded shadow">
+                            <div class="lg:absolute bottom-1 right-1 bg-surface-0 dark:bg-surface-900 p-3 rounded shadow">
                                 <div class="flex items-center mb-2">
-                                    <div class="w-4 h-4 bg-primary-500 rounded mr-2"></div>
-                                    <span class="text-surface-900 dark:text-surface-0">Available</span>
+                                    <div class="w-4 h-4 bg-orange-400 rounded mr-2"></div>
+                                    <span class="text-surface-900 dark:text-surface-0">VIP (RM150)</span>
+                                </div>
+                                <div class="flex items-center mb-2">
+                                    <div class="w-4 h-4 bg-yellow-500 rounded mr-2"></div>
+                                    <span class="text-surface-900 dark:text-surface-0">Standard (RM100)</span>
+                                </div>
+                                <div class="flex items-center mb-2">
+                                    <div class="w-4 h-4 bg-green-500 rounded mr-2"></div>
+                                    <span class="text-surface-900 dark:text-surface-0">Economy (RM80)</span>
                                 </div>
                                 <div class="flex items-center mb-2">
                                     <div class="w-4 h-4 bg-red-500 rounded mr-2"></div>
                                     <span class="text-surface-900 dark:text-surface-0">Selected</span>
                                 </div>
-                                <div class="flex items-center">
+                                <div class="flex items-center mb-2">
                                     <div class="w-4 h-4 bg-surface-400 rounded mr-2"></div>
                                     <span class="text-surface-900 dark:text-surface-0">Reserved</span>
                                 </div>
@@ -228,17 +242,21 @@ const proceedToCheckout = () => {
                         </div>
                     </div>
 
+                    
                     <!-- Selected Seats Info -->
-                    <div class="bg-surface-50 dark:bg-surface-800 rounded-lg shadow-lg p-6">
+                    <div class="bg-surface-50 lg:w-1/3 dark:bg-surface-800 rounded-lg shadow-lg p-6">
                         <h2 class="text-xl font-semibold mb-4 text-surface-900 dark:text-surface-0">Selected Seats</h2>
 
                         <div v-if="selectedSeats.length === 0" class="text-surface-600 dark:text-surface-400">No seats selected</div>
 
                         <template v-else>
                             <div v-for="seat in selectedSeats" :key="seat.id" class="flex justify-between items-center mb-2 p-2 bg-surface-100 dark:bg-surface-700 rounded">
-                                <span class="text-surface-900 dark:text-surface-0"> Row {{ seat.rowLabel }} - Seat {{ seat.seatNumber }} </span>
+                                <span class="text-surface-900 dark:text-surface-0">
+                                    Row {{ seat.rowLabel }} - Seat {{ seat.seatNumber }}
+                                    <span class="text-xs ml-2">({{ seat.tier }})</span>
+                                </span>
                                 <div class="flex items-center">
-                                    <span class="font-medium text-primary-600 dark:text-primary-400 mr-4">RM{{ seatPrice }} </span>
+                                    <span class="font-medium text-primary-600 dark:text-primary-400 mr-4"> RM{{ seatPrices[seat.tier] }} </span>
                                     <button @click="handleSeatClick(seat)" class="text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300">
                                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                                             <path
