@@ -101,7 +101,7 @@ onUnmounted(() => {
                 </div>
 
                 <!-- Event Cards -->
-                <div class="flex flex-col md:flex-row">
+                <div class="flex flex-col md:flex-row gap-2">
                     <div v-for="event in events" :key="event.id" class="p-6 mx-auto bg-white shadow-lg rounded-lg">
                         <div class="relative">
                             <img :src="event.image" alt="Event Image" class="w-full h-48 object-cover rounded-lg" />

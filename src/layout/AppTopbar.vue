@@ -24,47 +24,47 @@ const toggleMenu = () => {
             </router-link>
         </div>
 
-        <!-- Hamburger Menu (visible only on small devices) -->
-        <div class="relative md:hidden right-0 flex">
-            <button
-                @click="toggleMenu"
-                class="layout-topbar-action p-2"
-                v-styleclass="{
-                    selector: '@next',
-                    enterFromClass: 'hidden',
-                    enterActiveClass: 'animate-scalein',
-                    leaveToClass: 'hidden',
-                    leaveActiveClass: 'animate-fadeout',
-                    hideOnOutsideClick: true
-                }"
-            >
-                <i class="pi pi-bars text-xl"></i>
-            </button>
+        <div class="layout-topbar-actions ml-auto">
+            <!-- Hamburger Menu (visible only on small devices) -->
+            <div class="relative md:hidden right-0 flex mt-1">
+                <button
+                    @click="toggleMenu"
+                    class="layout-topbar-action p-2"
+                    v-styleclass="{
+                        selector: '@next',
+                        enterFromClass: 'hidden',
+                        enterActiveClass: 'animate-scalein',
+                        leaveToClass: 'hidden',
+                        leaveActiveClass: 'animate-fadeout',
+                        hideOnOutsideClick: true
+                    }"
+                >
+                    <i class="pi pi-bars text-xl"></i>
+                </button>
 
-            <!-- Mobile Navigation Menu -->
-            <div class="hidden absolute left-0 top-full mt-2 w-48 bg-white dark:bg-surface-900 rounded-lg shadow-lg z-50">
-                <div class="py-2">
-                    <router-link to="/homebook" class="flex items-center px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-800">
-                        <i class="pi pi-home mr-2"></i>
-                        <span>Home</span>
-                    </router-link>
-                    <router-link to="/event" class="flex items-center px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-800">
-                        <i class="pi pi-calendar mr-2"></i>
-                        <span>Events</span>
-                    </router-link>
-                    <router-link to="/ticket" class="flex items-center px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-800">
-                        <i class="pi pi-ticket mr-2"></i>
-                        <span>My Ticket</span>
-                    </router-link>
-                    <router-link to="/favourite" class="flex items-center px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-800">
-                        <i class="pi pi-heart mr-2"></i>
-                        <span>Favourite</span>
-                    </router-link>
+                <!-- Mobile Navigation Menu -->
+                <div class="hidden absolute left-0 top-full mt-2 w-48 bg-white dark:bg-surface-900 rounded-lg shadow-lg z-50">
+                    <div class="py-2">
+                        <router-link to="/homebook" class="flex items-center px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-800">
+                            <i class="pi pi-home mr-2"></i>
+                            <span>Home</span>
+                        </router-link>
+                        <router-link to="/event" class="flex items-center px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-800">
+                            <i class="pi pi-calendar mr-2"></i>
+                            <span>Events</span>
+                        </router-link>
+                        <router-link to="/ticket" class="flex items-center px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-800">
+                            <i class="pi pi-ticket mr-2"></i>
+                            <span>My Ticket</span>
+                        </router-link>
+                        <router-link to="/favourite" class="flex items-center px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-800">
+                            <i class="pi pi-heart mr-2"></i>
+                            <span>Favourite</span>
+                        </router-link>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <div class="layout-topbar-actions ml-auto">
             <!-- Desktop Navigation (hidden on small devices) -->
             <ul class="hidden md:flex list-none p-0 m-0 items-center select-none gap-8">
                 <li>
@@ -93,12 +93,12 @@ const toggleMenu = () => {
                 </li>
             </ul>
             <!-- Dark Mode Toggle -->
-            <button type="button" class="layout-topbar-action lg:mt-3 mt-2" @click="toggleDarkMode">
+            <button type="button" class="layout-topbar-action lg:mt-3 mt-1" @click="toggleDarkMode">
                 <i :class="['pi', { 'pi-moon': isDarkTheme, 'pi-sun': !isDarkTheme }]"></i>
             </button>
 
             <!-- Profile section -->
-            <div class="relative lg:mt-3 mt-2">
+            <div class="relative lg:mt-3 mt-1">
                 <button
                     v-styleclass="{
                         selector: '@next',
