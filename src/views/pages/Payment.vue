@@ -46,13 +46,12 @@ onMounted(() => {
                         </div>
                     </div>
 
-                    <!-- Selected Seats -->
                     <div class="border-t border-gray-300 pt-4">
                         <p class="text-gray-700 font-semibold mb-2">Selected Seats:</p>
                         <div class="space-y-2">
                             <div v-for="seat in selectedSeats" :key="seat.id" class="flex justify-between text-sm">
                                 <span class="text-gray-600">Row {{ seat.rowLabel }} - Seat {{ seat.seatNumber }}</span>
-                                <span class="text-gray-800 font-semibold">RM 80.00</span>
+                                <span class="text-gray-800 font-semibold">RM {{ seat.price }}</span>
                             </div>
                         </div>
                     </div>
