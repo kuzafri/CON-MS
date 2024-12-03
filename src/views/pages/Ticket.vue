@@ -1,30 +1,25 @@
 <script setup>
-import { useRoute } from 'vue-router';
 import { useLayout } from '@/layout/composables/layout';
-import { onMounted, ref, computed } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 
-const route = useRoute();
 const selectedSeats = ref([]);
 const totalPrice = ref(0);
 const { onMenuToggle, toggleDarkMode, isDarkTheme } = useLayout();
 const logoSrc = computed(() => (isDarkTheme.value ? '/logo_dark.png' : '/logo_light.png'));
 
 onMounted(() => {
-    // Get seat data from route query
-    if (route.query.seats) {
-        selectedSeats.value = JSON.parse(route.query.seats);
-    }
-    if (route.query.totalPrice) {
-        totalPrice.value = Number(route.query.totalPrice);
+    // Retrieve ticket details from localStorage
+    const ticketDetails = localStorage.getItem('ticketDetails');
+    if (ticketDetails) {
+        const parsedDetails = JSON.parse(ticketDetails);
+        selectedSeats.value = parsedDetails.seats;
+        totalPrice.value = parsedDetails.totalPrice;
     }
 });
-
-
 </script>
 
 <template>
     <div class="bg-surface-0 dark:bg-surface-900 min-h-screen flex flex-col">
-        
         <div class="min-h-screen flex flex-col md:flex-row items-center justify-center">
             <!-- Desktop View -->
             <div v-for="seat in selectedSeats" :key="seat.id" class="hidden md:flex max-w-lg w-full bg-white rounded-lg shadow-lg p-6 relative m-4">
@@ -39,7 +34,7 @@ onMounted(() => {
                     <p class="text-gray-600">Wed 2025-01-13 3.00 PM - 4.00 PM</p>
                     <p class="text-gray-600">Dewan Tuanku Syed Putra, USM</p>
                     <p class="text-gray-600">Row {{ seat.rowLabel }} - Seat {{ seat.seatNumber }}</p>
-                    <div class="text-right text-2xl font-bold text-gray-900 mt-4">RM80</div>
+                    <div class="text-right text-2xl font-bold text-gray-900 mt-4">RM {{ seat.price }}</div>
                     <div class="text-right mt-2">
                         <div class="bg-gray-200 px-4 py-1 rounded-full inline-block">
                             Ticket ID: <strong>#{{ Math.random().toString(36).substr(2, 6).toUpperCase() }}</strong>

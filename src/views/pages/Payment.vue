@@ -7,19 +7,19 @@ const router = useRouter();
 const selectedSeats = ref([]);
 const totalPrice = ref(0);
 
-// Add handlePayment function
 const handlePayment = () => {
+    const ticketDetails = {
+        seats: selectedSeats.value,
+        totalPrice: totalPrice.value + 5 // Include the booking fee
+    };
+    localStorage.setItem('ticketDetails', JSON.stringify(ticketDetails));
+
     router.push({
-        path: '/ticket',
-        query: {
-            seats: route.query.seats, // Pass through the seats data
-            totalPrice: route.query.totalPrice // Pass through the total price
-        }
+        path: '/ticket'
     });
 };
 
 onMounted(() => {
-    // Get seat data from route query
     if (route.query.seats) {
         selectedSeats.value = JSON.parse(route.query.seats);
     }
@@ -28,6 +28,7 @@ onMounted(() => {
     }
 });
 </script>
+
 
 <template>
     <div class="bg-surface-0 dark:bg-surface-900 min-h-screen flex justify-center items-center p-6 mt-14">

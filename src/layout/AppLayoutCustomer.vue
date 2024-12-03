@@ -52,7 +52,7 @@ function isOutsideClicked(event) {
 <template>
     <div class="layout-wrapper" :class="containerClass">
         <AppTopbar />
-        <div class="layout-main">
+        <div>
             <router-view></router-view>
         </div>
     </div>

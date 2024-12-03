@@ -1,7 +1,7 @@
 import AppLayout from '@/layout/AppLayout.vue';
+import AppLayoutCustomer from '@/layout/AppLayoutCustomer.vue';
 import AppLayoutAdmin from '@/views/admin/AppLayout.vue';
 import AppLayoutOrganizer from '@/views/organizer/AppLayout.vue';
-import AppLayoutCustomer from '@/layout/AppLayoutCustomer.vue';
 import { createRouter, createWebHistory } from 'vue-router';
 
 const router = createRouter({
@@ -200,7 +200,6 @@ const router = createRouter({
             path: '/',
             component: AppLayoutCustomer,
             children: [
-
                 {
                     path: '/booking',
                     name: 'Booking',
@@ -231,7 +230,11 @@ const router = createRouter({
                     name: 'homebook',
                     component: () => import('@/views/pages/Homebook.vue')
                 },
-
+                {
+                    path: '/profile',
+                    name: 'profile',
+                    component: () => import('@/views/pages/Profile.vue')
+                }
             ]
         },
         {

@@ -4,7 +4,7 @@ import { ref } from 'vue';
 
 const { onMenuToggle, toggleDarkMode, isDarkTheme } = useLayout();
 
-const adminUser = ref({
+const customerUser = ref({
     username: 'User',
     email: 'user@example.com'
 });
@@ -13,14 +13,6 @@ const isMenuOpen = ref(false);
 
 const toggleMenu = () => {
     isMenuOpen.value = !isMenuOpen.value;
-};
-
-const handleViewProfile = () => {
-    // Add your profile handling logic
-};
-
-const handleLogout = () => {
-    // Add your logout handling logic
 };
 </script>
 
@@ -131,17 +123,17 @@ const handleLogout = () => {
                                 <i class="pi pi-user text-xl"></i>
                             </div>
                             <div>
-                                <h3 class="font-semibold text-gray-800 dark:text-white">{{ adminUser.username }}</h3>
-                                <p class="text-sm text-gray-600 dark:text-gray-300">{{ adminUser.email }}</p>
+                                <h3 class="font-semibold text-gray-800 dark:text-white">{{ customerUser.username }}</h3>
+                                <p class="text-sm text-gray-600 dark:text-gray-300">{{ customerUser.email }}</p>
                             </div>
                         </div>
 
                         <!-- Actions -->
                         <div class="space-y-2">
-                            <button @click="handleViewProfile" class="w-full px-4 py-2 text-left hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors">
+                            <router-link to="/profile" class="flex items-center px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-800">
                                 <i class="pi pi-user-edit mr-2"></i>
-                                View Profile
-                            </button>
+                                <span>View Profile</span>
+                            </router-link>
                             <button @click="handleLogout" class="w-full px-4 py-2 text-left text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors">
                                 <i class="pi pi-power-off mr-2"></i>
                                 Logout
