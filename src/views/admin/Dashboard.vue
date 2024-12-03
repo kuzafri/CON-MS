@@ -83,7 +83,7 @@ function setColorOptions() {
                 label: 'Registered Users',
                 backgroundColor: documentStyle.getPropertyValue('--p-primary-500'),
                 borderColor: documentStyle.getPropertyValue('--p-primary-500'),
-                data: [750, 750, 750, 750, 750, 750, 750, 750, 750, 750, 750, 750]
+                data: [750, 550, 350, 250, 750, 950, 450, 550, 750, 750, 250, 150]
             }
         ]
     };
@@ -123,7 +123,7 @@ function setColorOptions() {
 
     const pieColors = ['#4169e1', '#b0c4de', '#ffa07a'];
     const pieLabels = ['Organiser', 'USM', 'Others'];
-    const pieValues = [100, 300, 105];
+    const pieValues = [150, 500, 205];
 
     // Pie chart data
     pieData.value = {
