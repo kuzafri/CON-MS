@@ -140,7 +140,7 @@ function smoothScroll(id) {
                                 </div>
                             </a>
                             <a href="#" class="bg-surface-100 dark:bg-surface-800 rounded-lg overflow-hidden hover:bg-surface-200 dark:hover:bg-surface-700">
-                                <img src="/concert.png" alt="Suicide Band summer Bali Island" class="w-full h-48 object-cover" />
+                                 <img src="/concert.png" alt="Suicide Band summer Bali Island" class="w-full h-48 object-cover" />
                                 <div class="p-4">
                                     <h3 class="text-lg font-semibold text-surface-900 dark:text-surface-0">REBEL 3.0: Because of you</h3>
                                     <p class="text-surface-600 dark:text-surface-400">USM Jazz Band</p>
