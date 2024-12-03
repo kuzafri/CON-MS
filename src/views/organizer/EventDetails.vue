@@ -98,15 +98,31 @@ const handleAudiences = () => {
                 </div>
                 <div class="flex justify-between border-b pb-2">
                     <p class="text-sm font-semibold">Performer(s)/Band(s):</p>
-                    <p class="text-sm">{{ EventRequest.audience }}</p>
+                    <div class="text-sm flex flex-col">
+                        <ul>Taylor Swift</ul>
+                        <ul>Beyonce</ul>
+                        <ul>Justin Bieber</ul>
+                        <ul>Harry Styles</ul>
+                        <ul>Eminem</ul>
+                        <ul>Drake</ul>
+                        <ul>Post Malone</ul>
+                    </div>
                 </div>
                 <div class="flex justify-between border-b pb-2">
                     <p class="text-sm font-semibold">Genre:</p>
-                    <p class="text-sm">{{ EventRequest.audience }}</p>
+                    <p class="text-sm">Rock</p>
                 </div>
                 <div class="flex justify-between border-b pb-2">
-                    <p class="text-sm font-semibold">Seat Price (RM):</p>
-                    <p class="text-sm">{{ EventRequest.audience }}</p>
+                    <p class="text-sm font-semibold">Standard Seat Price (RM):</p>
+                    <p class="text-sm">80</p>
+                </div>
+                <div class="flex justify-between border-b pb-2">
+                    <p class="text-sm font-semibold">Gold Seat Price (RM):</p>
+                    <p class="text-sm">120</p>
+                </div>
+                <div class="flex justify-between border-b pb-2">
+                    <p class="text-sm font-semibold">Platinum Seat Price (RM):</p>
+                    <p class="text-sm">190</p>
                 </div>
                 <div class="flex justify-between border-b pb-2">
                     <p class="text-sm font-semibold">Audience:</p>
@@ -118,7 +134,13 @@ const handleAudiences = () => {
                 </div>
                 <div class="flex justify-between border-b pb-2">
                     <p class="text-sm font-semibold">Event Policies:</p>
-                    <p class="text-sm">{{ EventRequest.type }}</p>
+                    <div class="w-1/4 text-right">
+                        <p class="text-sm font-bold">Refunds and Cancellations:</p>
+                        <p class="text-sm">No ticket refund 2 weeks before the event date.</p>
+                        <p class="text-sm font-bold">Bag Checks & Security:</p>
+                        <p class="text-sm">Bag check at the entrance to avoid any weapons or drugs enter the concert.</p>
+                    </div>
+                    
                 </div>
             </div>
 
