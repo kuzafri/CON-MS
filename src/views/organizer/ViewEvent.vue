@@ -50,6 +50,9 @@ const handleViewDetails = () => {
 </script>
 
 <template>
+    <div class="flex justify-between items-center mb-4">
+            <h1 class="text-2xl font-bold">All Concerts</h1>
+        </div>
     <div class="card h-full">
         <div class="space-y-4">
             <div v-for="i in 4" :key="i" class="border border-gray-300 rounded p-4 flex flex-col justify-between h-full">

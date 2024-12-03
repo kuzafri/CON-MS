@@ -47,8 +47,9 @@ const dropdownItem = ref(null);
 const calendarValue = ref(null);
 const startTime = ref(null);
 const endTime = ref(null);
-const standardPrice = ref(null);
-const vipPrice = ref(null);
+const regularPrice = ref(null);
+const goldPrice = ref(null);
+const platinumPrice = ref(null);
 
 // Modal visibility state
 const showModal = ref(false);
@@ -123,11 +124,15 @@ const closeModal = () => {
                 <div class="flex flex-col md:flex-row gap-4">
                     <div class="flex flex-col flex-wrap gap-2 w-full">
                         <label for="startTime">Standard Seat Price (RM)</label>
-                        <InputNumber id="standardPrice" type="text" v-model="standardPrice"/>
+                        <InputNumber id="regularPrice" type="text" v-model="regularPrice"/>
                     </div>
                     <div class="flex flex-col flex-wrap gap-2 w-full">
                         <label for="lastname2">VIP Seat Price (RM)</label>
-                        <InputNumber id="vipPrice" type="text" v-model="vipPrice"/>
+                        <InputNumber id="goldPrice" type="text" v-model="goldPrice"/>
+                    </div>
+                    <div class="flex flex-col flex-wrap gap-2 w-full">
+                        <label for="lastname2">VIP Seat Price (RM)</label>
+                        <InputNumber id="platinumPrice" type="text" v-model="platinumPrice"/>
                     </div>
                 </div>
 

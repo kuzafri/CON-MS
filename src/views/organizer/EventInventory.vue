@@ -3,6 +3,7 @@ import { ProductService } from '@/service/ProductService'; //all the product tem
 import { FilterMatchMode } from '@primevue/core/api';
 import { useToast } from 'primevue/usetoast';
 import { onMounted, ref } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 
 onMounted(() => {
     ProductService.getProducts().then((data) => (products.value = data));
@@ -129,6 +130,30 @@ function deleteSelectedProducts() {
     toast.add({ severity: 'success', summary: 'Successful', detail: 'Products Deleted', life: 3000 });
 }
 
+// Add props definition
+const props = defineProps({
+  id: String
+});
+
+const route = useRoute();
+const router = useRouter();
+
+const EventRequest = ref({
+    id: props.id || route.params.id,
+    // title: 'REBEL 3.0: Because of You',
+    // date: '13th January 2025',
+    // time: '3:00 PM - 4:00 PM',
+    // audience: '1500 pax',
+    // type: 'Paid Entry',
+    // status: 'Pending'
+});
+
+const handleBack = () => {
+    // Encode the ID to properly handle special characters like '/'
+    const encodedId = encodeURIComponent(EventRequest.value.id);
+    router.push(`/organizer/viewevent/event-details/${encodedId}`);
+};
+
 function getStatusLabel(status) {
     switch (status) {
         case 'INSTOCK':
@@ -147,7 +172,13 @@ function getStatusLabel(status) {
 </script>
 
 <template>
-    <div>
+    <div class="p-4">
+        <button 
+                @click="handleBack"
+                class="flex items-center text-blue-600 hover:text-blue-700 pb-4"
+            >
+                <span class="mr-2">←</span> Back to Event Details
+            </button>
         <div class="card">
             <Toolbar class="mb-6">
                 <template #start>

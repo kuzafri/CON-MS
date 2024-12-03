@@ -15,6 +15,7 @@ const router = createRouter({
                 //     name: 'dashboard',
                 //     component: () => import('@/views/Dashboard.vue')
                 // },
+               
                 {
                     path: '/uikit/formlayout',
                     name: 'formlayout',
@@ -155,6 +156,7 @@ const router = createRouter({
             path: '/organizer',
             component: AppLayoutOrganizer,
             children: [
+                
                 {
                     path: 'event',
                     name: 'eventorganizer',
@@ -187,11 +189,6 @@ const router = createRouter({
                     path: 'complaint',
                     name: 'complaint',
                     component: () => import('@/views/organizer/Complaint.vue')
-                },
-                {
-                    path: 'help',
-                    name: 'help',
-                    component: () => import('@/views/organizer/Help.vue')
                 }
             ]
         },
@@ -254,6 +251,11 @@ const router = createRouter({
             path: '/auth/error',
             name: 'error',
             component: () => import('@/views/pages/auth/Error.vue')
+        },
+        {
+            path: '/organizer/login',
+            name: 'organizerLogin',
+            component: () => import('@/views/organizer/Login.vue')
         }
     ]
 });

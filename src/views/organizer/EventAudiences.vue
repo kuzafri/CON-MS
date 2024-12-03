@@ -1,12 +1,33 @@
 <script setup>
 // import { ref } from 'vue';
-import { useRoute } from 'vue-router';
+// import { useRoute } from 'vue-router';
 import { useLayout } from '@/layout/composables/layout';
 import { onMounted, ref, computed } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 
-const route = useRoute();
+
 const selectedSeats = ref([]);
 const totalPrice = ref(0);
+
+// Add props definition
+const props = defineProps({
+  id: String
+});
+
+const route = useRoute();
+const router = useRouter();
+
+const EventRequest = ref({
+    id: props.id || route.params.id,
+    // title: 'REBEL 3.0: Because of You',
+    // date: '13th January 2025',
+    // time: '3:00 PM - 4:00 PM',
+    // audience: '1500 pax',
+    // type: 'Paid Entry',
+    // status: 'Pending'
+});
+
+
 
 // Audience data
 const Audiences = ref([
@@ -62,10 +83,23 @@ onMounted(() => {
     }
 });
 
+const handleBack = () => {
+    // Encode the ID to properly handle special characters like '/'
+    const encodedId = encodeURIComponent(EventRequest.value.id);
+    router.push(`/organizer/viewevent/event-details/${encodedId}`);
+};
+
 </script>
 
 <template>
+    
     <div class="p-4">
+        <button 
+                @click="handleBack"
+                class="flex items-center text-blue-600 hover:text-blue-700 pb-4"
+            >
+                <span class="mr-2">←</span> Back to Event Details
+            </button>
         <div class="flex justify-between items-center mb-4">
             <h1 class="text-2xl font-bold">Audiences</h1>
             <IconField>
