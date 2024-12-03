@@ -55,13 +55,13 @@ function toggleProfileModal() {
                     <i :class="['pi', { 'pi-moon': isDarkTheme, 'pi-sun': !isDarkTheme }]"></i>
                 </button>
                 <div class="relative">
-                    <button
+                    <!-- <button
                         v-styleclass="{ selector: '@next', enterFromClass: 'hidden', enterActiveClass: 'animate-scalein', leaveToClass: 'hidden', leaveActiveClass: 'animate-fadeout', hideOnOutsideClick: true }"
                         type="button"
                         class="layout-topbar-action layout-topbar-action-highlight"
                     >
                         <i class="pi pi-palette"></i>
-                    </button>
+                    </button> -->
                     <AppConfigurator />
                 </div>
             </div>
