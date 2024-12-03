@@ -1,5 +1,12 @@
 <script setup>
-import { ref } from 'vue';
+// import { ref } from 'vue';
+import { useRoute } from 'vue-router';
+import { useLayout } from '@/layout/composables/layout';
+import { onMounted, ref, computed } from 'vue';
+
+const route = useRoute();
+const selectedSeats = ref([]);
+const totalPrice = ref(0);
 
 // Audience data
 const Audiences = ref([
@@ -43,6 +50,18 @@ const showETicket = (ticket) => {
 const hideModal = () => {
     isModalVisible.value = false;
 };
+
+// Use this when have proper backend
+onMounted(() => {
+    // Get seat data from route query
+    if (route.query.seats) {
+        selectedSeats.value = JSON.parse(route.query.seats);
+    }
+    if (route.query.totalPrice) {
+        totalPrice.value = Number(route.query.totalPrice);
+    }
+});
+
 </script>
 
 <template>
@@ -96,15 +115,37 @@ const hideModal = () => {
     </div>
 
     <!-- Modal for E-Ticket -->
-    <div v-if="isModalVisible" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-        <div class="bg-white p-6 rounded shadow-md max-w-md w-full">
-            <h2 class="text-xl font-bold mb-4">E-Ticket</h2>
-            <p><strong>Booking ID:</strong> {{ selectedTicket.bookingId }}</p>
-            <p><strong>Event ID:</strong> {{ selectedTicket.eventId }}</p>
-            <p><strong>Seat Number:</strong> {{ selectedTicket.seatNumber }}</p>
-            <p><strong>Ticket Price:</strong> RM {{ selectedTicket.ticketPrice }}</p>
-            <p><strong>Booking Status:</strong> {{ selectedTicket.bookingStatus }}</p>
-            <Button class="mt-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600" @click="hideModal" label="Close" />
+    <div v-if="isModalVisible" @click.self="hideModal" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+        <div class="flex flex-col md:flex-row items-center justify-center bg-white rounded shadow-md max-w-md w-full">
+            <!-- Desktop View -->
+                <!-- Left Piano Design -->
+                <div class="left-0 top-0 h-full w-8 bg-gray-900">
+                    <div v-for="i in 10" :key="i" :class="i % 2 === 0 ? 'bg-white' : 'bg-gray-900'" class="h-6"></div>
+                </div>
+
+                <!-- Ticket Content -->
+                <div class="ml-10">
+                    <h2 class="text-3xl font-bold text-gray-800">REBEL 3.0: Because of you</h2>
+                    <p class="text-gray-600">Wed 2025-01-13 3.00 PM - 4.00 PM</p>
+                    <p class="text-gray-600">Dewan Tuanku Syed Putra, USM</p>
+                    <p class="text-gray-600">Row A - Seat 36</p>
+                    <div class="text-right text-2xl font-bold text-gray-900 mt-4">RM80</div>
+                    <div class="text-right mt-2">
+                        <div class="bg-gray-200 px-4 py-1 rounded-full inline-block">
+                            Ticket ID: <strong>#N71XIG</strong>
+                        </div>
+                    </div>
+                </div>
+
+            <!-- Mobile View -->
+            <div v-for="seat in selectedSeats" :key="seat.id" class="flex md:hidden w-full max-w-sm bg-white rounded-lg shadow-lg p-6 flex-col m-4">
+                <!-- QR Code Section -->
+                <div class="flex justify-center">
+                    <div class="bg-gray-100 p-4 rounded-full">
+                        <!-- <img class="w-16 h-16" src="/qrcode.png" alt="QR Code" /> -->
+                    </div>
+                </div>                
+            </div>
         </div>
     </div>
 </template>
