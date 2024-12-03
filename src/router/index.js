@@ -155,19 +155,19 @@ const router = createRouter({
                     component: () => import('@/views/organizer/ViewEvent.vue')
                 },
                 {
-                    path: 'event-details/:id',
+                    path: 'viewevent/event-details/:id',
                     name: 'EventDetails',
                     component: () => import('@/views/organizer/EventDetails.vue'),
                     props: true
                 },
                 {
-                    path: 'event-details/:id/event-inventory',
+                    path: 'viewevent/event-details/:id/event-inventory',
                     name: 'EventInventory',
                     component: () => import('@/views/organizer/EventInventory.vue'),
                     props: true
                 },
                 {
-                    path: 'event-details/:id/event-audiences',
+                    path: 'viewevent/event-details/:id/event-audiences',
                     name: 'EventAudiences',
                     component: () => import('@/views/organizer/EventAudiences.vue'),
                     props: true
