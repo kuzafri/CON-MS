@@ -110,56 +110,7 @@ const proceedToCheckout = () => {
 
 <template>
     <div class="min-h-screen bg-surface-0 dark:bg-surface-900">
-        <!-- Header with dark mode support -->
-        <header class="bg-surface-0 dark:bg-surface-900 border-b-[1px] border-gray-400 shadow-lg">
-            <div class="py-6 px-6 mx-0 md:mx-12 lg:mx-20 lg:px-20 flex items-center justify-between relative lg:static">
-                <a class="flex items-center mx-4" href="#">
-                    <img :src="logoSrc" alt="logo" class="w-full h-8 mb-1" />
-                </a>
-                <Button
-                    class="lg:!hidden"
-                    text
-                    severity="secondary"
-                    rounded
-                    v-styleclass="{ selector: '@next', enterFromClass: 'hidden', enterActiveClass: 'animate-scalein', leaveToClass: 'hidden', leaveActiveClass: 'animate-fadeout', hideOnOutsideClick: true }"
-                >
-                    <i class="pi pi-bars !text-2xl"></i>
-                </Button>
-                <div class="items-center bg-surface-0 dark:bg-surface-900 grow justify-between hidden lg:flex absolute lg:static w-full left-0 top-full px-12 lg:px-0 z-20 rounded-border">
-                    <ul class="list-none p-0 m-0 flex lg:items-center select-none flex-col lg:flex-row cursor-pointer gap-8">
-                        <li>
-                            <a href="/homebook" class="px-0 py-4 text-surface-900 dark:text-surface-0 font-medium text-xl">
-                                <span>Home</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="/event" class="px-0 py-4 text-surface-900 dark:text-surface-0 font-medium text-xl">
-                                <span>Events</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="/ticket" class="px-0 py-4 text-surface-900 dark:text-surface-0 font-medium text-xl">
-                                <span>My Ticket</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="/favourite" class="px-0 py-4 text-surface-900 dark:text-surface-0 font-medium text-xl">
-                                <span>Favourite</span>
-                            </a>
-                        </li>
-                    </ul>
-                    <div class="flex border-t lg:border-t-0 border-surface py-4 lg:py-0 mt-4 lg:mt-0 gap-2">
-                        <button type="button" class="layout-topbar-action" @click="toggleDarkMode">
-                            <i :class="['pi', { 'pi-moon': isDarkTheme, 'pi-sun': !isDarkTheme }]"></i>
-                        </button>
-                        <Button label="Logout" to="/auth/login" rounded></Button>
-                    </div>
-                </div>
-            </div>
-        </header>
-
-        <!-- Event Info Header -->
-        <header class="bg-surface-50 dark:bg-surface-800 shadow-sm">
+        <header class="bg-surface-50 dark:bg-surface-800 shadow-sm mt-14">
             <div class="max-w-7xl mx-auto px-4 py-4">
                 <div class="flex items-center">
                     <img src="/concert.png" alt="CONMs" class="h-8" />

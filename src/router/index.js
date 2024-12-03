@@ -1,4 +1,5 @@
 import AppLayout from '@/layout/AppLayout.vue';
+import AppLayoutCustomer from '@/layout/AppLayoutCustomer.vue';
 import AppLayoutAdmin from '@/views/admin/AppLayout.vue';
 import AppLayoutOrganizer from '@/views/organizer/AppLayout.vue';
 import { createRouter, createWebHistory } from 'vue-router';
@@ -194,38 +195,49 @@ const router = createRouter({
         },
         {
             path: '/',
+            component: AppLayoutCustomer,
+            children: [
+                {
+                    path: '/booking',
+                    name: 'Booking',
+                    component: () => import('@/views/pages/Booking.vue')
+                },
+                {
+                    path: '/eventdetail',
+                    name: 'EventDetail',
+                    component: () => import('@/views/pages/EventDetail.vue')
+                },
+                {
+                    path: '/payment',
+                    name: 'Payment',
+                    component: () => import('@/views/pages/Payment.vue')
+                },
+                {
+                    path: '/event',
+                    name: 'event',
+                    component: () => import('@/views/pages/Event.vue')
+                },
+                {
+                    path: '/ticket',
+                    name: 'ticket',
+                    component: () => import('@/views/pages/Ticket.vue')
+                },
+                {
+                    path: '/homebook',
+                    name: 'homebook',
+                    component: () => import('@/views/pages/Homebook.vue')
+                },
+                {
+                    path: '/profile',
+                    name: 'profile',
+                    component: () => import('@/views/pages/Profile.vue')
+                }
+            ]
+        },
+        {
+            path: '/',
             name: 'landing',
             component: () => import('@/views/pages/Landing.vue')
-        },
-        {
-            path: '/booking',
-            name: 'Booking',
-            component: () => import('@/views/pages/Booking.vue')
-        },
-        {
-            path: '/eventdetail',
-            name: 'EventDetail',
-            component: () => import('@/views/pages/EventDetail.vue')
-        },
-        {
-            path: '/payment',
-            name: 'Payment',
-            component: () => import('@/views/pages/Payment.vue')
-        },
-        {
-            path: '/event',
-            name: 'event',
-            component: () => import('@/views/pages/Event.vue')
-        },
-        {
-            path: '/ticket',
-            name: 'ticket',
-            component: () => import('@/views/pages/Ticket.vue')
-        },
-        {
-            path: '/homebook',
-            name: 'homebook',
-            component: () => import('@/views/pages/Homebook.vue')
         },
         {
             path: '/pages/notfound',
