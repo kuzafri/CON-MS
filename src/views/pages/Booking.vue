@@ -106,60 +106,57 @@ const proceedToCheckout = () => {
         }
     });
 };
+
+const viewBox = ref('0 0 800 600');
+const isPanning = ref(false);
+const startPan = ref({ x: 0, y: 0 });
+const currentTransform = ref({ x: 0, y: 0, scale: 1 });
+
+const handleMouseDown = (event) => {
+    isPanning.value = true;
+    startPan.value = {
+        x: event.clientX - currentTransform.value.x,
+        y: event.clientY - currentTransform.value.y
+    };
+};
+
+const handleMouseMove = (event) => {
+    if (!isPanning.value) return;
+
+    const newX = event.clientX - startPan.value.x;
+    const newY = event.clientY - startPan.value.y;
+
+    // Add boundaries to prevent excessive panning
+    const maxPan = 400 * currentTransform.value.scale;
+    currentTransform.value.x = Math.max(Math.min(newX, maxPan), -maxPan);
+    currentTransform.value.y = Math.max(Math.min(newY, maxPan), -maxPan);
+};
+
+const handleMouseUp = () => {
+    isPanning.value = false;
+};
+
+const handleWheel = (event) => {
+    event.preventDefault();
+    const scaleFactor = event.deltaY > 0 ? 0.9 : 1.1;
+    const newScale = currentTransform.value.scale * scaleFactor;
+
+    // Limit zoom scale between 0.5 and 3
+    if (newScale >= 0.5 && newScale <= 3) {
+        currentTransform.value.scale = newScale;
+    }
+};
+
+// Computed style for the transform
+const svgTransform = computed(() => {
+    const { x, y, scale } = currentTransform.value;
+    return `translate(${x}px, ${y}px) scale(${scale})`;
+});
 </script>
 
 <template>
     <div class="min-h-screen bg-surface-0 dark:bg-surface-900">
-        <!-- Header with dark mode support -->
-        <header class="bg-surface-0 dark:bg-surface-900 border-b-[1px] border-gray-400 shadow-lg">
-            <div class="py-6 px-6 mx-0 md:mx-12 lg:mx-20 lg:px-20 flex items-center justify-between relative lg:static">
-                <a class="flex items-center mx-4" href="#">
-                    <img :src="logoSrc" alt="logo" class="w-full h-8 mb-1" />
-                </a>
-                <Button
-                    class="lg:!hidden"
-                    text
-                    severity="secondary"
-                    rounded
-                    v-styleclass="{ selector: '@next', enterFromClass: 'hidden', enterActiveClass: 'animate-scalein', leaveToClass: 'hidden', leaveActiveClass: 'animate-fadeout', hideOnOutsideClick: true }"
-                >
-                    <i class="pi pi-bars !text-2xl"></i>
-                </Button>
-                <div class="items-center bg-surface-0 dark:bg-surface-900 grow justify-between hidden lg:flex absolute lg:static w-full left-0 top-full px-12 lg:px-0 z-20 rounded-border">
-                    <ul class="list-none p-0 m-0 flex lg:items-center select-none flex-col lg:flex-row cursor-pointer gap-8">
-                        <li>
-                            <a href="/homebook" class="px-0 py-4 text-surface-900 dark:text-surface-0 font-medium text-xl">
-                                <span>Home</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="/event" class="px-0 py-4 text-surface-900 dark:text-surface-0 font-medium text-xl">
-                                <span>Events</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="/ticket" class="px-0 py-4 text-surface-900 dark:text-surface-0 font-medium text-xl">
-                                <span>My Ticket</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="/favourite" class="px-0 py-4 text-surface-900 dark:text-surface-0 font-medium text-xl">
-                                <span>Favourite</span>
-                            </a>
-                        </li>
-                    </ul>
-                    <div class="flex border-t lg:border-t-0 border-surface py-4 lg:py-0 mt-4 lg:mt-0 gap-2">
-                        <button type="button" class="layout-topbar-action" @click="toggleDarkMode">
-                            <i :class="['pi', { 'pi-moon': isDarkTheme, 'pi-sun': !isDarkTheme }]"></i>
-                        </button>
-                        <Button label="Logout" to="/auth/login" rounded></Button>
-                    </div>
-                </div>
-            </div>
-        </header>
-
-        <!-- Event Info Header -->
-        <header class="bg-surface-50 dark:bg-surface-800 shadow-sm">
+        <header class="bg-surface-50 dark:bg-surface-800 shadow-sm mt-14">
             <div class="max-w-7xl mx-auto px-4 py-4">
                 <div class="flex items-center">
                     <img src="/concert.png" alt="CONMs" class="h-8" />
@@ -182,8 +179,8 @@ const proceedToCheckout = () => {
                 <div class="gap-8 flex lg:flex-row flex-col">
                     <!-- Seating Map -->
                     <div class="bg-surface-50 lg:w-2/3 dark:bg-surface-800 rounded-lg shadow-lg p-10">
-                        <div class="relative">
-                            <svg viewBox="0 0 800 600" class="w-full">
+                        <div class="relative overflow-hidden" @mousedown="handleMouseDown" @mousemove="handleMouseMove" @mouseup="handleMouseUp" @mouseleave="handleMouseUp" @wheel="handleWheel">
+                            <svg viewBox="0 0 800 600" class="w-full cursor-move transform-gpu" :style="{ transform: svgTransform }">
                                 <!-- Stage -->
                                 <path d="M250,550 Q400,520 550,550" fill="none" stroke="currentColor" stroke-width="4" class="text-surface-400 dark:text-surface-500" />
                                 <text x="400" y="560" text-anchor="middle" class="text-sm fill-current text-surface-900 dark:text-surface-0">STAGE</text>
@@ -209,40 +206,38 @@ const proceedToCheckout = () => {
                                             />
                                         </g>
                                         <!-- Row labels -->
-                                        <text :x="50" :y="row.seats[0].y" class="text-xs fill-current text-surface-900 dark:text-surface-0" alignment-baseline="middle">
+                                        <text :x="50" :y="row.seats[0].y" class="mr-4 text-xs fill-current text-surface-900 dark:text-surface-0" alignment-baseline="middle">
                                             {{ row.rowLabel }}
                                         </text>
                                     </g>
                                 </template>
                             </svg>
+                        </div>
 
-                            <!-- Legend -->
-                            <div class="lg:absolute bottom-1 right-1 bg-surface-0 dark:bg-surface-900 p-3 rounded shadow">
-                                <div class="flex items-center mb-2">
-                                    <div class="w-4 h-4 bg-orange-400 rounded mr-2"></div>
-                                    <span class="text-surface-900 dark:text-surface-0">VIP (RM150)</span>
-                                </div>
-                                <div class="flex items-center mb-2">
-                                    <div class="w-4 h-4 bg-yellow-500 rounded mr-2"></div>
-                                    <span class="text-surface-900 dark:text-surface-0">Standard (RM100)</span>
-                                </div>
-                                <div class="flex items-center mb-2">
-                                    <div class="w-4 h-4 bg-green-500 rounded mr-2"></div>
-                                    <span class="text-surface-900 dark:text-surface-0">Economy (RM80)</span>
-                                </div>
-                                <div class="flex items-center mb-2">
-                                    <div class="w-4 h-4 bg-red-500 rounded mr-2"></div>
-                                    <span class="text-surface-900 dark:text-surface-0">Selected</span>
-                                </div>
-                                <div class="flex items-center mb-2">
-                                    <div class="w-4 h-4 bg-surface-400 rounded mr-2"></div>
-                                    <span class="text-surface-900 dark:text-surface-0">Reserved</span>
-                                </div>
+                        <div class="bottom-1 right-1 bg-surface-0 dark:bg-surface-900 p-3 rounded shadow z-10">
+                            <div class="flex items-center mb-2">
+                                <div class="w-4 h-4 bg-orange-400 rounded mr-2"></div>
+                                <span class="text-surface-900 dark:text-surface-0">VIP (RM150)</span>
+                            </div>
+                            <div class="flex items-center mb-2">
+                                <div class="w-4 h-4 bg-yellow-500 rounded mr-2"></div>
+                                <span class="text-surface-900 dark:text-surface-0">Standard (RM100)</span>
+                            </div>
+                            <div class="flex items-center mb-2">
+                                <div class="w-4 h-4 bg-green-500 rounded mr-2"></div>
+                                <span class="text-surface-900 dark:text-surface-0">Economy (RM80)</span>
+                            </div>
+                            <div class="flex items-center mb-2">
+                                <div class="w-4 h-4 bg-red-500 rounded mr-2"></div>
+                                <span class="text-surface-900 dark:text-surface-0">Selected</span>
+                            </div>
+                            <div class="flex items-center mb-2">
+                                <div class="w-4 h-4 bg-surface-400 rounded mr-2"></div>
+                                <span class="text-surface-900 dark:text-surface-0">Reserved</span>
                             </div>
                         </div>
                     </div>
 
-                    
                     <!-- Selected Seats Info -->
                     <div class="bg-surface-50 lg:w-1/3 dark:bg-surface-800 rounded-lg shadow-lg p-6">
                         <h2 class="text-xl font-semibold mb-4 text-surface-900 dark:text-surface-0">Selected Seats</h2>
@@ -294,12 +289,23 @@ const proceedToCheckout = () => {
     </div>
 </template>
 
-<style>
+<style scoped>
 .seat {
     transition: fill 0.2s ease;
 }
 
 img {
     transition: opacity 0.3s ease-in-out;
+}
+
+/* Add these new styles */
+.transform-gpu {
+    transform-origin: center;
+    transition: transform 0.1s ease-out;
+    will-change: transform;
+}
+
+.overflow-hidden {
+    overflow: hidden;
 }
 </style>

@@ -3,6 +3,7 @@ import { ProductService } from '@/service/ProductService'; //all the product tem
 import { FilterMatchMode } from '@primevue/core/api';
 import { useToast } from 'primevue/usetoast';
 import { onMounted, ref } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 
 onMounted(() => {
     ProductService.getProducts().then((data) => (products.value = data));
@@ -20,16 +21,16 @@ const filters = ref({
     global: { value: null, matchMode: FilterMatchMode.CONTAINS }
 });
 const submitted = ref(false);
-const statuses = ref([
-    { label: 'INSTOCK', value: 'instock' },
-    { label: 'LOWSTOCK', value: 'lowstock' },
-    { label: 'OUTOFSTOCK', value: 'outofstock' }
-]);
+// const statuses = ref([
+//     { label: 'INSTOCK', value: 'instock' },
+//     { label: 'LOWSTOCK', value: 'lowstock' },
+//     { label: 'OUTOFSTOCK', value: 'outofstock' }
+// ]);
 
-function formatCurrency(value) {
-    if (value) return value.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
-    return;
-}
+// function formatCurrency(value) {
+//     if (value) return value.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
+//     return;
+// }
 
 function changeQuantity(product, change) {
     // Ensure quantity doesn't go below 0
@@ -59,14 +60,14 @@ function saveProduct() {
 
     if (product?.value.name?.trim()) {
         if (product.value.id) {
-            product.value.inventoryStatus = product.value.inventoryStatus.value ? product.value.inventoryStatus.value : product.value.inventoryStatus;
+            // product.value.inventoryStatus = product.value.inventoryStatus.value ? product.value.inventoryStatus.value : product.value.inventoryStatus;
             products.value[findIndexById(product.value.id)] = product.value;
             toast.add({ severity: 'success', summary: 'Successful', detail: 'Product Updated', life: 3000 });
         } else {
             product.value.id = createId();
             // product.value.code = createId();
             // product.value.image = 'product-placeholder.svg';
-            product.value.inventoryStatus = product.value.inventoryStatus ? product.value.inventoryStatus.value : 'INSTOCK';
+            // product.value.inventoryStatus = product.value.inventoryStatus ? product.value.inventoryStatus.value : 'INSTOCK';
             products.value.push(product.value);
             toast.add({ severity: 'success', summary: 'Successful', detail: 'Product Created', life: 3000 });
         }
@@ -129,25 +130,55 @@ function deleteSelectedProducts() {
     toast.add({ severity: 'success', summary: 'Successful', detail: 'Products Deleted', life: 3000 });
 }
 
-function getStatusLabel(status) {
-    switch (status) {
-        case 'INSTOCK':
-            return 'success';
+// Add props definition
+const props = defineProps({
+  id: String
+});
 
-        case 'LOWSTOCK':
-            return 'warn';
+const route = useRoute();
+const router = useRouter();
 
-        case 'OUTOFSTOCK':
-            return 'danger';
+const EventRequest = ref({
+    id: props.id || route.params.id,
+    // title: 'REBEL 3.0: Because of You',
+    // date: '13th January 2025',
+    // time: '3:00 PM - 4:00 PM',
+    // audience: '1500 pax',
+    // type: 'Paid Entry',
+    // status: 'Pending'
+});
 
-        default:
-            return null;
-    }
-}
+const handleBack = () => {
+    // Encode the ID to properly handle special characters like '/'
+    const encodedId = encodeURIComponent(EventRequest.value.id);
+    router.push(`/organizer/viewevent/event-details/${encodedId}`);
+};
+
+// function getStatusLabel(status) {
+//     switch (status) {
+//         case 'INSTOCK':
+//             return 'success';
+
+//         case 'LOWSTOCK':
+//             return 'warn';
+
+//         case 'OUTOFSTOCK':
+//             return 'danger';
+
+//         default:
+//             return null;
+//     }
+// }
 </script>
 
 <template>
-    <div>
+    <div class="p-4">
+        <button 
+                @click="handleBack"
+                class="flex items-center text-blue-600 hover:text-blue-700 pb-4"
+            >
+                <span class="mr-2">←</span> Back to Event Details
+            </button>
         <div class="card">
             <Toolbar class="mb-6">
                 <template #start>
@@ -245,42 +276,42 @@ function getStatusLabel(status) {
                     <InputText id="name" v-model.trim="product.name" required="true" autofocus :invalid="submitted && !product.name" fluid />
                     <small v-if="submitted && !product.name" class="text-red-500">Name is required.</small>
                 </div>
-                <div>
+                <!-- <div>
                     <label for="description" class="block font-bold mb-3">Description</label>
                     <Textarea id="description" v-model="product.description" required="true" rows="3" cols="20" fluid />
-                </div>
-                <div>
+                </div> -->
+                <!-- <div>
                     <label for="inventoryStatus" class="block font-bold mb-3">Inventory Status</label>
                     <Select id="inventoryStatus" v-model="product.inventoryStatus" :options="statuses" optionLabel="label" placeholder="Select a Status" fluid></Select>
-                </div>
+                </div> -->
 
                 <div>
                     <span class="block font-bold mb-4">Category</span>
                     <div class="grid grid-cols-12 gap-4">
                         <div class="flex items-center gap-2 col-span-6">
-                            <RadioButton id="category1" v-model="product.category" name="category" value="Accessories" />
-                            <label for="category1">Accessories</label>
+                            <RadioButton id="category1" v-model="product.category" name="category" value="Venue Equipments" />
+                            <label for="category1">Venue Equipments</label>
                         </div>
                         <div class="flex items-center gap-2 col-span-6">
-                            <RadioButton id="category2" v-model="product.category" name="category" value="Clothing" />
-                            <label for="category2">Clothing</label>
+                            <RadioButton id="category2" v-model="product.category" name="category" value="Audio-Visual Equipments" />
+                            <label for="category2">Audio-Visual Equipments</label>
                         </div>
                         <div class="flex items-center gap-2 col-span-6">
-                            <RadioButton id="category3" v-model="product.category" name="category" value="Electronics" />
-                            <label for="category3">Electronics</label>
+                            <RadioButton id="category3" v-model="product.category" name="category" value="Musical Instruments" />
+                            <label for="category3">Musical Instruments</label>
                         </div>
                         <div class="flex items-center gap-2 col-span-6">
-                            <RadioButton id="category4" v-model="product.category" name="category" value="Fitness" />
-                            <label for="category4">Fitness</label>
+                            <RadioButton id="category4" v-model="product.category" name="category" value="Safety Equipements" />
+                            <label for="category4">Safety Equipements</label>
                         </div>
                     </div>
                 </div>
 
                 <div class="grid grid-cols-12 gap-4">
-                    <div class="col-span-6">
+                    <!-- <div class="col-span-6">
                         <label for="price" class="block font-bold mb-3">Price</label>
                         <InputNumber id="price" v-model="product.price" mode="currency" currency="USD" locale="en-US" fluid />
-                    </div>
+                    </div> -->
                     <div class="col-span-6">
                         <label for="quantity" class="block font-bold mb-3">Quantity</label>
                         <InputNumber id="quantity" v-model="product.quantity" integeronly fluid />

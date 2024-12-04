@@ -18,6 +18,8 @@ import InputNumber from 'primevue/inputnumber';
 import Textarea from 'primevue/textarea';
 import Toast from 'primevue/toast';
 
+import { createPinia } from 'pinia'
+
 const app = createApp(App);
 
 app.use(router);
@@ -31,6 +33,7 @@ app.use(PrimeVue, {
 });
 app.use(ToastService);
 app.use(ConfirmationService);
+app.use(createPinia())
 
 app.component('Button', Button);
 app.component('InputText', InputText);

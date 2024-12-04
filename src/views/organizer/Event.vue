@@ -44,19 +44,49 @@ const removePerformer = (index) => {
 };
 
 const dropdownItem = ref(null);
+const concertTitle = ref('');
 const calendarValue = ref(null);
 const startTime = ref(null);
 const endTime = ref(null);
-const standardPrice = ref(null);
-const vipPrice = ref(null);
+const regularPrice = ref(null);
+const goldPrice = ref(null);
+const platinumPrice = ref(null);
+const submitted = ref(false);
+const eventPolicies = ref('');
+const timeError = ref(''); // Error message for time validation
 
 // Modal visibility state
 const showModal = ref(false);
 
 // Function to handle submit
 const handleSubmit = () => {
-    showModal.value = true;
+    submitted.value = true; // Trigger validation
+
+        // Validate end time is not earlier than start time
+    if (startTime.value && endTime.value && endTime.value <= startTime.value) {
+        timeError.value = 'End time must be later than the start time.';
+        return;
+    } else {
+        timeError.value = ''; // Clear error if valid
+    }
+
+    // Validate all required fields
+    if (!concertTitle.value || 
+        !calendarValue.value || 
+        !startTime.value || 
+        !endTime.value || 
+        performers.value.some((performer) => !performer) || 
+        !dropdownValue.value || 
+        !regularPrice.value || 
+        !goldPrice.value || 
+        !platinumPrice.value || 
+        !eventPolicies.value) {
+        return; // Stop submission if any field is invalid
+    }
+
+    showModal.value = true; // Show the modal if all validations pass
 };
+
 
 // Function to close the modal
 const closeModal = () => {
@@ -72,21 +102,26 @@ const closeModal = () => {
                 <div class="flex flex-col md:flex-row gap-4">
                     <div class="flex flex-wrap gap-2 w-full">
                         <label for="concertTitle">Concert Title</label>
-                        <InputText id="concertTitle" type="text" />
+                        <InputText id="concertTitle" type="text" required="true" v-model="concertTitle" autofocus :invalid="submitted && !concertTitle" fluid/>
+                        <small v-if="submitted && !concertTitle" class="text-red-500">Title is required.</small>
                     </div>
                     <div class="flex flex-col flex-wrap gap-2 w-full">
                         <label for="date">Date</label>
-                        <DatePicker :showIcon="true" :showButtonBar="true" v-model="calendarValue"></DatePicker>
+                        <DatePicker id="calendarValue" required="true" v-model="calendarValue" autofocus :showIcon="true" :showButtonBar="true" :invalid="submitted && !calendarValue"></DatePicker>
+                        <small v-if="submitted && !calendarValue" class="text-red-500">Date is required.</small>
                     </div>
                 </div>
                 <div class="flex flex-col md:flex-row gap-4">
                     <div class="flex flex-col flex-wrap gap-2 w-full">
                         <label for="startTime">Start Time</label>
                         <input type="time" id="startTime" v-model="startTime" class="w-full h-8 p-5 border rounded-md border-zinc-300" required />
+                        <small v-if="submitted && !startTime" class="text-red-500">Start time is required.</small>
                     </div>
                     <div class="flex flex-col flex-wrap gap-2 w-full">
                         <label for="lastname2">End Time</label>
                         <input type="time" id="endTime" v-model="endTime" class="w-full h-8 p-5 border rounded-md border-zinc-300" required />
+                        <small v-if="submitted && !endTime" class="text-red-500">End time is required.</small>
+                        <small v-if="timeError" class="text-red-500">{{ timeError }}</small>
                     </div>
                 </div>
 
@@ -107,6 +142,7 @@ const closeModal = () => {
                             class="p-button-rounded p-button-text"
                         />
                     </div>
+                    <small v-if="submitted && performers.some((performer) => !performer)" class="text-red-500">Performer field are required.</small>
                     <Button 
                         icon="pi pi-plus"
                         label="Add Performer"
@@ -118,27 +154,38 @@ const closeModal = () => {
                 <div class="flex flex-col flex-wrap gap-2 w-full">
                     <label for="concertTitle">Genre</label>
                     <Select v-model="dropdownValue" :options="dropdownValues" optionLabel="name" placeholder="Select" />
+                    <small v-if="submitted && !dropdownValue" class="text-red-500">Genre is required.</small>
                 </div>
 
                 <div class="flex flex-col md:flex-row gap-4">
                     <div class="flex flex-col flex-wrap gap-2 w-full">
-                        <label for="startTime">Standard Seat Price (RM)</label>
-                        <InputNumber id="standardPrice" type="text" v-model="standardPrice"/>
+                        <label for="regularPrice">Regular Seat Price (RM)</label>
+                        <InputNumber id="regularPrice" type="text" v-model="regularPrice"/>
+                        <small v-if="submitted && !regularPrice" class="text-red-500">Regular price is required.</small>
                     </div>
                     <div class="flex flex-col flex-wrap gap-2 w-full">
-                        <label for="lastname2">VIP Seat Price (RM)</label>
-                        <InputNumber id="vipPrice" type="text" v-model="vipPrice"/>
+                        <label for="goldPrice">Gold Seat Price (RM)</label>
+                        <InputNumber id="goldPrice" type="text" v-model="goldPrice"/>
+                        <small v-if="submitted && !goldPrice" class="text-red-500">Gold price is required.</small>
                     </div>
+                    <div class="flex flex-col flex-wrap gap-2 w-full">
+                        <label for="platinumPrice">VIP Seat Price (RM)</label>
+                        <InputNumber id="platinumPrice" type="text" v-model="platinumPrice"/>
+                        <small v-if="submitted && !platinumPrice" class="text-red-500">Platinum price is required.</small>
+                    </div>
+                    
                 </div>
-
+            
                 <div class="flex flex-wrap">
-                    <label for="address">Event Policies</label>
-                    <Textarea id="address" rows="4" placeholder="e.g: safety guideline, COVID-19 safety guideline" />
+                    <label for="eventPolicies">Event Policies</label>
+                    <Textarea v-model="eventPolicies" id="eventPolicies" rows="4" placeholder="e.g: safety guideline, COVID-19 safety guideline" />
+                    <small v-if="submitted && !eventPolicies" class="text-red-500">Event policies are required.</small>
                 </div>
                 
                 <Button label="Submit" @click="handleSubmit"></Button>
             </div>
         </div>
+    
 
         <!-- Modal -->
         <div v-if="showModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">

@@ -1,7 +1,7 @@
 <script setup>
 import { useLayout } from '@/layout/composables/layout';
 import { computed, ref, watch } from 'vue';
-import AppMenuCustomer from './AppMenuCustomer.vue';
+import AppTopbarCustomer from './AppTopbarCustomer.vue';
 
 const { layoutConfig, layoutState, isSidebarActive, resetMenu } = useLayout();
 
@@ -44,22 +44,18 @@ function unbindOutsideClickListener() {
 }
 
 function isOutsideClicked(event) {
-    const sidebarEl = document.querySelector('.layout-sidebar');
     const topbarEl = document.querySelector('.layout-menu-button');
-
-    return !(sidebarEl.isSameNode(event.target) || sidebarEl.contains(event.target) || topbarEl.isSameNode(event.target) || topbarEl.contains(event.target));
+    return !(topbarEl.isSameNode(event.target) || topbarEl.contains(event.target));
 }
 </script>
 
 <template>
     <div class="layout-wrapper" :class="containerClass">
-        <app-topbar></app-topbar>
-        <div class="layout-main-container">
-            <div class="layout-main">
-                <router-view></router-view>
-            </div>
+        <AppTopbarCustomer />
+        <div>
+            <router-view></router-view>
         </div>
-        <div class="layout-mask animate-fadein"></div>
     </div>
+    <div class="layout-mask animate-fadein"></div>
     <Toast />
 </template>

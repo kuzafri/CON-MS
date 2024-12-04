@@ -1,6 +1,8 @@
 <script setup>
 import { useLayout } from '@/layout/composables/layout';
 import { computed, onMounted, onUnmounted, ref } from 'vue';
+import { HeartIcon } from 'lucide-vue-next'; // Assuming you're using Lucide icons
+import { useFavoriteStore } from '@/stores/favorite';
 
 const logoSrc = computed(() => (isDarkTheme.value ? '/logo_dark.png' : '/logo_light.png'));
 const categoriesContainer = ref(null);
@@ -12,7 +14,8 @@ const events = ref([
         title: 'Thriller',
         date: '24/5/2025',
         description: 'Dewan Tuanku Syed Putra, USM',
-        price: 235
+        price: 235,
+        isFavorite: false
     },
     {
         id: 2,
@@ -20,7 +23,8 @@ const events = ref([
         title: 'Thriller',
         date: '24/5/2025',
         description: 'Dewan Tuanku Syed Putra, USM',
-        price: 320
+        price: 320,
+        isFavorite: false
     },
     {
         id: 3,
@@ -28,10 +32,50 @@ const events = ref([
         title: 'Thriller',
         date: '24/5/2025',
         description: 'Dewan Tuanku Syed Putra, USM',
-        price: 450
+        price: 450,
+        isFavorite: false
+    },
+    {
+        id: 4,
+        image: 'concert.png',
+        title: 'Thriller',
+        date: '24/5/2025',
+        description: 'Dewan Tuanku Syed Putra, USM',
+        price: 235,
+        isFavorite: false
+    },
+    {
+        id: 5,
+        image: 'concert.png',
+        title: 'Thriller',
+        date: '24/5/2025',
+        description: 'Dewan Tuanku Syed Putra, USM',
+        price: 320,
+        isFavorite: false
+    },
+    {
+        id: 6,
+        image: 'concert.png',
+        title: 'Thriller',
+        date: '24/5/2025',
+        description: 'Dewan Tuanku Syed Putra, USM',
+        price: 450,
+        isFavorite: false
     }
 ]);
 let scrollInterval = null;
+
+const favoriteStore = useFavoriteStore();
+
+const toggleFavorite = (event) => {
+    if (favoriteStore.isFavorite(event.id)) {
+        favoriteStore.removeFavorite(event.id);
+        event.isFavorite = false;
+    } else {
+        favoriteStore.addFavorite(event);
+        event.isFavorite = true;
+    }
+};
 
 const startAutoScroll = () => {
     if (!categoriesContainer.value) return;
@@ -85,81 +129,43 @@ onUnmounted(() => {
 </script>
 
 <template>
-    <div class="bg-surface-0 dark:bg-surface-900 min-h-screen flex flex-col">
-        <header class="bg-surface-0 dark:bg-surface-900 border-b-[1px] border-gray-400 shadow-lg">
-            <div class="py-6 px-6 mx-0 md:mx-12 lg:mx-20 lg:px-20 flex items-center justify-between relative lg:static">
-                <a class="flex items-center mx-4" href="#">
-                    <img :src="logoSrc" alt="logo" class="w-full h-8" />
-                </a>
-                <Button
-                    class="lg:!hidden"
-                    text
-                    severity="secondary"
-                    rounded
-                    v-styleclass="{ selector: '@next', enterFromClass: 'hidden', enterActiveClass: 'animate-scalein', leaveToClass: 'hidden', leaveActiveClass: 'animate-fadeout', hideOnOutsideClick: true }"
-                >
-                    <i class="pi pi-bars !text-2xl"></i>
-                </Button>
-                <div class="items-center bg-surface-0 dark:bg-surface-900 grow justify-between hidden lg:flex absolute lg:static w-full left-0 top-full px-12 lg:px-0 z-20 rounded-border">
-                    <ul class="list-none p-0 m-0 flex lg:items-center select-none flex-col lg:flex-row cursor-pointer gap-8">
-                        <li>
-                            <a href="/homebook" class="px-0 py-4 text-surface-900 dark:text-surface-0 font-medium text-xl">
-                                <span>Home</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="/event" class="px-0 py-4 text-surface-900 dark:text-surface-0 font-medium text-xl">
-                                <span>Events</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="/ticket" class="px-0 py-4 text-surface-900 dark:text-surface-0 font-medium text-xl">
-                                <span>My Ticket</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="/favourite" class="px-0 py-4 text-surface-900 dark:text-surface-0 font-medium text-xl">
-                                <span>Favourite</span>
-                            </a>
-                        </li>
-                    </ul>
-                    <div class="flex border-t lg:border-t-0 border-surface py-4 lg:py-0 mt-4 lg:mt-0 gap-2">
-                        <button type="button" class="layout-topbar-action" @click="toggleDarkMode">
-                            <i :class="['pi', { 'pi-moon': isDarkTheme, 'pi-sun': !isDarkTheme }]"></i>
-                        </button>
-                        <Button label="Logout" to="/auth/login" rounded></Button>
-                    </div>
-                </div>
-            </div>
-        </header>
-        <div class="container mx-auto p-6">
-            <div class="flex flex-col md:flex-row space-x-4">
+    <div class="bg-surface-0 dark:bg-surface-900 min-h-screen flex flex-col mt-14">
+        <div class="mx-auto py-6">
+            <div class="flex flex-col md:flex-row w-full ">
                 <!-- Sidebar -->
-                <div class="sm:w-auto bg-gray-50 p-4 rounded-lg">
-                    <h2 class="text-lg font-semibold mb-4">Locations</h2>
+                <div class="sm:w-auto mx-3 h-max p-4 rounded-lg dark:bg-surface-800 mt-2">
+                    <h2 class="text-lg font-semibold mb-4 dark:text-white">Locations</h2>
                     <button class="bg-gray-200 text-sm py-1 px-4 rounded w-full" @click="clearFilters">Clear filters</button>
                     <div class="mt-6">
-                        <h2 class="text-lg font-semibold mb-2">Stay in the loop</h2>
+                        <h2 class="text-lg font-semibold mb-2 dark:text-white">Stay in the loop</h2>
                         <input v-model="email" type="email" placeholder="your@email.com" class="border w-full p-2 rounded mb-2" />
                         <button class="bg-blue-500 text-white px-4 py-2 rounded w-full" @click="subscribe">Create alerts</button>
                     </div>
                 </div>
 
                 <!-- Event Cards -->
-                <div class="flex flex-col md:flex-row">
-                    <div v-for="event in events" :key="event.id" class="p-6 mx-auto bg-white shadow-lg rounded-lg">
+                <div class="flex flex-wrap gap-2 w-full mt-2">
+                    <div v-for="event in events" :key="event.id" class="ml-2 dark:bg-surface-800 p-6 bg-white shadow-lg rounded-lg sm:w-1/3 relative">
                         <div class="relative">
                             <img :src="event.image" alt="Event Image" class="w-full h-48 object-cover rounded-lg" />
-                            <!-- <div class="absolute top-2 left-2 bg-white rounded-full p-2 shadow">
-                <i class="text-xl text-blue-500 material-icons">music_note</i>
-              </div> -->
                         </div>
-                        <h2 class="text-xl font-semibold mt-4">{{ event.title }}</h2>
-                        <p class="text-gray-500">{{ event.description }}</p>
-                        <p class="text-gray-700 font-bold">{{ event.date }}</p>
+                        <div class="flex flex-row mt-4">
+                            <h2 class="text-xl font-semibold mt-4">{{ event.title }}</h2>
+                            <button 
+                                @click="toggleFavorite(event)" 
+                                class="focus:outline-none right-5 absolute"
+                            >
+                                <HeartIcon 
+                                    :fill="favoriteStore.isFavorite(event.id) ? 'red' : 'none'" 
+                                    :stroke="favoriteStore.isFavorite(event.id) ? 'red' : 'currentColor'" 
+                                    class="w-6 h-6 hover:scale-110 transition-transform"
+                                />
+                            </button>
+                        </div>
+                        <p class="text-gray-500 dark:text-white">{{ event.description }}</p>
+                        <p class="text-gray-700 dark:text-white font-bold">{{ event.date }}</p>
                         <div class="flex flex-wrap mt-2 space-x-2">
-                            <span class="bg-gray-200 text-sm py-1 px-2 rounded">Music</span>
-                            <!-- <span class="bg-gray-200 text-sm py-1 px-2 rounded">Min 1 year</span> -->
+                            <span class="bg-gray-200 dark:text-black text-sm py-1 px-2 rounded">Music</span>
                         </div>
                         <div class="flex justify-between items-center mt-4">
                             <span class="text-lg font-bold">RM{{ event.price }}</span>
@@ -167,6 +173,7 @@ onUnmounted(() => {
                         </div>
                     </div>
                 </div>
+                
             </div>
         </div>
     </div>

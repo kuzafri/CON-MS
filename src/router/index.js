@@ -1,4 +1,5 @@
 import AppLayout from '@/layout/AppLayout.vue';
+import AppLayoutCustomer from '@/layout/AppLayoutCustomer.vue';
 import AppLayoutAdmin from '@/views/admin/AppLayout.vue';
 import AppLayoutOrganizer from '@/views/organizer/AppLayout.vue';
 import { createRouter, createWebHistory } from 'vue-router';
@@ -15,6 +16,11 @@ const router = createRouter({
                 //     name: 'dashboard',
                 //     component: () => import('@/views/Dashboard.vue')
                 // },
+                {
+                    path: '/',
+                    name: 'landing',
+                    component: () => import('@/views/pages/Landing.vue')
+                },
                 {
                     path: '/uikit/formlayout',
                     name: 'formlayout',
@@ -175,6 +181,7 @@ const router = createRouter({
             path: '/organizer',
             component: AppLayoutOrganizer,
             children: [
+                
                 {
                     path: 'event',
                     name: 'eventorganizer',
@@ -186,19 +193,19 @@ const router = createRouter({
                     component: () => import('@/views/organizer/ViewEvent.vue')
                 },
                 {
-                    path: 'event-details/:id',
+                    path: 'viewevent/event-details/:id',
                     name: 'EventDetails',
                     component: () => import('@/views/organizer/EventDetails.vue'),
                     props: true
                 },
                 {
-                    path: 'event-details/:id/event-inventory',
+                    path: 'viewevent/event-details/:id/event-inventory',
                     name: 'EventInventory',
                     component: () => import('@/views/organizer/EventInventory.vue'),
                     props: true
                 },
                 {
-                    path: 'event-details/:id/event-audiences',
+                    path: 'viewevent/event-details/:id/event-audiences',
                     name: 'EventAudiences',
                     component: () => import('@/views/organizer/EventAudiences.vue'),
                     props: true
@@ -207,49 +214,61 @@ const router = createRouter({
                     path: 'complaint',
                     name: 'complaint',
                     component: () => import('@/views/organizer/Complaint.vue')
-                },
-                {
-                    path: 'help',
-                    name: 'help',
-                    component: () => import('@/views/organizer/Help.vue')
                 }
             ]
         },
         {
             path: '/',
-            name: 'landing',
-            component: () => import('@/views/pages/Landing.vue')
+            component: AppLayoutCustomer,
+            children: [
+                {
+                    path: '/booking',
+                    name: 'Booking',
+                    component: () => import('@/views/pages/Booking.vue')
+                },
+                {
+                    path: '/eventdetail',
+                    name: 'EventDetail',
+                    component: () => import('@/views/pages/EventDetail.vue')
+                },
+                {
+                    path: '/payment',
+                    name: 'Payment',
+                    component: () => import('@/views/pages/Payment.vue')
+                },
+                {
+                    path: '/event',
+                    name: 'Event',
+                    component: () => import('@/views/pages/Event.vue')
+                },
+                {
+                    path: '/ticket',
+                    name: 'Ticket',
+                    component: () => import('@/views/pages/Ticket.vue')
+                },
+                {
+                    path: '/homebook',
+                    name: 'Homebook',
+                    component: () => import('@/views/pages/Homebook.vue')
+                },
+                {
+                    path: '/profile',
+                    name: 'Profile',
+                    component: () => import('@/views/pages/Profile.vue')
+                },
+                {
+                    path: '/complaint',
+                    name: 'Complaint',
+                    component: () => import('@/views/pages/Complaint.vue')
+                },
+                {
+                    path: '/favourite',
+                    name: 'Favourite',
+                    component: () => import('@/views/pages/Favourite.vue')
+                }
+            ]
         },
-        {
-            path: '/booking',
-            name: 'Booking',
-            component: () => import('@/views/pages/Booking.vue')
-        },
-        {
-            path: '/eventdetail',
-            name: 'EventDetail',
-            component: () => import('@/views/pages/EventDetail.vue')
-        },
-        {
-            path: '/payment',
-            name: 'Payment',
-            component: () => import('@/views/pages/Payment.vue')
-        },
-        {
-            path: '/event',
-            name: 'event',
-            component: () => import('@/views/pages/Event.vue')
-        },
-        {
-            path: '/ticket',
-            name: 'ticket',
-            component: () => import('@/views/pages/Ticket.vue')
-        },
-        {
-            path: '/homebook',
-            name: 'homebook',
-            component: () => import('@/views/pages/Homebook.vue')
-        },
+
         {
             path: '/pages/notfound',
             name: 'notfound',
@@ -274,6 +293,11 @@ const router = createRouter({
             path: '/auth/error',
             name: 'error',
             component: () => import('@/views/pages/auth/Error.vue')
+        },
+        {
+            path: '/organizer/login',
+            name: 'organizerLogin',
+            component: () => import('@/views/organizer/Login.vue')
         }
     ]
 });
