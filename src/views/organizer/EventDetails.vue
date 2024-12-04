@@ -1,6 +1,7 @@
 <script setup>
 import { ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
+import { useToast } from 'primevue/usetoast';
 
 // Add props definition
 const props = defineProps({
@@ -9,6 +10,7 @@ const props = defineProps({
 
 const route = useRoute();
 const router = useRouter();
+const toast = useToast();
 
 // Get data from state or create default object
 const EventRequest = ref({
@@ -18,8 +20,28 @@ const EventRequest = ref({
     time: '3:00 PM - 4:00 PM',
     audience: '1500 pax',
     type: 'Paid Entry',
-    status: 'Pending'
+    status: 'Pending',
+    performers: [
+        'Taylor Swift', 
+        'Beyonce', 
+        'Justin Bieber', 
+        'Harry Styles', 
+        'Eminem', 
+        'Drake', 
+        'Post Malone'
+    ],
+    genre: 'Rock',
+    standardSeatPrice: 80,
+    goldSeatPrice: 120,
+    platinumSeatPrice: 190,
+    refundPolicy: 'No ticket refund 2 weeks before the event date.',
+    securityPolicy: 'Bag check at the entrance to avoid any weapons or drugs enter the concert.'
 });
+
+// New refs for editing
+const eventDialog = ref(false);
+const submitted = ref(false);
+const performerInput = ref('');
 
 const getStatusSeverity = (status) => {
     switch (status) {
@@ -60,6 +82,47 @@ const handleBack = () => {
     router.push('/organizer/viewevent');
 };
 
+// New edit-related functions
+const openEditDialog = () => {
+    eventDialog.value = true;
+    submitted.value = false;
+};
+
+const hideDialog = () => {
+    eventDialog.value = false;
+    submitted.value = false;
+};
+
+const addPerformer = () => {
+    if (performerInput.value.trim()) {
+        EventRequest.value.performers.push(performerInput.value.trim());
+        performerInput.value = '';
+    }
+};
+
+const removePerformer = (index) => {
+    EventRequest.value.performers.splice(index, 1);
+};
+
+const saveEvent = () => {
+    submitted.value = true;
+
+    // Basic validation for required fields
+    if (EventRequest.value.title?.trim() && 
+        EventRequest.value.date?.trim() && 
+        EventRequest.value.time?.trim()) {
+        
+        toast.add({ 
+            severity: 'success', 
+            summary: 'Successful', 
+            detail: 'Event Details Updated', 
+            life: 3000 
+        });
+
+        eventDialog.value = false;
+        submitted.value = false;
+    }
+};
 // For debugging
 // console.log('Props:', props);
 // console.log('Route params:', route.params);
@@ -106,30 +169,26 @@ const handleBack = () => {
                 <div class="flex justify-between border-b pb-2">
                     <p class="text-sm font-semibold">Performer(s)/Band(s):</p>
                     <div class="text-sm flex flex-col">
-                        <ul>Taylor Swift</ul>
-                        <ul>Beyonce</ul>
-                        <ul>Justin Bieber</ul>
-                        <ul>Harry Styles</ul>
-                        <ul>Eminem</ul>
-                        <ul>Drake</ul>
-                        <ul>Post Malone</ul>
+                        <ul v-for="(performer, index) in EventRequest.performers" :key="index">
+                            {{ performer }}
+                        </ul>
                     </div>
                 </div>
                 <div class="flex justify-between border-b pb-2">
                     <p class="text-sm font-semibold">Genre:</p>
-                    <p class="text-sm">Rock</p>
+                    <p class="text-sm">{{ EventRequest.genre }}</p>
                 </div>
                 <div class="flex justify-between border-b pb-2">
                     <p class="text-sm font-semibold">Standard Seat Price (RM):</p>
-                    <p class="text-sm">80</p>
+                    <p class="text-sm">{{ EventRequest.standardSeatPrice }}</p>
                 </div>
                 <div class="flex justify-between border-b pb-2">
                     <p class="text-sm font-semibold">Gold Seat Price (RM):</p>
-                    <p class="text-sm">120</p>
+                    <p class="text-sm">{{ EventRequest.goldSeatPrice }}</p>
                 </div>
                 <div class="flex justify-between border-b pb-2">
                     <p class="text-sm font-semibold">Platinum Seat Price (RM):</p>
-                    <p class="text-sm">190</p>
+                    <p class="text-sm">{{ EventRequest.platinumSeatPrice }}</p>
                 </div>
                 <div class="flex justify-between border-b pb-2">
                     <p class="text-sm font-semibold">Audience:</p>
@@ -143,9 +202,9 @@ const handleBack = () => {
                     <p class="text-sm font-semibold">Event Policies:</p>
                     <div class="w-1/4 text-right">
                         <p class="text-sm font-bold">Refunds and Cancellations:</p>
-                        <p class="text-sm">No ticket refund 2 weeks before the event date.</p>
+                        <p class="text-sm">{{ EventRequest.refundPolicy }}</p>
                         <p class="text-sm font-bold">Bag Checks & Security:</p>
-                        <p class="text-sm">Bag check at the entrance to avoid any weapons or drugs enter the concert.</p>
+                        <p class="text-sm">{{ EventRequest.securityPolicy }}</p>
                     </div>
                     
                 </div>
@@ -154,7 +213,7 @@ const handleBack = () => {
             <div class="flex justify-end space-x-4 mt-6">
                 <button
                     class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition"
-                    @click="handleAccept"
+                    @click="openEditDialog"
                 >
                     Edit
                 </button>
@@ -173,5 +232,164 @@ const handleBack = () => {
                 
             </div>
         </div>
+
+        <!-- Edit Dialog -->
+        <!-- Edit Dialog -->
+        <Dialog v-model:visible="eventDialog" :style="{ width: '600px' }" header="Edit Event Details" :modal="true">
+            <div class="flex flex-col gap-6">
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label for="title" class="block font-bold mb-3">Concert Title</label>
+                        <InputText 
+                            id="title" 
+                            v-model.trim="EventRequest.title" 
+                            required="true" 
+                            autofocus 
+                            :invalid="submitted && !EventRequest.title" 
+                            fluid 
+                            class="w-full"
+                        />
+                        <small v-if="submitted && !EventRequest.title" class="text-red-500">Title is required.</small>
+                    </div>
+                    <div>
+                        <label for="genre" class="block font-bold mb-3">Genre</label>
+                        <InputText 
+                            id="genre" 
+                            v-model="EventRequest.genre" 
+                            fluid 
+                            class="w-full"
+                        />
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label for="date" class="block font-bold mb-3">Date</label>
+                        <InputText 
+                            id="date" 
+                            v-model="EventRequest.date" 
+                            fluid 
+                            class="w-full"
+                        />
+                    </div>
+                    <div>
+                        <label for="time" class="block font-bold mb-3">Time</label>
+                        <InputText 
+                            id="time" 
+                            v-model="EventRequest.time" 
+                            fluid 
+                            class="w-full"
+                        />
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block font-bold mb-3">Performers</label>
+                    <div class="flex mb-3">
+                        <InputText 
+                            v-model="performerInput" 
+                            placeholder="Add performer" 
+                            class="w-full mr-2"
+                        />
+                        <Button 
+                            label="Add" 
+                            @click="addPerformer" 
+                            class="p-button-secondary"
+                        />
+                    </div>
+                    <div class="flex flex-wrap gap-2">
+                        <Chip 
+                            v-for="(performer, index) in EventRequest.performers" 
+                            :key="index" 
+                            :label="performer" 
+                            removable 
+                            @remove="removePerformer(index)"
+                        />
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-3 gap-4">
+                    <div>
+                        <label for="standardSeatPrice" class="block font-bold mb-3">Standard Seat Price (RM)</label>
+                        <InputNumber 
+                            id="standardSeatPrice" 
+                            v-model="EventRequest.standardSeatPrice" 
+                            mode="currency" 
+                            currency="MYR" 
+                            fluid 
+                            class="w-full"
+                        />
+                    </div>
+                    <div>
+                        <label for="goldSeatPrice" class="block font-bold mb-3">Gold Seat Price (RM)</label>
+                        <InputNumber 
+                            id="goldSeatPrice" 
+                            v-model="EventRequest.goldSeatPrice" 
+                            mode="currency" 
+                            currency="MYR" 
+                            fluid 
+                            class="w-full"
+                        />
+                    </div>
+                    <div>
+                        <label for="platinumSeatPrice" class="block font-bold mb-3">Platinum Seat Price (RM)</label>
+                        <InputNumber 
+                            id="platinumSeatPrice" 
+                            v-model="EventRequest.platinumSeatPrice" 
+                            mode="currency" 
+                            currency="MYR" 
+                            fluid 
+                            class="w-full"
+                        />
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label for="audience" class="block font-bold mb-3">Audience</label>
+                        <InputText 
+                            id="audience" 
+                            v-model="EventRequest.audience" 
+                            fluid 
+                            class="w-full"
+                        />
+                    </div>
+                    <div>
+                        <label for="type" class="block font-bold mb-3">Type of Entry</label>
+                        <InputText 
+                            id="type" 
+                            v-model="EventRequest.type" 
+                            fluid 
+                            class="w-full"
+                        />
+                    </div>
+                </div>
+
+                <div>
+                    <label for="refundPolicy" class="block font-bold mb-3">Refund Policy</label>
+                    <Textarea 
+                        id="refundPolicy" 
+                        v-model="EventRequest.refundPolicy" 
+                        rows="3" 
+                        class="w-full"
+                    />
+                </div>
+
+                <div>
+                    <label for="securityPolicy" class="block font-bold mb-3">Security Policy</label>
+                    <Textarea 
+                        id="securityPolicy" 
+                        v-model="EventRequest.securityPolicy" 
+                        rows="3" 
+                        class="w-full"
+                    />
+                </div>
+            </div>
+
+            <template #footer>
+                <Button label="Cancel" icon="pi pi-times" text @click="hideDialog" />
+                <Button label="Save" icon="pi pi-check" @click="saveEvent" />
+            </template>
+        </Dialog>
     </div>
 </template>
