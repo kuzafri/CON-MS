@@ -60,6 +60,7 @@ const { onMenuToggle, toggleDarkMode, isDarkTheme } = useLayout();
                 <button type="button" class="layout-topbar-action" @click="toggleDarkMode">
                     <i :class="['pi', { 'pi-moon': isDarkTheme, 'pi-sun': !isDarkTheme }]"></i>
                 </button>
+                
                 <Button label="Login" text as="router-link" to="/auth/login" rounded></Button>
                 <Button label="Register" to="/auth/login" rounded></Button>
             </div>

@@ -135,7 +135,7 @@ onUnmounted(() => {
                 <!-- Sidebar -->
                 <div class="sm:w-auto mx-3 h-max p-4 rounded-lg dark:bg-surface-800 mt-2">
                     <h2 class="text-lg font-semibold mb-4 dark:text-white">Locations</h2>
-                    <button class="bg-gray-200 text-sm py-1 px-4 rounded w-full" @click="clearFilters">Clear filters</button>
+                    <button class="bg-gray-200 dark:text-black text-sm py-1 px-4 rounded w-full" @click="clearFilters">Clear filters</button>
                     <div class="mt-6">
                         <h2 class="text-lg font-semibold mb-2 dark:text-white">Stay in the loop</h2>
                         <input v-model="email" type="email" placeholder="your@email.com" class="border w-full p-2 rounded mb-2" />
