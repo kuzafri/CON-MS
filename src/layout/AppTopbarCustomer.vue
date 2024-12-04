@@ -22,7 +22,7 @@ const logoSrc = computed(() => (isDarkTheme.value ? '/logo_dark.png' : '/logo_li
     <div class="layout-topbar border-b-[1px] border-black-900 dark:border-white-900">
         <div class="layout-topbar-logo-container">
             <a class="flex items-center mx-4 sm:w-1/2" href="#">
-                <img :src="logoSrc" alt="logo" class="w-full h-8" />
+                <img :src="logoSrc" alt="logo" class="sm:w-full sm:h1/3 h-8" />
             </a>
         </div>
 

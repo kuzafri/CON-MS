@@ -212,31 +212,30 @@ const svgTransform = computed(() => {
                                     </g>
                                 </template>
                             </svg>
-                           
                         </div>
-                         <!-- Move the legend outside the transform to keep it static -->
-                         <div class=" bottom-1 right-1 bg-surface-0 dark:bg-surface-900 p-3 rounded shadow z-10">
-                                <div class="flex items-center mb-2">
-                                    <div class="w-4 h-4 bg-orange-400 rounded mr-2"></div>
-                                    <span class="text-surface-900 dark:text-surface-0">VIP (RM150)</span>
-                                </div>
-                                <div class="flex items-center mb-2">
-                                    <div class="w-4 h-4 bg-yellow-500 rounded mr-2"></div>
-                                    <span class="text-surface-900 dark:text-surface-0">Standard (RM100)</span>
-                                </div>
-                                <div class="flex items-center mb-2">
-                                    <div class="w-4 h-4 bg-green-500 rounded mr-2"></div>
-                                    <span class="text-surface-900 dark:text-surface-0">Economy (RM80)</span>
-                                </div>
-                                <div class="flex items-center mb-2">
-                                    <div class="w-4 h-4 bg-red-500 rounded mr-2"></div>
-                                    <span class="text-surface-900 dark:text-surface-0">Selected</span>
-                                </div>
-                                <div class="flex items-center mb-2">
-                                    <div class="w-4 h-4 bg-surface-400 rounded mr-2"></div>
-                                    <span class="text-surface-900 dark:text-surface-0">Reserved</span>
-                                </div>
+
+                        <div class="bottom-1 right-1 bg-surface-0 dark:bg-surface-900 p-3 rounded shadow z-10">
+                            <div class="flex items-center mb-2">
+                                <div class="w-4 h-4 bg-orange-400 rounded mr-2"></div>
+                                <span class="text-surface-900 dark:text-surface-0">VIP (RM150)</span>
                             </div>
+                            <div class="flex items-center mb-2">
+                                <div class="w-4 h-4 bg-yellow-500 rounded mr-2"></div>
+                                <span class="text-surface-900 dark:text-surface-0">Standard (RM100)</span>
+                            </div>
+                            <div class="flex items-center mb-2">
+                                <div class="w-4 h-4 bg-green-500 rounded mr-2"></div>
+                                <span class="text-surface-900 dark:text-surface-0">Economy (RM80)</span>
+                            </div>
+                            <div class="flex items-center mb-2">
+                                <div class="w-4 h-4 bg-red-500 rounded mr-2"></div>
+                                <span class="text-surface-900 dark:text-surface-0">Selected</span>
+                            </div>
+                            <div class="flex items-center mb-2">
+                                <div class="w-4 h-4 bg-surface-400 rounded mr-2"></div>
+                                <span class="text-surface-900 dark:text-surface-0">Reserved</span>
+                            </div>
+                        </div>
                     </div>
 
                     <!-- Selected Seats Info -->
