@@ -70,7 +70,7 @@ const handleViewRequest = (event) => {
     <div class="card">
         <div class="flex justify-between items-center mb-4">
             <h2 class="text-2xl font-bold">Events</h2>
-            <button class="btn btn-primary">+ Create New Entry</button>
+            <!-- <button class="btn btn-primary">+ Create New Entry</button> -->
         </div>
 
         <DataTable :value="events" :loading="loading" :rows="10" paginator sortField="eventID" sortOrder="1">

@@ -11,7 +11,7 @@ const model = ref([
             { label: 'Dashboard', icon: 'pi pi-fw pi-id-card', to: `${currentPrefix}/dashboard` },
             { label: 'Events', icon: 'pi pi-fw pi-check-square', to: `${currentPrefix}/events` },
             { label: 'Users', icon: 'pi pi-fw pi-mobile', to: `${currentPrefix}/users` },
-            { label: 'Complaints', icon: 'pi pi-fw pi-comment', to: `${currentPrefix}/complaints` }
+            // { label: 'Complaints', icon: 'pi pi-fw pi-comment', to: `${currentPrefix}/complaint` }
             // { label: 'List', icon: 'pi pi-fw pi-list', to: '/uikit/list' },
             // { label: 'Tree', icon: 'pi pi-fw pi-share-alt', to: '/uikit/tree' },
             // { label: 'Panel', icon: 'pi pi-fw pi-tablet', to: '/uikit/panel' },
