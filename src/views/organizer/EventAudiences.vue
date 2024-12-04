@@ -9,6 +9,9 @@ const totalPrice = ref(0);
 const qrModalEnlarge = ref(false);
 const currentQrCodeSrc = ref('');
 
+// New search-related reactive variable
+const searchQuery = ref('');
+
 function closeQrCodeModal() {
     qrModalEnlarge.value = false;
 }
@@ -55,8 +58,73 @@ const Audiences = ref([
         seatNumber: 'Row J - Seat 5',
         ticketPrice: '100',
         bookingStatus: 'success'
+    },
+    {
+        name: 'Amira Khan',
+        bookingId: '1244',
+        eventId: 'R-KL-58/42',
+        seatNumber: 'Row F - Seat 22',
+        ticketPrice: '90',
+        bookingStatus: 'success'
+    },
+    {
+        name: 'Carlos Rodriguez',
+        bookingId: '1245',
+        eventId: 'R-KL-58/42',
+        seatNumber: 'Row K - Seat 8',
+        ticketPrice: '75',
+        bookingStatus: 'pending'
+    },
+    {
+        name: 'Emma Thompson',
+        bookingId: '1246',
+        eventId: 'R-KL-58/42',
+        seatNumber: 'Row D - Seat 14',
+        ticketPrice: '110',
+        bookingStatus: 'success'
+    },
+    {
+        name: 'Hassan Ali',
+        bookingId: '1247',
+        eventId: 'R-KL-58/42',
+        seatNumber: 'Row E - Seat 3',
+        ticketPrice: '85',
+        bookingStatus: 'pending'
+    },
+    {
+        name: 'Isabella Martinez',
+        bookingId: '1248',
+        eventId: 'R-KL-58/42',
+        seatNumber: 'Row B - Seat 19',
+        ticketPrice: '95',
+        bookingStatus: 'success'
+    },
+    {
+        name: 'John Smith',
+        bookingId: '1249',
+        eventId: 'R-KL-58/42',
+        seatNumber: 'Row C - Seat 7',
+        ticketPrice: '70',
+        bookingStatus: 'pending'
+    },
+    {
+        name: 'Sophia Lee',
+        bookingId: '1250',
+        eventId: 'R-KL-58/42',
+        seatNumber: 'Row A - Seat 11',
+        ticketPrice: '105',
+        bookingStatus: 'success'
     }
 ]);
+
+// Computed property for filtered audiences
+const filteredAudiences = computed(() => {
+    if (!searchQuery.value) return Audiences.value;
+    
+    return Audiences.value.filter(audience => 
+        audience.name.toLowerCase().includes(searchQuery.value.toLowerCase())
+    );
+});
 
 // Modal state
 const isModalVisible = ref(false);
@@ -100,38 +168,45 @@ const handleBack = () => {
                 <InputIcon>
                     <i class="pi pi-search" />
                 </InputIcon>
-                <InputText placeholder="Search..." />
+                <InputText 
+                    v-model="searchQuery" 
+                    placeholder="Search by name..." 
+                    class="w-full"
+                />
             </IconField>
         </div>
         <div class="card h-full">
-            <div class="space-y-4">
-                <div v-for="audience in Audiences" :key="audience.bookingId" class="border border-gray-300 rounded p-4 flex flex-col justify-between h-full">
+            <div v-if="filteredAudiences.length === 0" class="text-center text-gray-500 py-4">
+                No audiences found matching your search.
+            </div>
+            <div v-else class="space-y-4">
+                <div v-for="audience in filteredAudiences" :key="audience.bookingId" class="border border-gray-300 rounded p-4 flex flex-col justify-between h-full">
                     <div class="flex items-center justify-between">
                         <div>
                             <div class="flex items-center gap-4">
                                 <p class="text-base font-extrabold">Name:</p>
                                 <p class="text-sm font-semibold mb-2">{{ audience.name }}</p>
                             </div>
-                            <div class="flex items-center gap-4">
+                            <!-- <div class="flex items-center gap-4">
                                 <p class="text-base font-extrabold">Booking ID:</p>
                                 <p class="text-sm font-semibold mb-2">{{ audience.bookingId }}</p>
-                            </div>
-                            <div class="flex items-center gap-4">
+                            </div> -->
+                            <!-- <div class="flex items-center gap-4">
                                 <p class="text-base font-extrabold">Event ID:</p>
                                 <p class="text-sm">{{ audience.eventId }}</p>
-                            </div>
+                            </div> -->
                             <div class="flex items-center gap-4">
                                 <p class="text-base font-extrabold">Seat Number:</p>
                                 <p class="text-sm">{{ audience.seatNumber }}</p>
                             </div>
-                            <div class="flex items-center gap-4">
+                            <!-- <div class="flex items-center gap-4">
                                 <p class="text-base font-extrabold">Ticket Price:</p>
                                 <p class="text-sm">RM {{ audience.ticketPrice }}</p>
-                            </div>
-                            <div class="flex items-center gap-4">
+                            </div> -->
+                            <!-- <div class="flex items-center gap-4">
                                 <p class="text-base font-extrabold">Booking Status:</p>
                                 <p class="text-sm">{{ audience.bookingStatus }}</p>
-                            </div>
+                            </div> -->
                         </div>
                         <div>
                             <Button label="View E-Ticket" raised @click="showETicket(audience)" />
