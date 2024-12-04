@@ -8,14 +8,15 @@ function smoothScroll(id) {
     });
 }
 
+const logoSrc = computed(() => (isDarkTheme.value ? '/logo_dark.png' : '/logo_light.png'));
 const { onMenuToggle, toggleDarkMode, isDarkTheme } = useLayout();
 </script>
 <template>
     <div class="bg-surface-0 dark:bg-surface-900">
         <div id="home" class="landing-wrapper overflow-hidden">
             <div class="py-6 px-6 mx-0 md:mx-12 lg:mx-20 lg:px-20 flex items-center justify-between relative lg:static">
-                <a class="flex items-center" href="#">
-                   <span class="text-surface-900 dark:text-surface-0 font-medium text-2xl leading-normal mr-20">Concertify</span>
+                <a class="flex items-center mx-4 sm:w-1/2" href="#">
+                    <img :src="logoSrc" alt="logo" class="sm:w-full sm:h1/3 h-8" />
                 </a>
                 <Button
                     class="lg:!hidden"
