@@ -86,15 +86,14 @@ onUnmounted(() => {
 
 <template>
     <div class="bg-surface-0 dark:bg-surface-900 min-h-screen flex flex-col mt-14">
-       
         <div class="container mx-auto p-6">
             <div class="flex flex-col md:flex-row space-x-4">
                 <!-- Sidebar -->
-                <div class="sm:w-auto bg-gray-50 p-4 rounded-lg">
-                    <h2 class="text-lg font-semibold mb-4">Locations</h2>
+                <div class="sm:w-auto bg-gray-50 p-4 rounded-lg dark:bg-surface-800 ">
+                    <h2 class="text-lg font-semibold mb-4 dark:text-white">Locations</h2>
                     <button class="bg-gray-200 text-sm py-1 px-4 rounded w-full" @click="clearFilters">Clear filters</button>
                     <div class="mt-6">
-                        <h2 class="text-lg font-semibold mb-2">Stay in the loop</h2>
+                        <h2 class="text-lg font-semibold mb-2 dark:text-white">Stay in the loop</h2>
                         <input v-model="email" type="email" placeholder="your@email.com" class="border w-full p-2 rounded mb-2" />
                         <button class="bg-blue-500 text-white px-4 py-2 rounded w-full" @click="subscribe">Create alerts</button>
                     </div>
@@ -102,7 +101,7 @@ onUnmounted(() => {
 
                 <!-- Event Cards -->
                 <div class="flex flex-col md:flex-row gap-2">
-                    <div v-for="event in events" :key="event.id" class="p-6 mx-auto bg-white shadow-lg rounded-lg">
+                    <div v-for="event in events" :key="event.id" class="dark:bg-surface-800 p-6 mx-auto bg-white shadow-lg rounded-lg">
                         <div class="relative">
                             <img :src="event.image" alt="Event Image" class="w-full h-48 object-cover rounded-lg" />
                             <!-- <div class="absolute top-2 left-2 bg-white rounded-full p-2 shadow">
@@ -110,10 +109,10 @@ onUnmounted(() => {
               </div> -->
                         </div>
                         <h2 class="text-xl font-semibold mt-4">{{ event.title }}</h2>
-                        <p class="text-gray-500">{{ event.description }}</p>
-                        <p class="text-gray-700 font-bold">{{ event.date }}</p>
+                        <p class="text-gray-500 dark:text-white">{{ event.description }}</p>
+                        <p class="text-gray-700 dark:text-white font-bold">{{ event.date }}</p>
                         <div class="flex flex-wrap mt-2 space-x-2">
-                            <span class="bg-gray-200 text-sm py-1 px-2 rounded">Music</span>
+                            <span class="bg-gray-200 dark:text-black text-sm py-1 px-2 rounded">Music</span>
                             <!-- <span class="bg-gray-200 text-sm py-1 px-2 rounded">Min 1 year</span> -->
                         </div>
                         <div class="flex justify-between items-center mt-4">
