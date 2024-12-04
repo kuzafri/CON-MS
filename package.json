@@ -9,9 +9,12 @@
     },
     "dependencies": {
         "@firebasegen/default-connector": "file:dataconnect-generated/js/default-connector",
+        "@panzoom/panzoom": "^4.5.1",
         "@primevue/themes": "^4.0.0",
         "chart.js": "3.3.2",
         "firebase": "^10.14.1",
+        "lucide-vue-next": "^0.464.0",
+        "pinia": "^2.2.8",
         "primeicons": "^6.0.1",
         "primevue": "^4.0.0",
         "vue": "^3.4.34",

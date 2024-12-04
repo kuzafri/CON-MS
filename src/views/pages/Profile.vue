@@ -23,9 +23,6 @@ const handleLogout = () => {
     router.push('/auth/login');
 };
 
-const handleEditProfile = () => {
-    // Add edit profile logic here
-};
 </script>
 
 <template>

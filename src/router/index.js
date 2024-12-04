@@ -158,6 +158,26 @@ const router = createRouter({
             ]
         },
         {
+            path: '/admin/auth/login',
+            name: 'adminLogin',
+            component: () => import('@/views/admin/auth/Login.vue')
+        },
+        {
+            path: '/admin/auth/register',
+            name: 'adminRegister',
+            component: () => import('@/views/admin/auth/Register.vue')
+        },
+        {
+            path: '/admin/auth/access',
+            name: 'adminAccessDenied',
+            component: () => import('@/views/admin/auth/Access.vue')
+        },
+        {
+            path: '/admin/auth/error',
+            name: 'adminError',
+            component: () => import('@/views/admin/auth/Error.vue')
+        },
+        {
             path: '/organizer',
             component: AppLayoutOrganizer,
             children: [

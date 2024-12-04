@@ -93,20 +93,20 @@ const sections = generateSections();
 // Ticket Rates
 const ticketRates = ref([
     {
-        type: 'Platinum',
-        price: 'RM 50',
+        type: 'VIP',
+        price: 'RM 150',
         seats: '250 seat(s)',
         color: 'bg-gray-200'
     },
     {
-        type: 'Gold',
-        price: 'RM 35',
+        type: 'Standard',
+        price: 'RM 100',
         seats: '500 seat(s)',
         color: 'bg-yellow-400'
     },
     {
-        type: 'Regular',
-        price: 'RM 25',
+        type: 'Economy',
+        price: 'RM 80',
         seats: '750 seat(s)',
         color: 'bg-blue-500'
     }
@@ -200,9 +200,9 @@ const handleDeclineRequest = () => {
                                             height="12"
                                             rx="2"
                                             :class="{
-                                                'fill-blue-500': rowIndex < 3, // Regular
-                                                'fill-gray-200': rowIndex >= 3 && rowIndex < 5, // Platinum
-                                                'fill-yellow-400': rowIndex >= 5, // Gold
+                                                'fill-gray-200': rowIndex < 2, // VIP
+                                                'fill-yellow-400': rowIndex >= 2 && rowIndex < 5, // Standard
+                                                'fill-blue-500': rowIndex >= 5, // Economy
                                             }"
                                         />
                                     </g>
@@ -221,15 +221,15 @@ const handleDeclineRequest = () => {
                         <div class="absolute bottom-1 right-1 bg-surface-0 dark:bg-surface-900 p-3 rounded shadow">
                             <div class="flex items-center mb-2">
                                 <div class="w-4 h-4 bg-blue-500 rounded mr-2"></div>
-                                <span class="text-surface-900 dark:text-white">Regular</span>
+                                <span class="text-surface-900 dark:text-white">Economy</span>
                             </div>
                             <div class="flex items-center mb-2">
-                                <div class="w-4 h-4 bg-gray-200 rounded mr-2"></div>
-                                <span class="text-surface-900 dark:text-white">Platinum</span>
+                                <div class="w-4 h-4 bg-yellow-400 rounded mr-2"></div>
+                                <span class="text-surface-900 dark:text-white">Standard</span>
                             </div>
                             <div class="flex items-center">
-                                <div class="w-4 h-4 bg-yellow-400 rounded mr-2"></div>
-                                <span class="text-surface-900 dark:text-white">Gold</span>
+                                <div class="w-4 h-4 bg-gray-200 rounded mr-2"></div>
+                                <span class="text-surface-900 dark:text-white">VIP</span>
                             </div>
                         </div>
                     </div>
@@ -285,7 +285,12 @@ const handleDeclineRequest = () => {
                     <div class="bg-surface-50 dark:bg-surface-800 rounded-lg shadow-lg p-6">
                         <div class="flex justify-between items-center mb-4">
                             <h2 class="text-lg font-semibold text-surface-900 dark:text-white">Disputes</h2>
-                            <button class="text-sm text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300">View More</button>
+                            <button 
+                                @click="$router.push('/admin/complaints')" 
+                                class="text-sm text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300"
+                            >
+                                View More
+                            </button>
                         </div>
                         <div class="space-y-4">
                             <div v-for="dispute in disputes" 

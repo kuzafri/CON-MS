@@ -1,6 +1,6 @@
 <script setup>
 import { useLayout } from '@/layout/composables/layout';
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 
 const { onMenuToggle, toggleDarkMode, isDarkTheme } = useLayout();
 
@@ -14,14 +14,16 @@ const isMenuOpen = ref(false);
 const toggleMenu = () => {
     isMenuOpen.value = !isMenuOpen.value;
 };
+
+const logoSrc = computed(() => (isDarkTheme.value ? '/logo_dark.png' : '/logo_light.png'));
 </script>
 
 <template>
     <div class="layout-topbar border-b-[1px] border-black-900 dark:border-white-900">
         <div class="layout-topbar-logo-container">
-            <router-link to="/homebook" class="layout-topbar-logo">
-                <span>Concertify</span>
-            </router-link>
+            <a class="flex items-center mx-4" href="#">
+                <img :src="logoSrc" alt="logo" class="w-full h-8" />
+            </a>
         </div>
 
         <div class="layout-topbar-actions ml-auto">
@@ -115,7 +117,7 @@ const toggleMenu = () => {
                 </button>
 
                 <!-- Profile Popup Menu -->
-                <div class="hidden absolute right-0 top-full mt-2 w-64 bg-white dark:bg-gray-900 rounded-lg shadow-lg z-50">
+                <div class="hidden absolute right-0 top-full mt-2 w-64 bg-white dark:bg-surface-800 rounded-lg shadow-lg z-50">
                     <div class="p-4">
                         <!-- User Info -->
                         <div class="flex items-center gap-3 mb-4">
