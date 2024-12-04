@@ -1,26 +1,17 @@
 <script setup>
-import { ref, computed } from 'vue';
+import { computed } from 'vue';
 import { HeartIcon } from 'lucide-vue-next';
-import { Button } from '@/components/ui/button'; // Adjust import as needed
+// import { Button } from '@/components/ui/button';
+import { useFavoriteStore } from '@/stores/favorite';
 
-// Assuming you're managing favorites in a store or through a prop/emit
-const favorites = ref([
-    {
-        id: 1,
-        image: 'concert.png',
-        title: 'Thriller',
-        date: '24/5/2025',
-        description: 'Dewan Tuanku Syed Putra, USM',
-        price: 235,
-        isFavorite: true
-    }
-]);
+const favoriteStore = useFavoriteStore();
+
+const favorites = computed(() => favoriteStore.favorites);
+const hasFavorites = computed(() => favorites.value.length > 0);
 
 const removeFavorite = (event) => {
-    favorites.value = favorites.value.filter(fav => fav.id !== event.id);
+    favoriteStore.removeFavorite(event.id);
 };
-
-const hasFavorites = computed(() => favorites.value.length > 0);
 </script>
 
 <template>

@@ -260,6 +260,11 @@ const router = createRouter({
                     path: '/complaint',
                     name: 'Complaint',
                     component: () => import('@/views/pages/Complaint.vue')
+                },
+                {
+                    path: '/favourite',
+                    name: 'Favourite',
+                    component: () => import('@/views/pages/Favourite.vue')
                 }
             ]
         },

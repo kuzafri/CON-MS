@@ -2,6 +2,7 @@
 import { useLayout } from '@/layout/composables/layout';
 import { computed, onMounted, onUnmounted, ref } from 'vue';
 import { HeartIcon } from 'lucide-vue-next'; // Assuming you're using Lucide icons
+import { useFavoriteStore } from '@/stores/favorite';
 
 const logoSrc = computed(() => (isDarkTheme.value ? '/logo_dark.png' : '/logo_light.png'));
 const categoriesContainer = ref(null);
@@ -35,7 +36,7 @@ const events = ref([
         isFavorite: false
     },
     {
-        id: 1,
+        id: 4,
         image: 'concert.png',
         title: 'Thriller',
         date: '24/5/2025',
@@ -44,7 +45,7 @@ const events = ref([
         isFavorite: false
     },
     {
-        id: 2,
+        id: 5,
         image: 'concert.png',
         title: 'Thriller',
         date: '24/5/2025',
@@ -53,7 +54,7 @@ const events = ref([
         isFavorite: false
     },
     {
-        id: 3,
+        id: 6,
         image: 'concert.png',
         title: 'Thriller',
         date: '24/5/2025',
@@ -64,8 +65,16 @@ const events = ref([
 ]);
 let scrollInterval = null;
 
+const favoriteStore = useFavoriteStore();
+
 const toggleFavorite = (event) => {
-    event.isFavorite = !event.isFavorite;
+    if (favoriteStore.isFavorite(event.id)) {
+        favoriteStore.removeFavorite(event.id);
+        event.isFavorite = false;
+    } else {
+        favoriteStore.addFavorite(event);
+        event.isFavorite = true;
+    }
 };
 
 const startAutoScroll = () => {
@@ -121,10 +130,10 @@ onUnmounted(() => {
 
 <template>
     <div class="bg-surface-0 dark:bg-surface-900 min-h-screen flex flex-col mt-14">
-        <div class="container mx-auto py-6">
-            <div class="flex flex-col md:flex-row">
+        <div class="mx-auto py-6">
+            <div class="flex flex-col md:flex-row w-full ">
                 <!-- Sidebar -->
-                <div class="sm:w-auto mx-3 h-max p-4 rounded-lg dark:bg-surface-800">
+                <div class="sm:w-auto mx-3 h-max p-4 rounded-lg dark:bg-surface-800 mt-2">
                     <h2 class="text-lg font-semibold mb-4 dark:text-white">Locations</h2>
                     <button class="bg-gray-200 text-sm py-1 px-4 rounded w-full" @click="clearFilters">Clear filters</button>
                     <div class="mt-6">
@@ -135,8 +144,8 @@ onUnmounted(() => {
                 </div>
 
                 <!-- Event Cards -->
-                <div class="flex flex-wrap gap-2 w-full">
-                    <div v-for="event in events" :key="event.id" class="ml-2 dark:bg-surface-800 p-6 bg-white shadow-lg rounded-lg w-max sm:w-1/3 relative">
+                <div class="flex flex-wrap gap-2 w-full mt-2">
+                    <div v-for="event in events" :key="event.id" class="ml-2 dark:bg-surface-800 p-6 bg-white shadow-lg rounded-lg sm:w-1/3 relative">
                         <div class="relative">
                             <img :src="event.image" alt="Event Image" class="w-full h-48 object-cover rounded-lg" />
                         </div>
@@ -147,8 +156,8 @@ onUnmounted(() => {
                                 class="focus:outline-none right-5 absolute"
                             >
                                 <HeartIcon 
-                                    :fill="event.isFavorite ? 'red' : 'none'" 
-                                    :stroke="event.isFavorite ? 'red' : 'currentColor'" 
+                                    :fill="favoriteStore.isFavorite(event.id) ? 'red' : 'none'" 
+                                    :stroke="favoriteStore.isFavorite(event.id) ? 'red' : 'currentColor'" 
                                     class="w-6 h-6 hover:scale-110 transition-transform"
                                 />
                             </button>
@@ -164,6 +173,7 @@ onUnmounted(() => {
                         </div>
                     </div>
                 </div>
+                
             </div>
         </div>
     </div>
