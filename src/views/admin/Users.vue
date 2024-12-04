@@ -6,10 +6,10 @@ const users = ref([
     {
         id: 1,
         image: 'https://via.placeholder.com/150',
-        name: 'Irshad Bin Abdul Razak',
+        name: 'Irshad',
         userID: 'CFY-A-2907762-T',
         role: 'Audience',
-        email: 'irshadrazak@student.usm.my',
+        email: 'irshad@student.usm.my',
         contact: '019-514 0014',
         lastActive: '2024-09-30 23:59:59',
         status: 'Active',
@@ -17,10 +17,10 @@ const users = ref([
     {
         id: 2,
         image: 'https://via.placeholder.com/150',
-        name: 'Sarah Abdullah',
+        name: 'Ku Muhammad Zafri',
         userID: 'CFY-A-2907763-T',
         role: 'Audience',
-        email: 'sarahabd@student.usm.my',
+        email: 'zaf@student.usm.my',
         contact: '019-555 1234',
         lastActive: '2024-09-29 14:30:00',
         status: 'Active',
@@ -28,10 +28,10 @@ const users = ref([
     {
         id: 3,
         image: 'https://via.placeholder.com/150',
-        name: 'Ahmad Zakaria',
+        name: 'Muhammad Al Hakim',
         userID: 'CFY-A-2907764-T',
         role: 'Audience',
-        email: 'ahmadz@student.usm.my',
+        email: 'hakim@student.usm.my',
         contact: '019-666 5678',
         lastActive: '2024-09-28 09:15:00',
         status: 'Inactive',
@@ -40,10 +40,10 @@ const users = ref([
     {
         id: 4,
         image: 'https://via.placeholder.com/150',
-        name: 'Dr. Fatimah Rahman',
+        name: 'Danish Irfan',
         userID: 'CFY-O-1234567-T',
         role: 'Organiser',
-        email: 'fatimah.rahman@usm.my',
+        email: 'danish@usm.my',
         contact: '019-777 8899',
         lastActive: '2024-09-30 22:45:00',
         status: 'Active',
@@ -151,7 +151,7 @@ function getStatusClass(status) {
                     />
                     <i class="pi pi-search search-icon"></i>
                 </div>
-                <button class="btn btn-primary">+ Create New User</button>
+                <!-- <button class="btn btn-primary">+ Create New User</button> -->
             </div>
         </div>
 
@@ -183,7 +183,6 @@ function getStatusClass(status) {
 </template>
 
 <style scoped>
-/* Keeping your original styles */
 .card {
     padding: 1rem;
     background-color: var(--surface-card);

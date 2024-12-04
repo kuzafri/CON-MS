@@ -115,7 +115,8 @@ const ticketRates = ref([
 // Dummy disputes data
 const disputes = ref([
     {
-        user: 'Lucas Lim Weng Kit',
+        id: '1',
+        user: 'Locas Lim Weng Kit',
         date: '21-10-2024',
         time: '13:14:44',
         status: 'Active',
@@ -123,6 +124,7 @@ const disputes = ref([
         details: 'I ordered a set of Hokkien Mee with drinks but only received a dry set of noodles and condiments without both the broth and drinks.'
     },
     {
+        id: '2',
         user: 'Dennis Tan Yi Jian',
         date: '21-10-2024',
         time: '13:14:44',
@@ -137,6 +139,28 @@ const handleAcceptRequest = () => {
 
 const handleDeclineRequest = () => {
     alert(`Event request "${eventInfo.value.title}" has been declined`);
+};
+
+const handleInventory = () => {
+    console.log('handleInventory called');
+    router.push({
+        name: 'adminEventInventory',  // Use the named route
+        // params: {
+        //     id: EventRequest.value.id
+        // },
+        // state: EventRequest.value  // Pass full event data in state
+    });
+};
+
+const handleViewDisputes = () => {
+    router.push({
+        name: 'complaints',
+        query: {
+            disputes: JSON.stringify(disputes.value),
+            eventTitle: eventInfo.value.title,
+            eventId: eventInfo.value.id
+        }
+    });
 };
 </script>
 
@@ -159,8 +183,14 @@ const handleDeclineRequest = () => {
                     >
                         Decline Request
                     </button>
-                    <button class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors">
+                    <!-- <button class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors">
                         Edit
+                    </button> -->
+                    <button
+                        class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition"
+                        @click="handleInventory"
+                    >
+                        Inventory
                     </button>
                     <span class="px-3 py-1 bg-green-100 dark:bg-green-700 text-green-800 dark:text-green-100 rounded-full text-sm">
                         {{ eventInfo.type }}
@@ -265,7 +295,7 @@ const handleDeclineRequest = () => {
                     <div class="bg-surface-50 dark:bg-surface-800 rounded-lg shadow-lg p-6">
                         <div class="flex justify-between items-center mb-4">
                             <h2 class="text-lg font-semibold text-surface-900 dark:text-white">Ticket Rate</h2>
-                            <button class="text-blue-600 dark:text-blue-400">Edit</button>
+                            <!-- <button class="text-blue-600 dark:text-blue-400">Edit</button> -->
                         </div>
                         <div class="flex gap-4 overflow-x-auto pb-2">
                             <div v-for="rate in ticketRates" 
@@ -286,7 +316,7 @@ const handleDeclineRequest = () => {
                         <div class="flex justify-between items-center mb-4">
                             <h2 class="text-lg font-semibold text-surface-900 dark:text-white">Disputes</h2>
                             <button 
-                                @click="$router.push('/admin/complaints')" 
+                                @click="handleViewDisputes" 
                                 class="text-sm text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300"
                             >
                                 View More
@@ -308,10 +338,6 @@ const handleDeclineRequest = () => {
                                 <p class="text-sm text-surface-600 dark:text-gray-400">{{ dispute.date }} | {{ dispute.time }}</p>
                                 <p class="mt-2 text-surface-900 dark:text-white">{{ dispute.description }}</p>
                                 <p v-if="dispute.details" class="mt-1 text-sm text-surface-600 dark:text-gray-300">{{ dispute.details }}</p>
-                                <button v-if="dispute.details" 
-                                        class="mt-2 px-4 py-1 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm">
-                                    Resolve
-                                </button>
                             </div>
                         </div>
                     </div>
