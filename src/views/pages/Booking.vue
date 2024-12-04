@@ -106,6 +106,52 @@ const proceedToCheckout = () => {
         }
     });
 };
+
+const viewBox = ref('0 0 800 600');
+const isPanning = ref(false);
+const startPan = ref({ x: 0, y: 0 });
+const currentTransform = ref({ x: 0, y: 0, scale: 1 });
+
+const handleMouseDown = (event) => {
+    isPanning.value = true;
+    startPan.value = {
+        x: event.clientX - currentTransform.value.x,
+        y: event.clientY - currentTransform.value.y
+    };
+};
+
+const handleMouseMove = (event) => {
+    if (!isPanning.value) return;
+    
+    const newX = event.clientX - startPan.value.x;
+    const newY = event.clientY - startPan.value.y;
+    
+    // Add boundaries to prevent excessive panning
+    const maxPan = 400 * currentTransform.value.scale;
+    currentTransform.value.x = Math.max(Math.min(newX, maxPan), -maxPan);
+    currentTransform.value.y = Math.max(Math.min(newY, maxPan), -maxPan);
+};
+
+const handleMouseUp = () => {
+    isPanning.value = false;
+};
+
+const handleWheel = (event) => {
+    event.preventDefault();
+    const scaleFactor = event.deltaY > 0 ? 0.9 : 1.1;
+    const newScale = currentTransform.value.scale * scaleFactor;
+    
+    // Limit zoom scale between 0.5 and 3
+    if (newScale >= 0.5 && newScale <= 3) {
+        currentTransform.value.scale = newScale;
+    }
+};
+
+// Computed style for the transform
+const svgTransform = computed(() => {
+    const { x, y, scale } = currentTransform.value;
+    return `translate(${x}px, ${y}px) scale(${scale})`;
+});
 </script>
 
 <template>
@@ -133,8 +179,19 @@ const proceedToCheckout = () => {
                 <div class="gap-8 flex lg:flex-row flex-col">
                     <!-- Seating Map -->
                     <div class="bg-surface-50 lg:w-2/3 dark:bg-surface-800 rounded-lg shadow-lg p-10">
-                        <div class="relative">
-                            <svg viewBox="0 0 800 600" class="w-full">
+                        <div 
+                            class="relative overflow-hidden" 
+                            @mousedown="handleMouseDown"
+                            @mousemove="handleMouseMove"
+                            @mouseup="handleMouseUp"
+                            @mouseleave="handleMouseUp"
+                            @wheel="handleWheel"
+                        >
+                            <svg 
+                                viewBox="0 0 800 600" 
+                                class="w-full cursor-move transform-gpu"
+                                :style="{ transform: svgTransform }"
+                            >
                                 <!-- Stage -->
                                 <path d="M250,550 Q400,520 550,550" fill="none" stroke="currentColor" stroke-width="4" class="text-surface-400 dark:text-surface-500" />
                                 <text x="400" y="560" text-anchor="middle" class="text-sm fill-current text-surface-900 dark:text-surface-0">STAGE</text>
@@ -167,8 +224,10 @@ const proceedToCheckout = () => {
                                 </template>
                             </svg>
 
-                            <!-- Legend -->
-                            <div class="lg:absolute bottom-1 right-1 bg-surface-0 dark:bg-surface-900 p-3 rounded shadow">
+                           
+                        </div>
+                         <!-- Move the legend outside the transform to keep it static -->
+                         <div class="lg:absolute bottom-1 right-1 bg-surface-0 dark:bg-surface-900 p-3 rounded shadow z-10">
                                 <div class="flex items-center mb-2">
                                     <div class="w-4 h-4 bg-orange-400 rounded mr-2"></div>
                                     <span class="text-surface-900 dark:text-surface-0">VIP (RM150)</span>
@@ -190,7 +249,6 @@ const proceedToCheckout = () => {
                                     <span class="text-surface-900 dark:text-surface-0">Reserved</span>
                                 </div>
                             </div>
-                        </div>
                     </div>
 
                     
@@ -245,12 +303,23 @@ const proceedToCheckout = () => {
     </div>
 </template>
 
-<style>
+<style scoped>
 .seat {
     transition: fill 0.2s ease;
 }
 
 img {
     transition: opacity 0.3s ease-in-out;
+}
+
+/* Add these new styles */
+.transform-gpu {
+    transform-origin: center;
+    transition: transform 0.1s ease-out;
+    will-change: transform;
+}
+
+.overflow-hidden {
+    overflow: hidden;
 }
 </style>

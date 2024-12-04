@@ -117,7 +117,7 @@ const logoSrc = computed(() => (isDarkTheme.value ? '/logo_dark.png' : '/logo_li
                 </button>
 
                 <!-- Profile Popup Menu -->
-                <div class="hidden absolute right-0 top-full mt-2 w-64 bg-white dark:bg-gray-900 rounded-lg shadow-lg z-50">
+                <div class="hidden absolute right-0 top-full mt-2 w-64 bg-white dark:bg-surface-800 rounded-lg shadow-lg z-50">
                     <div class="p-4">
                         <!-- User Info -->
                         <div class="flex items-center gap-3 mb-4">
