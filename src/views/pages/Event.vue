@@ -29,6 +29,30 @@ const events = ref([
         date: '24/5/2025',
         description: 'Dewan Tuanku Syed Putra, USM',
         price: 450
+    },
+    {
+        id: 1,
+        image: 'concert.png',
+        title: 'Thriller',
+        date: '24/5/2025',
+        description: 'Dewan Tuanku Syed Putra, USM',
+        price: 235
+    },
+    {
+        id: 2,
+        image: 'concert.png',
+        title: 'Thriller',
+        date: '24/5/2025',
+        description: 'Dewan Tuanku Syed Putra, USM',
+        price: 320
+    },
+    {
+        id: 3,
+        image: 'concert.png',
+        title: 'Thriller',
+        date: '24/5/2025',
+        description: 'Dewan Tuanku Syed Putra, USM',
+        price: 450
     }
 ]);
 let scrollInterval = null;
@@ -86,10 +110,10 @@ onUnmounted(() => {
 
 <template>
     <div class="bg-surface-0 dark:bg-surface-900 min-h-screen flex flex-col mt-14">
-        <div class="container mx-auto p-6">
-            <div class="flex flex-col md:flex-row space-x-4">
+        <div class="container mx-auto py-6">
+            <div class="flex flex-col md:flex-row">
                 <!-- Sidebar -->
-                <div class="sm:w-auto bg-gray-50 p-4 rounded-lg dark:bg-surface-800 ">
+                <div class="sm:w-auto mx-3 h-max p-4 rounded-lg dark:bg-surface-800">
                     <h2 class="text-lg font-semibold mb-4 dark:text-white">Locations</h2>
                     <button class="bg-gray-200 text-sm py-1 px-4 rounded w-full" @click="clearFilters">Clear filters</button>
                     <div class="mt-6">
@@ -100,20 +124,16 @@ onUnmounted(() => {
                 </div>
 
                 <!-- Event Cards -->
-                <div class="flex flex-col md:flex-row gap-2">
-                    <div v-for="event in events" :key="event.id" class="dark:bg-surface-800 p-6 mx-auto bg-white shadow-lg rounded-lg">
+                <div class="flex flex-wrap gap-2 w-full">
+                    <div v-for="event in events" :key="event.id" class="ml-2 dark:bg-surface-800 p-6 bg-white shadow-lg rounded-lg w-max sm:w-1/3">
                         <div class="relative">
                             <img :src="event.image" alt="Event Image" class="w-full h-48 object-cover rounded-lg" />
-                            <!-- <div class="absolute top-2 left-2 bg-white rounded-full p-2 shadow">
-                <i class="text-xl text-blue-500 material-icons">music_note</i>
-              </div> -->
                         </div>
                         <h2 class="text-xl font-semibold mt-4">{{ event.title }}</h2>
                         <p class="text-gray-500 dark:text-white">{{ event.description }}</p>
                         <p class="text-gray-700 dark:text-white font-bold">{{ event.date }}</p>
                         <div class="flex flex-wrap mt-2 space-x-2">
                             <span class="bg-gray-200 dark:text-black text-sm py-1 px-2 rounded">Music</span>
-                            <!-- <span class="bg-gray-200 text-sm py-1 px-2 rounded">Min 1 year</span> -->
                         </div>
                         <div class="flex justify-between items-center mt-4">
                             <span class="text-lg font-bold">RM{{ event.price }}</span>
