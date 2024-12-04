@@ -133,14 +133,20 @@ const router = createRouter({
                     component: () => import('@/views/admin/Users.vue')
                 },
                 {
-                    path: 'complaints',
+                    path: 'event-details/:id',
+                    name: 'EventsDetails',
+                    component: () => import('@/views/admin/EventsDetails.vue'),
+                    props: true
+                },
+                {
+                    path: 'event-details/:id/complaint',
                     name: 'complaints',
                     component: () => import('@/views/admin/Complaint.vue')
                 },
                 {
-                    path: 'events-detail/:id',
-                    name: 'EventsDetails',
-                    component: () => import('@/views/admin/EventsDetails.vue'),
+                    path: 'event-details/:id/event-inventory',
+                    name: 'adminEventInventory',
+                    component: () => import('@/views/admin/EventInventory.vue'),
                     props: true
                 },
                 {
