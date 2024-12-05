@@ -11,7 +11,7 @@ const { onMenuToggle, toggleDarkMode, isDarkTheme } = useLayout();
     <div class="layout-topbar">
         <div class="layout-topbar-logo-container">
             <a class="flex items-center mx-4 sm:w-1/2" href="#">
-                <img :src="logoSrc" alt="logo" class="sm:w-full sm:h-1/3 md:w-1/3 h-8" />
+                <img :src="logoSrc" alt="logo" class="sm:w-full sm:h-1/3 md:w-1/4 h-6" />
             </a>
         </div>
 

@@ -41,10 +41,10 @@ const { onMenuToggle, toggleDarkMode, isDarkTheme } = useLayout();
 <template>
     <div class="bg-surface-0 dark:bg-surface-900">
         <div id="home" class="landing-wrapper overflow-hidden">
-            <div class="py-6 px-6 mx-0 md:mx-12 lg:mx-20 lg:px-20 flex items-center justify-between relative lg:static">
+            <div class="py-4 px-4 mx-0 md:mx-12 lg:mx-20 lg:px-20 flex items-center justify-between relative lg:static">
                 <div class="layout-topbar-logo-container">
                     <a class="flex items-center mx-4 sm:w-1/2" href="#">
-                        <img :src="logoSrc" alt="logo" class="sm:w-full sm:h-1/3 md:w-1/3 h-8" />
+                        <img :src="logoSrc" alt="logo" class="sm:w-full sm:h-1/3 md:w-1/4 h-6" />
                     </a>
                 </div>
                 <!-- <Button
