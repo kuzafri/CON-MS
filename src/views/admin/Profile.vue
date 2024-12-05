@@ -20,7 +20,7 @@ const adminUser = ref({
 });
 
 const handleLogout = () => {
-    router.push('/auth/login');
+    router.push('/admin/auth/login');
 };
 
 const handleEditProfile = () => {
