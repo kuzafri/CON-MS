@@ -29,7 +29,6 @@ onMounted(() => {
 });
 </script>
 
-
 <template>
     <div class="bg-surface-0 dark:bg-surface-900 min-h-screen flex justify-center items-center p-6 mt-14">
         <div class="max-w-4xl w-full bg-white rounded-2xl shadow-xl p-8">
@@ -61,10 +60,6 @@ onMounted(() => {
                         <div class="flex justify-between">
                             <p class="text-gray-600">Number of Seats:</p>
                             <p class="text-gray-800 font-semibold">{{ selectedSeats.length }}</p>
-                        </div>
-                        <div class="flex justify-between">
-                            <p class="text-gray-600">Price per Seat:</p>
-                            <p class="text-gray-800 font-semibold">RM 80.00</p>
                         </div>
                         <div class="flex justify-between">
                             <p class="text-gray-600">Booking Fee:</p>

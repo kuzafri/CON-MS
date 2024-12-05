@@ -32,7 +32,7 @@ const generateCurvedRow = (rowIndex, centerX, startY, radius, spreadAngle) => {
 
     const totalSeats = seatsPerGroup * numGroups;
     const angleStep = spreadAngle / (totalSeats + gapBetweenGroups * (numGroups - 1));
-    const startAngle = -spreadAngle / 2;
+    const startAngle = -spreadAngle / 2.48;
 
     for (let group = 0; group < numGroups; group++) {
         for (let i = 0; i < seatsPerGroup; i++) {
@@ -54,17 +54,15 @@ const generateCurvedRow = (rowIndex, centerX, startY, radius, spreadAngle) => {
     return seats;
 };
 
-// Generate seating sections
 const generateSections = () => {
     const sections = [];
     const centerX = 400;
     const startY = 800;
 
-    // Main floor section
     const mainSection = [];
     for (let row = 0; row < 8; row++) {
-        const radius = 460 + row * 40; // Increased spacing between rows
-        const spreadAngle = Math.PI / 3 + row * 0.02; // Adjusted spread angle
+        const radius = 440 + row * 40; // Increased spacing between rows
+        const spreadAngle = Math.PI / 2 + row * 0.02; // Adjusted spread angle
         const seats = generateCurvedRow(row, centerX, startY, radius, spreadAngle);
         mainSection.push({ seats, rowLabel: String.fromCharCode(65 + row) });
     }
@@ -180,7 +178,7 @@ const svgTransform = computed(() => {
                     <!-- Seating Map -->
                     <div class="bg-surface-50 lg:w-2/3 dark:bg-surface-800 rounded-lg shadow-lg p-10">
                         <div class="relative overflow-hidden" @mousedown="handleMouseDown" @mousemove="handleMouseMove" @mouseup="handleMouseUp" @mouseleave="handleMouseUp" @wheel="handleWheel">
-                            <svg viewBox="0 0 800 600" class="w-full cursor-move transform-gpu" :style="{ transform: svgTransform }">
+                            <svg viewBox="0 0 950 600" class="w-full cursor-move transform-gpu" :style="{ transform: svgTransform }">
                                 <!-- Stage -->
                                 <path d="M250,550 Q400,520 550,550" fill="none" stroke="currentColor" stroke-width="4" class="text-surface-400 dark:text-surface-500" />
                                 <text x="400" y="560" text-anchor="middle" class="text-sm fill-current text-surface-900 dark:text-surface-0">STAGE</text>
@@ -206,7 +204,7 @@ const svgTransform = computed(() => {
                                             />
                                         </g>
                                         <!-- Row labels -->
-                                        <text :x="50" :y="row.seats[0].y" class="mr-4 text-xs fill-current text-surface-900 dark:text-surface-0" alignment-baseline="middle">
+                                        <text :x="7" :y="row.seats[0].y" text-anchor="end" class="text-xs fill-current text-surface-900 dark:text-surface-0" alignment-baseline="middle">
                                             {{ row.rowLabel }}
                                         </text>
                                     </g>

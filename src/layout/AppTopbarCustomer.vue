@@ -21,7 +21,8 @@ const logoSrc = computed(() => (isDarkTheme.value ? '/logo_dark.png' : '/logo_li
 <template>
     <div class="layout-topbar border-b-[1px] border-black-900 dark:border-white-900">
         <div class="layout-topbar-logo-container">
-            <a class="flex items-center mx-4" href="#"> <!-- sm:w-1/2 -->
+            <a class="flex items-center mx-4" href="#">
+                <!-- sm:w-1/2 -->
                 <img :src="logoSrc" alt="logo" class="sm:w-full sm:h-1/3 md:w-1/3 h-8" />
             </a>
         </div>
@@ -136,7 +137,7 @@ const logoSrc = computed(() => (isDarkTheme.value ? '/logo_dark.png' : '/logo_li
                                 <i class="pi pi-user-edit mr-2"></i>
                                 <span>View Profile</span>
                             </router-link>
-                            <button @click="handleLogout" class="w-full px-4 py-2 text-left text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors">
+                            <button to="/auth/login" class="w-full px-4 py-2 text-left text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors">
                                 <i class="pi pi-power-off mr-2"></i>
                                 Logout
                             </button>

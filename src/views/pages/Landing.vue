@@ -9,7 +9,6 @@ function smoothScroll(id) {
     });
 }
 
-
 const categoriesContainer = ref(null);
 let scrollInterval = null;
 
@@ -60,7 +59,7 @@ const { onMenuToggle, toggleDarkMode, isDarkTheme } = useLayout();
                 <button type="button" class="layout-topbar-action" @click="toggleDarkMode">
                     <i :class="['pi', { 'pi-moon': isDarkTheme, 'pi-sun': !isDarkTheme }]"></i>
                 </button>
-                
+
                 <Button label="Login" text as="router-link" to="/auth/login" rounded></Button>
                 <Button label="Register" to="/auth/login" rounded></Button>
             </div>
@@ -347,57 +346,78 @@ const { onMenuToggle, toggleDarkMode, isDarkTheme } = useLayout();
 
                         <div class="col-span-9 md:col-span-6 lg:col-span-3 p-0 lg:pr-8 lg:pb-8 mt-6 lg:mt-0 bg-surface-100 dark:bg-surface-800 rounded-lg shadow p-4">
                             <div class="flex items-center justify-between">
-                                <div class="text-surface-900 dark:text-surface-0 font-semibold text-xl">Saturday<br />03 June</div>
+                                <div class="dark:text-primary font-semibold text-xl text-center text-primary">Saturday<br /><span class="mx-2 font-bold text-3xl">03</span><br />June</div>
                                 <div class="text-surface-600 dark:text-surface-400">DTSP<br />USM</div>
                             </div>
                         </div>
 
                         <div class="col-span-9 md:col-span-6 lg:col-span-3 p-0 lg:pr-8 lg:pb-8 mt-6 lg:mt-0 bg-surface-0 dark:bg-surface-900 border-1 border-surface-800 rounded-lg shadow p-4">
                             <div class="flex items-center justify-between">
-                                <div class="text-surface-900 dark:text-surface-0 font-semibold text-xl">Sunday<br />04 June</div>
+                                <div class="text-surface-900 dark:text-surface-0 font-semibold text-xl text-center">
+                                    Sunday<br /><span class="mx-2 font-bold text-3xl">04</span><br />
+                                    June
+                                </div>
                                 <div class="text-surface-600 dark:text-surface-400">DTSP<br />USM</div>
                             </div>
                         </div>
 
                         <div class="col-span-9 md:col-span-6 lg:col-span-3 p-0 lg:pr-8 lg:pb-8 mt-6 lg:mt-0 bg-surface-100 dark:bg-surface-800 rounded-lg shadow p-4">
                             <div class="flex items-center justify-between">
-                                <div class="text-surface-900 dark:text-surface-0 font-semibold text-xl">Tuesday<br />09 June</div>
+                                <div class="dark:text-primary font-semibold text-xl text-center text-primary">
+                                    Tuesday<br /><span class="mx-2 font-bold text-3xl">09</span><br />
+                                    June
+                                </div>
                                 <div class="text-surface-600 dark:text-surface-400">DTSP<br />USM</div>
                             </div>
                         </div>
 
                         <div class="col-span-9 md:col-span-6 lg:col-span-3 p-0 lg:pr-8 lg:pb-8 mt-6 lg:mt-0 bg-surface-0 dark:bg-surface-900 rounded-lg shadow p-4">
                             <div class="flex items-center justify-between">
-                                <div class="text-surface-900 dark:text-surface-0 font-semibold text-xl">Friday<br />03 June</div>
+                                <div class="dark:text-primary font-semibold text-xl text-center text-primary">
+                                    Friday<br /><span class="mx-2 font-bold text-3xl">03</span><br />
+                                    April
+                                </div>
                                 <div class="text-surface-600 dark:text-surface-400">DTSP<br />USM</div>
                             </div>
                         </div>
 
                         <div class="col-span-9 md:col-span-6 lg:col-span-3 p-0 lg:pr-8 lg:pb-8 mt-6 lg:mt-0 bg-surface-100 dark:bg-surface-800 rounded-lg shadow p-4">
                             <div class="flex items-center justify-between">
-                                <div class="text-surface-900 dark:text-surface-0 font-semibold text-xl">Monday<br />28 June</div>
+                                <div class="dark:text-primary font-semibold text-xl text-center text-primary">
+                                    Monday<br /><span class="mx-2 font-bold text-3xl">28</span><br />
+                                    June
+                                </div>
                                 <div class="text-surface-600 dark:text-surface-400">DTSP<br />USM</div>
                             </div>
                         </div>
 
                         <div class="col-span-9 md:col-span-6 lg:col-span-3 p-0 lg:pr-8 lg:pb-8 mt-6 lg:mt-0 bg-surface-0 dark:bg-surface-900 rounded-lg shadow p-4">
                             <div class="flex items-center justify-between">
-                                <div class="text-surface-900 dark:text-surface-0 font-semibold text-xl">Saturday<br />17 June</div>
-                                <div class="text-surface-600 dark:text-surface-400">DTSP<br />San Jose</div>
+                                <div class="dark:text-primary font-semibold text-xl text-center text-primary">
+                                    Saturday<br /><span class="mx-2 font-bold text-3xl">17</span><br />
+                                    May
+                                </div>
+                                <div class="text-surface-600 dark:text-surface-400">DTSP<br />USM</div>
                             </div>
                         </div>
 
                         <div class="col-span-9 md:col-span-6 lg:col-span-3 p-0 lg:pr-8 lg:pb-8 mt-6 lg:mt-0 bg-surface-100 dark:bg-surface-800 rounded-lg shadow p-4">
                             <div class="flex items-center justify-between">
-                                <div class="text-surface-900 dark:text-surface-0 font-semibold text-xl">Monday<br />28 June</div>
+                                <div class="dark:text-primary font-semibold text-xl text-center text-primary">
+                                    Monday<br /><span class="mx-2 font-bold text-3xl">16</span><br />
+                                    September
+                                </div>
                                 <div class="text-surface-600 dark:text-surface-400">DTSP<br />USM</div>
                             </div>
                         </div>
 
                         <div class="col-span-9 md:col-span-6 lg:col-span-3 p-0 lg:pr-8 lg:pb-8 mt-6 lg:mt-0 bg-surface-0 dark:bg-surface-900 rounded-lg shadow p-4">
                             <div class="flex items-center justify-between">
-                                <div class="text-surface-900 dark:text-surface-0 font-semibold text-xl">Saturday<br />17 June</div>
-                                <div class="text-surface-600 dark:text-surface-400">DTSP<br />San Jose</div>
+                                <div class="dark:text-primary font-semibold text-xl text-center text-primary">
+                                    Saturday<br /><span class="mx-2 font-bold text-3xl">11</span><br />
+                                    March
+                                </div>
+                                <div class="text-surface-600 dark:text-surface-400">DTSP<br />USM</div>
                             </div>
                         </div>
                     </div>
