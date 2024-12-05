@@ -266,7 +266,7 @@ function smoothScroll(id) {
                 </div>
             </div>
 
-            <div class="flex-1 max-w-7xl mx-auto px-4 mb-14">
+            <div class="flex-1 max-w-7xl mx-auto px-4 mb-24">
                 <div class="grid grid-cols-12 gap-4 justify-center">
                     <div class="col-span-12 mt-20">
                         <div class="text-surface-900 dark:text-surface-0 font-normal mb-2 text-3xl">Tour Dates</div>

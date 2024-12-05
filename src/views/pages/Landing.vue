@@ -338,7 +338,7 @@ const { onMenuToggle, toggleDarkMode, isDarkTheme } = useLayout();
                     </div>
                 </div>
 
-                <div class="flex-1 max-w-7xl mx-auto px-4 mb-14">
+                <div class="flex-1 max-w-7xl mx-auto px-4 mb-24">
                     <div class="grid grid-cols-12 gap-4 justify-center">
                         <div class="col-span-12 mt-20">
                             <div class="text-surface-900 dark:text-surface-0 font-normal mb-2 text-3xl">Tour Dates</div>
@@ -346,7 +346,7 @@ const { onMenuToggle, toggleDarkMode, isDarkTheme } = useLayout();
 
                         <div class="col-span-9 md:col-span-6 lg:col-span-3 p-0 lg:pr-8 lg:pb-8 mt-6 lg:mt-0 bg-surface-100 dark:bg-surface-800 rounded-lg shadow p-4">
                             <div class="flex items-center justify-between">
-                                <div class="dark:text-primary font-semibold text-xl text-center text-primary">Saturday<br /><span class="mx-2 font-bold text-3xl">03</span><br />June</div>
+                                <div class="text-surface-900 dark:text-surface-0 font-semibold text-xl text-center">Saturday<br /><span class="mx-2 font-bold text-3xl">03</span><br />June</div>
                                 <div class="text-surface-600 dark:text-surface-400">DTSP<br />USM</div>
                             </div>
                         </div>
@@ -363,7 +363,7 @@ const { onMenuToggle, toggleDarkMode, isDarkTheme } = useLayout();
 
                         <div class="col-span-9 md:col-span-6 lg:col-span-3 p-0 lg:pr-8 lg:pb-8 mt-6 lg:mt-0 bg-surface-100 dark:bg-surface-800 rounded-lg shadow p-4">
                             <div class="flex items-center justify-between">
-                                <div class="dark:text-primary font-semibold text-xl text-center text-primary">
+                                <div class="text-surface-900 dark:text-surface-0 font-semibold text-xl text-center">
                                     Tuesday<br /><span class="mx-2 font-bold text-3xl">09</span><br />
                                     June
                                 </div>
@@ -373,7 +373,7 @@ const { onMenuToggle, toggleDarkMode, isDarkTheme } = useLayout();
 
                         <div class="col-span-9 md:col-span-6 lg:col-span-3 p-0 lg:pr-8 lg:pb-8 mt-6 lg:mt-0 bg-surface-0 dark:bg-surface-900 rounded-lg shadow p-4">
                             <div class="flex items-center justify-between">
-                                <div class="dark:text-primary font-semibold text-xl text-center text-primary">
+                                <div class="text-surface-900 dark:text-surface-0 font-semibold text-xl text-center">
                                     Friday<br /><span class="mx-2 font-bold text-3xl">03</span><br />
                                     April
                                 </div>
@@ -383,7 +383,7 @@ const { onMenuToggle, toggleDarkMode, isDarkTheme } = useLayout();
 
                         <div class="col-span-9 md:col-span-6 lg:col-span-3 p-0 lg:pr-8 lg:pb-8 mt-6 lg:mt-0 bg-surface-100 dark:bg-surface-800 rounded-lg shadow p-4">
                             <div class="flex items-center justify-between">
-                                <div class="dark:text-primary font-semibold text-xl text-center text-primary">
+                                <div class="text-surface-900 dark:text-surface-0 font-semibold text-xl text-center">
                                     Monday<br /><span class="mx-2 font-bold text-3xl">28</span><br />
                                     June
                                 </div>
@@ -393,7 +393,7 @@ const { onMenuToggle, toggleDarkMode, isDarkTheme } = useLayout();
 
                         <div class="col-span-9 md:col-span-6 lg:col-span-3 p-0 lg:pr-8 lg:pb-8 mt-6 lg:mt-0 bg-surface-0 dark:bg-surface-900 rounded-lg shadow p-4">
                             <div class="flex items-center justify-between">
-                                <div class="dark:text-primary font-semibold text-xl text-center text-primary">
+                                <div class="text-surface-900 dark:text-surface-0 font-semibold text-xl text-center">
                                     Saturday<br /><span class="mx-2 font-bold text-3xl">17</span><br />
                                     May
                                 </div>
@@ -403,7 +403,7 @@ const { onMenuToggle, toggleDarkMode, isDarkTheme } = useLayout();
 
                         <div class="col-span-9 md:col-span-6 lg:col-span-3 p-0 lg:pr-8 lg:pb-8 mt-6 lg:mt-0 bg-surface-100 dark:bg-surface-800 rounded-lg shadow p-4">
                             <div class="flex items-center justify-between">
-                                <div class="dark:text-primary font-semibold text-xl text-center text-primary">
+                                <div class="text-surface-900 dark:text-surface-0 font-semibold text-xl text-center">
                                     Monday<br /><span class="mx-2 font-bold text-3xl">16</span><br />
                                     September
                                 </div>
@@ -413,7 +413,7 @@ const { onMenuToggle, toggleDarkMode, isDarkTheme } = useLayout();
 
                         <div class="col-span-9 md:col-span-6 lg:col-span-3 p-0 lg:pr-8 lg:pb-8 mt-6 lg:mt-0 bg-surface-0 dark:bg-surface-900 rounded-lg shadow p-4">
                             <div class="flex items-center justify-between">
-                                <div class="dark:text-primary font-semibold text-xl text-center text-primary">
+                                <div class="text-surface-900 dark:text-surface-0 font-semibold text-xl text-center">
                                     Saturday<br /><span class="mx-2 font-bold text-3xl">11</span><br />
                                     March
                                 </div>
