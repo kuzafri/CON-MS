@@ -24,7 +24,6 @@ const handleLogout = () => {
 };
 
 const handleEditProfile = () => {
-    // Add edit profile logic here
 };
 </script>
 
