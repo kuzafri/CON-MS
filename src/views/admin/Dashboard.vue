@@ -80,7 +80,7 @@ function setColorOptions() {
         labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
         datasets: [
             {
-                label: 'Registered Users',
+                label: 'Events Created',
                 backgroundColor: documentStyle.getPropertyValue('--p-primary-500'),
                 borderColor: documentStyle.getPropertyValue('--p-primary-500'),
                 data: [750, 550, 350, 250, 750, 950, 450, 550, 750, 750, 250, 150]
