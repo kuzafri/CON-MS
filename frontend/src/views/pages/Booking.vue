@@ -61,8 +61,8 @@ const generateSections = () => {
 
     const mainSection = [];
     for (let row = 0; row < 8; row++) {
-        const radius = 440 + row * 40; // Increased spacing between rows
-        const spreadAngle = Math.PI / 2 + row * 0.02; // Adjusted spread angle
+        const radius = 440 + row * 40; //increas spacing between rows
+        const spreadAngle = Math.PI / 2 + row * 0.02; //untuk adjust spread angle
         const seats = generateCurvedRow(row, centerX, startY, radius, spreadAngle);
         mainSection.push({ seats, rowLabel: String.fromCharCode(65 + row) });
     }
@@ -99,7 +99,7 @@ const proceedToCheckout = () => {
     router.push({
         path: '/payment',
         query: {
-            seats: JSON.stringify(selectedSeats.value), // Includes price for each seat
+            seats: JSON.stringify(selectedSeats.value), //price each seat
             totalPrice: totalPrice.value
         }
     });
