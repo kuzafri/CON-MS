@@ -1,10 +1,30 @@
 <script setup>
-import FloatingConfigurator from '@/components/FloatingConfigurator.vue';
-import { ref } from 'vue';
 
+import FloatingConfigurator from '@/components/FloatingConfigurator.vue';
+import axios from 'axios'; // Make sure axios is installed
+import { useRouter } from 'vue-router';
+import { ref } from 'vue';
 const email = ref('');
 const password = ref('');
 const checked = ref(false);
+const errorMessage = ref('');
+
+const handleLogin = async () => {
+   try {
+       const response = await axios.post('/api/login', {
+           email: email.value,
+           password: password.value
+       });
+        // Store the token in localStorage or your preferred storage method
+       localStorage.setItem('token', response.data.token);
+       
+       // Navigate to the dashboard
+       router.push('/organizer/event');
+   } catch (error) {
+       errorMessage.value = error.response?.data?.message || 'Login failed';
+   }
+;
+}
 </script>
 
 <template>
@@ -31,8 +51,16 @@ const checked = ref(false);
                         </div>
                         <span class="font-medium no-underline ml-2 text-right cursor-pointer text-primary">Forgot password?</span>
                     </div>
-                    <Button label="Sign In" class="w-full" as="router-link" to="/organizer/event"></Button>
-                </div>
+            <Button 
+                label="Sign In" 
+                class="w-full" 
+                @click="handleLogin"
+                :loading="loading"
+            />                
+
+   <small class="text-red-500 block mt-2" v-if="errorMessage">{{ errorMessage }}</small>
+
+   </div>
             </div>
         </div>
     </div>
