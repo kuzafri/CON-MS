@@ -1,10 +1,27 @@
 <script setup>
 import FloatingConfigurator from '@/components/FloatingConfigurator.vue';
 import { ref } from 'vue';
+import axios from 'axios';
+import { useRouter } from 'vue-router';
 
 const email = ref('');
 const password = ref('');
 const checked = ref(false);
+const errorMessage = ref('');
+const router = useRouter();
+
+const login = async () => {
+    try {
+        const response = await axios.post('/api/users/login', { email: email.value, password: password.value });
+        // Handle successful login (e.g., redirect to home)
+    } catch (error) {
+        errorMessage.value = error.response.data.message;
+    }
+};
+
+const handleRegistrationSuccess = () => {
+    router.push('/auth/login');
+};
 </script>
 
 <template>
@@ -30,7 +47,8 @@ const checked = ref(false);
                         </div>
                         <span class="font-medium no-underline ml-2 text-right cursor-pointer text-primary">Forgot password?</span>
                     </div>
-                    <Button label="Sign In" class="w-full" as="router-link" to="/homebook"></Button>
+                    <Button label="Sign In" class="w-full" @click="login"></Button>
+                    <div v-if="errorMessage">{{ errorMessage }}</div>
                 </div>
             </div>
         </div>
