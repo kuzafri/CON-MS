@@ -61,7 +61,7 @@ const { onMenuToggle, toggleDarkMode, isDarkTheme } = useLayout();
                 </button>
 
                 <Button label="Login" text as="router-link" to="/auth/login" rounded></Button>
-                <Button label="Register" to="/auth/login" rounded></Button>
+                <Button label="Register" text as="router-link" to="/auth/register" rounded></Button>
             </div>
 
             <div class="hero-section relative flex flex-col items-center justify-center text-center h-[50vh] text-white">
