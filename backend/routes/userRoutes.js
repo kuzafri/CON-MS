@@ -8,7 +8,7 @@ router.get('/test', (req, res) => {
 });
 
 // Existing endpoint
-router.get('/test2', getUsers);
+router.get('/', getUsers);
 
 // New endpoint for user registration
 router.post('/register', registerUser);
