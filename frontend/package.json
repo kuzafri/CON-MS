@@ -11,6 +11,7 @@
         "@firebasegen/default-connector": "file:dataconnect-generated/js/default-connector",
         "@panzoom/panzoom": "^4.5.1",
         "@primevue/themes": "^4.0.0",
+        "axios": "^1.7.9",
         "chart.js": "3.3.2",
         "firebase": "^10.14.1",
         "lucide-vue-next": "^0.464.0",

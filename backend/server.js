@@ -3,10 +3,15 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 require('dotenv').config();
 
+// Initial
 const app = express();
 
 // Middleware
-app.use(cors());
+app.use(cors({
+    origin: 'http://localhost:5173',
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    allowedHeaders: ['Content-Type']
+}));
 app.use(express.json());
 
 const dns = require('dns');
@@ -25,6 +30,10 @@ mongoose.connect(process.env.MONGO_URI, {
 // Routes
 const userRoutes = require('./routes/userRoutes');
 app.use('/api/users', userRoutes);
+
+// Routes (organizer)
+const eventRoutes = require('./routes/organizerEvent');
+app.use('/api', eventRoutes);
 
 // Start server
 const PORT = process.env.PORT || 5001;

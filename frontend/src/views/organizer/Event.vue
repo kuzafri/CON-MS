@@ -1,12 +1,6 @@
 <script setup>
 import { ref } from 'vue';
-import { PrimeIcons } from '@primevue/core/api';
-
-const dropdownItems = ref([
-    { name: 'Option 1', code: 'Option 1' },
-    { name: 'Option 2', code: 'Option 2' },
-    { name: 'Option 3', code: 'Option 3' }
-]);
+import axios from 'axios';
 
 const dropdownValue = ref(null);
 const dropdownValues = ref([
@@ -43,7 +37,6 @@ const removePerformer = (index) => {
     }
 };
 
-const dropdownItem = ref(null);
 const concertTitle = ref('');
 const calendarValue = ref(null);
 const startTime = ref(null);
@@ -59,15 +52,15 @@ const timeError = ref(''); // Error message for time validation
 const showModal = ref(false);
 
 // Function to handle submit
-const handleSubmit = () => {
-    submitted.value = true; // Trigger validation
+const handleSubmit = async () => {
+    submitted.value = true;
 
-        // Validate end time is not earlier than start time
+    // Validate end time is not earlier than start time
     if (startTime.value && endTime.value && endTime.value <= startTime.value) {
         timeError.value = 'End time must be later than the start time.';
         return;
     } else {
-        timeError.value = ''; // Clear error if valid
+        timeError.value = '';
     }
 
     // Validate all required fields
@@ -81,12 +74,51 @@ const handleSubmit = () => {
         !goldPrice.value || 
         !platinumPrice.value || 
         !eventPolicies.value) {
-        return; // Stop submission if any field is invalid
+        return;
     }
 
-    showModal.value = true; // Show the modal if all validations pass
+    try {
+        const eventData = {
+            concertTitle: concertTitle.value,
+            calendarValue: calendarValue.value,
+            startTime: startTime.value,
+            endTime: endTime.value,
+            performers: performers.value.filter(p => p.trim() !== ''),
+            genre: dropdownValue.value.name,
+            regularPrice: regularPrice.value,
+            goldPrice: goldPrice.value,
+            platinumPrice: platinumPrice.value,
+            eventPolicies: eventPolicies.value
+        };
+
+        const response = await axios.post('http://localhost:5001/api/events', eventData);
+        
+        if (response.status === 201) {
+            showModal.value = true;
+            // Reset form after successful submission
+            resetForm();
+        }
+    } catch (error) {
+        console.error('Error creating event:', error);
+        alert('Failed to create event. Please try again.');
+    }
 };
 
+// Add a new function to reset the form
+const resetForm = () => {
+    concertTitle.value = '';
+    calendarValue.value = null;
+    startTime.value = null;
+    endTime.value = null;
+    performers.value = [''];
+    dropdownValue.value = null;
+    regularPrice.value = null;
+    goldPrice.value = null;
+    platinumPrice.value = null;
+    eventPolicies.value = '';
+    submitted.value = false;
+    timeError.value = '';
+};
 
 // Function to close the modal
 const closeModal = () => {
