@@ -4,11 +4,10 @@ const router = express.Router();
 
 // New endpoint to test the connection
 router.get('/test', (req, res) => {
-    res.json({ message: 'API is working!' });
+    res.json({ message: 'API works' });
 });
 
-// Existing endpoint
-router.get('/test2', getUsers);
+router.get('/', getUsers);
 
 // New endpoint for user registration
 router.post('/register', registerUser);
