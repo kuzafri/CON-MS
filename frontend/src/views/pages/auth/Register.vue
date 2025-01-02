@@ -9,6 +9,8 @@ const password = ref('');
 const cpassword = ref('');
 const checked = ref(false);
 const errorMessage = ref('');
+const cors = require('cors');
+app.use(cors());
 
 const register = async () => {
     if (password.value !== cpassword.value) {
@@ -23,7 +25,7 @@ const register = async () => {
     }
 };
 
-axios.defaults.baseURL = 'http://localhost:5000'
+axios.defaults.baseURL = 'http://localhost:5000';
 </script>
 
 <template>

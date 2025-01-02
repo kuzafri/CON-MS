@@ -13,14 +13,36 @@ const router = useRouter();
 const login = async () => {
     try {
         const response = await axios.post('/api/users/login', { email: email.value, password: password.value });
+        console.log('Login response:', response);
+        // Check the response status
+        console.log('Response status:', response.status);
         // Handle successful login (e.g., redirect to home)
+        if (response.status === 200) {
+            console.log('Redirecting to /homebook');
+            router.push('/homebook');
+        }
     } catch (error) {
-        errorMessage.value = error.response.data.message;
+        console.error('Login error:', error);
+        // Enhanced error handling
+        if (error.response) {
+            // The request was made and the server responded with a status code
+            console.error('Error data:', error.response.data);
+            console.error('Error status:', error.response.status);
+            errorMessage.value = error.response.data.message || 'An error occurred';
+        } else if (error.request) {
+            // The request was made but no response was received
+            console.error('No response received:', error.request);
+            errorMessage.value = 'No response from the server. Please try again later.';
+        } else {
+            // Something happened in setting up the request that triggered an Error
+            console.error('Error message:', error.message);
+            errorMessage.value = 'An unexpected error occurred. Please try again.';
+        }
     }
 };
 
 const handleRegistrationSuccess = () => {
-    router.push('/auth/login');
+    router.push('/homebook');
 };
 </script>
 
