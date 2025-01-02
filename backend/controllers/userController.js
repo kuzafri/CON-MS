@@ -4,11 +4,12 @@ const bcrypt = require('bcrypt');
 // Get all users
 const getUsers = async (req, res) => {
     try {
-        const users = await User.find();
+        const users = await User.find().maxTimeMS(5000); // Add timeout to the query
+        // console.log(users);
         res.json(users);
-    } catch (err) {
-        res.status(500).json({ message: err.message });
-    }
+      } catch (error) {
+        console.error('Query error:', error);
+      }
 };
 
 // Register a new user
