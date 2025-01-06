@@ -11,7 +11,7 @@ const errorMessage = ref('');
 
 const handleLogin = async () => {
    try {
-       const response = await axios.post('/api/login', {
+       const response = await axios.post('http://localhost:YOUR_BACKEND_PORT/api/users/login', {
            email: email.value,
            password: password.value
        });
