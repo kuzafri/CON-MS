@@ -1,5 +1,12 @@
 <script setup>
 import { ref } from 'vue';
+import { PrimeIcons } from '@primevue/core/api';
+
+const dropdownItems = ref([
+    { name: 'Option 1', code: 'Option 1' },
+    { name: 'Option 2', code: 'Option 2' },
+    { name: 'Option 3', code: 'Option 3' }
+]);
 import axios from 'axios';
 
 const dropdownValue = ref(null);
@@ -37,6 +44,7 @@ const removePerformer = (index) => {
     }
 };
 
+const dropdownItem = ref(null);
 const concertTitle = ref('');
 const calendarValue = ref(null);
 const startTime = ref(null);
