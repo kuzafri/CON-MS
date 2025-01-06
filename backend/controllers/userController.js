@@ -47,4 +47,33 @@ const loginUser = async (req, res) => {
     }
 };
 
+const submitData = async (req, res) => {
+    const { concertData } = req.body;
+    try {
+        const newConcertBooking = new ConcertBooking({
+            userId: req.body.userId,
+            seatDetails: concertData.selectedSeats,
+            totalPrice: concertData.totalPrice,
+            eventDate: concertData.eventDate,
+            status: 'pending'
+        });
+
+        const savedBooking = await newConcertBooking.save();
+        
+        res.status(201).json({
+            success: true,
+            message: 'Submitted',
+            data: savedBooking
+        });
+    } catch (error) {
+        console.error('Error:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Error',
+            error: error.message
+        });
+    }
+};
+
+
 module.exports = { getUsers, registerUser, loginUser };

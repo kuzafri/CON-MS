@@ -15,4 +15,6 @@ router.post('/register', registerUser);
 // New endpoint for user login
 router.post('/login', loginUser);
 
+router.post('/submit-concert-booking', submitData);
+
 module.exports = router;

@@ -150,6 +150,35 @@ const svgTransform = computed(() => {
     const { x, y, scale } = currentTransform.value;
     return `translate(${x}px, ${y}px) scale(${scale})`;
 });
+
+const handleSubmit = async () => {
+    try {
+        const response = await fetch('/api/submit-concert-booking', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                userId: currentUserId,
+                concertData: {
+                    selectedSeats: selectedSeats,
+                    totalPrice: totalPrice,
+                    eventDate: new Date('2025-01-13 15:00:00')
+                }
+            })
+        });
+
+        const result = await response.json();
+        if (result.success) {
+            alert('Success');
+        } else {
+            alert('Error:' + result.message);
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert('Error');
+    }
+};
 </script>
 
 <template>
