@@ -97,20 +97,68 @@ const removePerformer = (index) => {
     EventRequest.value.performers.splice(index, 1);
 };
 
-const saveEvent = () => {
+const saveEvent = async () => {
     submitted.value = true;
 
     // Basic validation for required fields
     if (EventRequest.value.title?.trim() && EventRequest.value.date?.trim() && EventRequest.value.time?.trim()) {
-        toast.add({
-            severity: 'success',
-            summary: 'Successful',
-            detail: 'Event Details Updated',
-            life: 3000
-        });
+        try {
+            // Extract start and end time from the combined time string
+            const [startTime, endTime] = EventRequest.value.time.split(' - ');
 
-        eventDialog.value = false;
-        submitted.value = false;
+            // Parse the date string correctly
+            // First split the date string into components (assuming format: MM/DD/YYYY)
+            const [month, day, year] = EventRequest.value.date.split('/');
+            // Create a new Date object with the components
+            const calendarValue = new Date(year, month - 1, day).toISOString();
+
+            // Convert the frontend data structure back to backend format
+            const eventData = {
+                concertTitle: EventRequest.value.title,
+                calendarValue: calendarValue,
+                startTime: startTime,
+                endTime: endTime,
+                performers: EventRequest.value.performers,
+                genre: EventRequest.value.genre,
+                standardPrice: EventRequest.value.standardSeatPrice,
+                vipPrice: EventRequest.value.goldSeatPrice,
+                economyPrice: EventRequest.value.platinumSeatPrice,
+                eventPolicies: EventRequest.value.refundPolicy,
+                status: EventRequest.value.status
+            };
+
+            console.log('Sending update with data:', eventData); // Debug log
+
+            // Send PUT request to update the event
+            const response = await axios.put(`http://localhost:5001/api/events/${EventRequest.value.id}`, eventData);
+
+            if (response.status === 200) {
+                toast.add({
+                    severity: 'success',
+                    summary: 'Successful',
+                    detail: 'Event Details Updated',
+                    life: 3000
+                });
+
+                // Refresh the event details to show updated data
+                await fetchEventDetails();
+            }
+
+            eventDialog.value = false;
+            submitted.value = false;
+        } catch (error) {
+            console.error('Error updating event:', error);
+            // Add more detailed error information
+            console.log('Current date value:', EventRequest.value.date);
+            console.log('Current time value:', EventRequest.value.time);
+
+            toast.add({
+                severity: 'error',
+                summary: 'Error',
+                detail: 'Failed to update event details',
+                life: 3000
+            });
+        }
     }
 };
 
