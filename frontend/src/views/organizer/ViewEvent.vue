@@ -39,9 +39,8 @@ const handleViewDetails = (event) => {
     router.push({
         name: 'EventDetails',
         params: {
-            id: event._id // MongoDB uses _id
-        },
-        state: event
+            id: event._id
+        }
     });
 };
 </script>
