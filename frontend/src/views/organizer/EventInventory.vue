@@ -4,14 +4,19 @@ import { FilterMatchMode } from '@primevue/core/api';
 import { useToast } from 'primevue/usetoast';
 import { onMounted, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
+import axios from 'axios';
 
-onMounted(() => {
-    ProductService.getProducts().then((data) => (products.value = data));
-});
-
+// Initialize route and router first
+const route = useRoute();
+const router = useRouter();
 const toast = useToast();
+
+// Then use route.params
+const eventId = route.params.id;
+
+// Rest of your variables
 const dt = ref();
-const products = ref();
+const products = ref([]);
 const productDialog = ref(false);
 const deleteProductDialog = ref(false);
 const deleteProductsDialog = ref(false);
@@ -21,6 +26,21 @@ const filters = ref({
     global: { value: null, matchMode: FilterMatchMode.CONTAINS }
 });
 const submitted = ref(false);
+
+onMounted(async () => {
+    await fetchInventory();
+});
+
+const fetchInventory = async () => {
+    try {
+        const response = await axios.get(`http://localhost:5001/api/events/${eventId}/inventory`);
+        products.value = response.data;
+    } catch (error) {
+        console.error('Error fetching inventory:', error);
+        toast.add({ severity: 'error', summary: 'Error', detail: 'Failed to load inventory', life: 3000 });
+    }
+};
+
 // const statuses = ref([
 //     { label: 'INSTOCK', value: 'instock' },
 //     { label: 'LOWSTOCK', value: 'lowstock' },
@@ -35,7 +55,7 @@ const submitted = ref(false);
 function changeQuantity(product, change) {
     // Ensure quantity doesn't go below 0
     product.quantity = Math.max(0, (product.quantity || 0) + change);
-    
+
     // Optional: Add a toast notification for quantity change
     if (change > 0) {
         toast.add({ severity: 'info', summary: 'Quantity Increased', detail: `${product.name} quantity updated`, life: 2000 });
@@ -55,25 +75,29 @@ function hideDialog() {
     submitted.value = false;
 }
 
-function saveProduct() {
+async function saveProduct() {
     submitted.value = true;
 
-    if (product?.value.name?.trim()) {
-        if (product.value.id) {
-            // product.value.inventoryStatus = product.value.inventoryStatus.value ? product.value.inventoryStatus.value : product.value.inventoryStatus;
-            products.value[findIndexById(product.value.id)] = product.value;
-            toast.add({ severity: 'success', summary: 'Successful', detail: 'Product Updated', life: 3000 });
-        } else {
-            product.value.id = createId();
-            // product.value.code = createId();
-            // product.value.image = 'product-placeholder.svg';
-            // product.value.inventoryStatus = product.value.inventoryStatus ? product.value.inventoryStatus.value : 'INSTOCK';
-            products.value.push(product.value);
-            toast.add({ severity: 'success', summary: 'Successful', detail: 'Product Created', life: 3000 });
-        }
+    if (product.value.name?.trim()) {
+        try {
+            if (product.value._id) {
+                // Update existing item
+                const response = await axios.put(`http://localhost:5001/api/events/${eventId}/inventory/${product.value._id}`, product.value);
+                products.value[findIndexById(product.value._id)] = response.data;
+                toast.add({ severity: 'success', summary: 'Successful', detail: 'Product Updated', life: 3000 });
+            } else {
+                // Create new item
+                const response = await axios.post(`http://localhost:5001/api/events/${eventId}/inventory`, product.value);
+                products.value.push(response.data);
+                toast.add({ severity: 'success', summary: 'Successful', detail: 'Product Created', life: 3000 });
+            }
 
-        productDialog.value = false;
-        product.value = {};
+            productDialog.value = false;
+            product.value = {};
+            await fetchInventory();
+        } catch (error) {
+            toast.add({ severity: 'error', summary: 'Error', detail: 'Failed to save product', life: 3000 });
+        }
     }
 }
 
@@ -87,22 +111,26 @@ function confirmDeleteProduct(prod) {
     deleteProductDialog.value = true;
 }
 
-function deleteProduct() {
-    products.value = products.value.filter((val) => val.id !== product.value.id);
-    deleteProductDialog.value = false;
-    product.value = {};
-    toast.add({ severity: 'success', summary: 'Successful', detail: 'Product Deleted', life: 3000 });
+async function deleteProduct() {
+    try {
+        await axios.delete(`http://localhost:5001/api/events/${eventId}/inventory/${product.value._id}`);
+        await fetchInventory();
+        deleteProductDialog.value = false;
+        product.value = {};
+        toast.add({ severity: 'success', summary: 'Successful', detail: 'Product Deleted', life: 3000 });
+    } catch (error) {
+        toast.add({ severity: 'error', summary: 'Error', detail: 'Failed to delete product', life: 3000 });
+    }
 }
 
 function findIndexById(id) {
     let index = -1;
     for (let i = 0; i < products.value.length; i++) {
-        if (products.value[i].id === id) {
+        if (products.value[i]._id === id) {
             index = i;
             break;
         }
     }
-
     return index;
 }
 
@@ -123,23 +151,28 @@ function confirmDeleteSelected() {
     deleteProductsDialog.value = true;
 }
 
-function deleteSelectedProducts() {
-    products.value = products.value.filter((val) => !selectedProducts.value.includes(val));
-    deleteProductsDialog.value = false;
-    selectedProducts.value = null;
-    toast.add({ severity: 'success', summary: 'Successful', detail: 'Products Deleted', life: 3000 });
+async function deleteSelectedProducts() {
+    try {
+        const itemIds = selectedProducts.value.map((p) => p._id);
+        await axios.post(`http://localhost:5001/api/events/${eventId}/inventory/delete-multiple`, {
+            itemIds: itemIds
+        });
+        await fetchInventory();
+        deleteProductsDialog.value = false;
+        selectedProducts.value = null;
+        toast.add({ severity: 'success', summary: 'Successful', detail: 'Products Deleted', life: 3000 });
+    } catch (error) {
+        toast.add({ severity: 'error', summary: 'Error', detail: 'Failed to delete products', life: 3000 });
+    }
 }
 
 // Add props definition
 const props = defineProps({
-  id: String
+    id: String
 });
 
-const route = useRoute();
-const router = useRouter();
-
 const EventRequest = ref({
-    id: props.id || route.params.id,
+    id: props.id || eventId
     // title: 'REBEL 3.0: Because of You',
     // date: '13th January 2025',
     // time: '3:00 PM - 4:00 PM',
@@ -170,15 +203,9 @@ const handleBack = () => {
 //     }
 // }
 </script>
-
 <template>
     <div class="p-4">
-        <button 
-                @click="handleBack"
-                class="flex items-center text-blue-600 hover:text-blue-700 pb-4"
-            >
-                <span class="mr-2">←</span> Back to Event Details
-            </button>
+        <button @click="handleBack" class="flex items-center text-blue-600 hover:text-blue-700 pb-4"><span class="mr-2">←</span> Back to Event Details</button>
         <div class="card">
             <Toolbar class="mb-6">
                 <template #start>
@@ -243,21 +270,12 @@ const handleBack = () => {
                 <Column header="Quantity" style="min-width: 12rem">
                     <template #body="slotProps">
                         <div class="flex items-center gap-2">
-                            <Button 
-                                icon="pi pi-minus" 
-                                class="p-button-rounded p-button-text p-button-sm" 
-                                @click="changeQuantity(slotProps.data, -1)"
-                            />
+                            <Button icon="pi pi-minus" class="p-button-rounded p-button-text p-button-sm" @click="changeQuantity(slotProps.data, -1)" />
                             <span class="font-bold">{{ slotProps.data.quantity || 0 }}</span>
-                            <Button 
-                                icon="pi pi-plus" 
-                                class="p-button-rounded p-button-text p-button-sm" 
-                                @click="changeQuantity(slotProps.data, 1)"
-                            />
+                            <Button icon="pi pi-plus" class="p-button-rounded p-button-text p-button-sm" @click="changeQuantity(slotProps.data, 1)" />
                         </div>
                     </template>
                 </Column>
-
 
                 <Column :exportable="false" style="min-width: 12rem">
                     <template #body="slotProps">

@@ -35,6 +35,10 @@ app.use('/api/users', userRoutes);
 const eventRoutes = require('./routes/organizerEvent');
 app.use('/api', eventRoutes);
 
+// Routes (inventory)
+const inventoryRoutes = require('./routes/organizerEventInventory');
+app.use('/api', inventoryRoutes);
+
 // Start server
 const PORT = process.env.PORT || 5001;
 app.listen(PORT, () => {
