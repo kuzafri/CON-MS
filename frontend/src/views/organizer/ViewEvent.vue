@@ -80,8 +80,8 @@ const handleViewDetails = (event) => {
                         <p>{{ event.genre }}</p>
                     </div>
                     <div class="flex flex-col items-start">
-                        <p class="text-base font-extrabold">Regular Price</p>
-                        <p>RM {{ event.regularPrice }}</p>
+                        <p class="text-base font-extrabold">Economy Price</p>
+                        <p>RM {{ event.economyPrice }}</p>
                     </div>
                     <div class="flex justify-end mt-5">
                         <button class="text-blue-600 text-sm font-extrabold cursor-pointer" @click="handleViewDetails(event)">View >></button>
