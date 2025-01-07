@@ -232,7 +232,7 @@ const router = createRouter({
                     component: () => import('@/views/pages/Booking.vue')
                 },
                 {
-                    path: '/eventdetail',
+                    path: '/eventdetail/:id',
                     name: 'EventDetail',
                     component: () => import('@/views/pages/EventDetail.vue')
                 },

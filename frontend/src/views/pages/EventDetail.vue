@@ -1,6 +1,10 @@
 <script setup>
 import { useLayout } from '@/layout/composables/layout';
 import { onMounted, onUnmounted, ref } from 'vue';
+import { useRoute } from 'vue-router';
+import { useEvents } from '@/composables/useEvents';
+const route = useRoute();
+const { event, loading, error, fetchEventById } = useEvents();
 
 // Target event date
 const eventDate = new Date('2024-12-25T00:00:00'); // Replace with your event date
@@ -35,6 +39,10 @@ const updateCountdown = () => {
 onMounted(() => {
     updateCountdown();
     countdownInterval = setInterval(updateCountdown, 1000);
+});
+
+onMounted(async () => {
+    await fetchEventById(route.params.id);
 });
 
 onUnmounted(() => {
