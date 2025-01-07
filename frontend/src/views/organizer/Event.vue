@@ -49,9 +49,9 @@ const concertTitle = ref('');
 const calendarValue = ref(null);
 const startTime = ref(null);
 const endTime = ref(null);
-const regularPrice = ref(null);
-const goldPrice = ref(null);
-const platinumPrice = ref(null);
+const economyPrice = ref(null);
+const standardPrice = ref(null);
+const vipPrice = ref(null);
 const submitted = ref(false);
 const eventPolicies = ref('');
 const timeError = ref(''); // Error message for time validation
@@ -79,9 +79,9 @@ const handleSubmit = async () => {
         !endTime.value ||
         performers.value.some((performer) => !performer) ||
         !dropdownValue.value ||
-        !regularPrice.value ||
-        !goldPrice.value ||
-        !platinumPrice.value ||
+        !economyPrice.value ||
+        !standardPrice.value ||
+        !vipPrice.value ||
         !eventPolicies.value
     ) {
         return;
@@ -93,15 +93,15 @@ const handleSubmit = async () => {
             calendarValue: calendarValue.value,
             startTime: startTime.value,
             endTime: endTime.value,
-            performers: performers.value.filter(p => p.trim() !== ''),
+            performers: performers.value.filter((p) => p.trim() !== ''),
             genre: dropdownValue.value.name,
-            regularPrice: regularPrice.value,
-            goldPrice: goldPrice.value,
-            platinumPrice: platinumPrice.value,
+            economyPrice: economyPrice.value,
+            standardPrice: standardPrice.value,
+            vipPrice: vipPrice.value,
             eventPolicies: eventPolicies.value
         };
         const response = await axios.post('http://localhost:5001/api/events', eventData);
-        
+
         if (response.status === 201) {
             showModal.value = true;
             // Reset form after successful submission
@@ -121,9 +121,9 @@ const resetForm = () => {
     endTime.value = null;
     performers.value = [''];
     dropdownValue.value = null;
-    regularPrice.value = null;
-    goldPrice.value = null;
-    platinumPrice.value = null;
+    economyPrice.value = null;
+    standardPrice.value = null;
+    vipPrice.value = null;
     eventPolicies.value = '';
     submitted.value = false;
     timeError.value = '';
@@ -184,19 +184,19 @@ const closeModal = () => {
 
                 <div class="flex flex-col md:flex-row gap-4">
                     <div class="flex flex-col flex-wrap gap-2 w-full">
-                        <label for="regularPrice">Regular Seat Price (RM)</label>
-                        <InputNumber id="regularPrice" type="text" v-model="regularPrice" />
-                        <small v-if="submitted && !regularPrice" class="text-red-500">Regular price is required.</small>
+                        <label for="economyPrice">Economy Seat Price (RM)</label>
+                        <InputNumber id="economyPrice" type="text" v-model="economyPrice" />
+                        <small v-if="submitted && !economyPrice" class="text-red-500">Economy price is required.</small>
                     </div>
                     <div class="flex flex-col flex-wrap gap-2 w-full">
-                        <label for="goldPrice">Gold Seat Price (RM)</label>
-                        <InputNumber id="goldPrice" type="text" v-model="goldPrice" />
-                        <small v-if="submitted && !goldPrice" class="text-red-500">Gold price is required.</small>
+                        <label for="standardPrice">Standard Seat Price (RM)</label>
+                        <InputNumber id="standardPrice" type="text" v-model="standardPrice" />
+                        <small v-if="submitted && !standardPrice" class="text-red-500">Standard price is required.</small>
                     </div>
                     <div class="flex flex-col flex-wrap gap-2 w-full">
-                        <label for="platinumPrice">VIP Seat Price (RM)</label>
-                        <InputNumber id="platinumPrice" type="text" v-model="platinumPrice" />
-                        <small v-if="submitted && !platinumPrice" class="text-red-500">Platinum price is required.</small>
+                        <label for="vipPrice">VIP Seat Price (RM)</label>
+                        <InputNumber id="vipPrice" type="text" v-model="vipPrice" />
+                        <small v-if="submitted && !vipPrice" class="text-red-500">VIP price is required.</small>
                     </div>
                 </div>
 
