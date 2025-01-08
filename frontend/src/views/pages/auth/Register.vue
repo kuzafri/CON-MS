@@ -2,36 +2,44 @@
 import FloatingConfigurator from '@/components/FloatingConfigurator.vue';
 import { ref } from 'vue';
 import axios from 'axios';
+import { useRouter } from 'vue-router';
 
+const router = useRouter();
 const name = ref('');
 const email = ref('');
 const password = ref('');
 const cpassword = ref('');
 const checked = ref(false);
 const errorMessage = ref('');
-const cors = require('cors');
-app.use(cors());
 
 const register = async () => {
     if (password.value !== cpassword.value) {
-        errorMessage.value = "Passwords do not match!";
+        errorMessage.value = 'Passwords do not match!';
         return;
     }
     try {
         const response = await axios.post('/api/users/register', { name: name.value, email: email.value, password: password.value });
-        // Handle successful registration (e.g., redirect to login)
+
+        // If registration is successful, redirect to login page
+        if (response.status === 201) {
+            router.push('/auth/login');
+        }
     } catch (error) {
-        errorMessage.value = error.response.data.message;
+        if (error.response) {
+            errorMessage.value = error.response.data.message;
+        } else {
+            errorMessage.value = 'An error occurred during registration';
+        }
     }
 };
 
-axios.defaults.baseURL = 'http://localhost:5000';
+axios.defaults.baseURL = 'http://localhost:5001';
 </script>
 
 <template>
     <div class="bg-surface-50 dark:bg-surface-950 flex items-center justify-center min-h-screen min-w-[100vw] overflow-hidden">
-            <FloatingConfigurator />
-<div class="flex flex-col items-center justify-center">
+        <FloatingConfigurator />
+        <div class="flex flex-col items-center justify-center">
             <div class="w-full border-2 border-surface-2 bg-surface-0 dark:bg-surface-900 py-20 px-8 sm:px-20" style="border-radius: 53px">
                 <div class="text-center mb-8">
                     <div class="text-primary dark:text-surface-0 text-3xl font-medium mb-4">Welcome to Concertify!</div>

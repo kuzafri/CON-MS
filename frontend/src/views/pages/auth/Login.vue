@@ -12,7 +12,7 @@ const router = useRouter();
 
 const login = async () => {
     try {
-        const response = await axios.post('http://localhost:5000/api/users/login', { email: email.value, password: password.value });
+        const response = await axios.post('http://localhost:5001/api/users/login', { email: email.value, password: password.value });
         console.log('Login response:', response);
         // Check the response status
         console.log('Response status:', response.status);
