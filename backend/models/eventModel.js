@@ -1,19 +1,21 @@
+const express = require('express');
+const router = express.Router();
 const mongoose = require('mongoose');
 
+// Event Schema
 const eventSchema = new mongoose.Schema({
     title: String,
     image: String,
-    date: Date,
+    date: String,
+    time: String,
     description: String,
-    venue: String,
     price: Number,
-    openingTime: String,
-    artistCount: Number,
-    rundown: [{
-        artist: String,
-        country: String,
-        time: String
-    }]
-});
+    type: String,
+    eventID: String,
+    status: String,
+    organiser: String
+}, { timestamps: true });
 
-module.exports = mongoose.model('Event', eventSchema);
+const Event = mongoose.model('Event', eventSchema);
+
+module.exports = Event;

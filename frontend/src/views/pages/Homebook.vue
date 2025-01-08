@@ -1,37 +1,9 @@
 <script setup>
-import { ref, onMounted } from 'vue';
-import { useRouter } from 'vue-router';
-import axios from 'axios';
+import { onMounted, ref } from 'vue';
 
-const router = useRouter();
-const featuredEvents = ref([]);
 const categoriesContainer = ref(null);
 let scrollInterval = null;
-
-
-const fetchRandomFeaturedEvents = async () => {
-    try {
-        const response = await axios.get('/api/featured-events');
-        console.log('Response:', response.data); // Debug log
-        if (!response.data || !Array.isArray(response.data)) {
-            console.error('Invalid response data:', response.data);
-            return;
-        }
-        featuredEvents.value = response.data.map(event => ({
-            _id: event._id,
-            title: event.concertTitle,
-            venue: "DTSP USM",
-            image: '/concert.png',
-            price: event.regularPrice,
-            date: new Date(event.calendarValue).toLocaleDateString(),
-            startTime: event.startTime,
-            genre: event.genre
-        }));
-    } catch (error) {
-        console.error('Full error:', error);
-        featuredEvents.value = [];
-    }
-};
+const featuredEvent = ref(null);
 
 const startAutoScroll = () => {
     if (!categoriesContainer.value) return;
@@ -51,9 +23,20 @@ const stopAutoScroll = () => {
         clearInterval(scrollInterval);
     }
 };
+
+const fetchFeaturedEvent = async () => {
+    try {
+        const response = await fetch('your-api-endpoint');
+        const data = await response.json();
+        featuredEvent.value = data;
+    } catch (error) {
+        console.error('Error fetching featured event:', error);
+    }
+};
+
 onMounted(() => {
-    fetchRandomFeaturedEvents();
     startAutoScroll();
+    fetchFeaturedEvent();
 });
 
 function smoothScroll(id) {
@@ -103,40 +86,25 @@ function smoothScroll(id) {
                     <div class="col-span-2 bg-surface-0 dark:bg-surface-900 rounded-lg shadow md:p-6 sm:p-3">
                         <h2 class="text-3xl font-semibold mb-4 text-surface-900 dark:text-surface-0">Featured Events</h2>
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                            <router-link 
-                                v-for="event in featuredEvents" 
-                                :key="event._id"
-                                :to="{ name: 'EventDetails', params: { id: event._id }}"
-                                class="bg-surface-100 dark:bg-surface-800 rounded-lg overflow-hidden hover:bg-surface-200 dark:hover:bg-surface-700"
-                            >
-                                <img :src="event.image" :alt="event.title" class="w-full h-48 object-cover" />
+                            <a v-if="featuredEvent" :href="`#${featuredEvent._id}`" class="bg-surface-100 dark:bg-surface-800 rounded-lg overflow-hidden hover:bg-surface-200 dark:hover:bg-surface-700">
+                                <img :src="featuredEvent.imageUrl" alt="Featured Event" class="w-full h-48 object-cover" />
                                 <div class="p-4">
-                                    <h3 class="text-lg font-semibold text-surface-900 dark:text-surface-0">{{ event.title }}</h3>
-                                    <p class="text-surface-600 dark:text-surface-400">{{ event.venue }}</p>
+                                    <h3 class="text-lg font-semibold text-surface-900 dark:text-surface-0">{{ featuredEvent.concertTitle }}</h3>
+                                    <p class="text-surface-600 dark:text-surface-400">{{ featuredEvent.performers.join(', ') }}</p>
                                     <div class="flex flex-row mt-4">
-                                        <div class="font-bold">
-                                            <span class="text-sm">Starting from </span>
-                                            RM{{ event.price }}
-                                        </div>
-                                        <div class="bottom-0 right-0 ml-auto">
-                                            <Button label="Book Now" as="router-link" 
-                                                :to="{ name: 'Booking', params: { id: event._id }}" 
-                                                rounded
-                                            ></Button>
+                                        <div class="font-bold"><span class="text-sm">Starting from </span>RM{{ featuredEvent.regularPrice }}</div>
+                                        <div class="bottom-0 right-0 ml-auto flex sm:flex-row">
+                                            <Button label="See Detail" as="router-link" :to="`/eventdetail/${featuredEvent._id}`" rounded class="seedetail flex mr-4"></Button>
+                                            <Button label="Book Now" as="router-link" :to="`/booking/${featuredEvent._id}`" rounded></Button>
                                         </div>
                                     </div>
                                 </div>
-                            </router-link>
-                            
-                            <!-- Placeholder when no events are loaded -->
-                            <div v-if="featuredEvents.length === 0" 
-                                class="bg-surface-100 dark:bg-surface-800 rounded-lg p-4 text-center">
-                                <p class="text-surface-600 dark:text-surface-400">Loading featured events...</p>
-                            </div>
+                            </a>
                         </div>
                     </div>
                 </div>
             </div>
+
             <div class="flex-1 max-w-7xl mx-auto px-4">
                 <div class="grid grid-cols-12 gap-4 justify-center">
                     <div class="col-span-12 mt-20">
@@ -449,4 +417,3 @@ button:hover {
     transition: transform 0.2s ease-in-out;
 }
 </style>
-

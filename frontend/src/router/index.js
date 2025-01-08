@@ -227,7 +227,12 @@ const router = createRouter({
             component: AppLayoutCustomer,
             children: [
                 {
-                    path: '/booking',
+                    path: '/event/',
+                    name: 'Event',
+                    component: () => import('@/views/pages/Event.vue')
+                },
+                {
+                    path: '/booking/:id',
                     name: 'Booking',
                     component: () => import('@/views/pages/Booking.vue')
                 },
@@ -241,11 +246,11 @@ const router = createRouter({
                     name: 'Payment',
                     component: () => import('@/views/pages/Payment.vue')
                 },
-                {
-                    path: '/event',
-                    name: 'Event',
-                    component: () => import('@/views/pages/Event.vue')
-                },
+                // {
+                //     path: '/event',
+                //     name: 'Event',
+                //     component: () => import('@/views/pages/Event.vue')
+                // },
                 {
                     path: '/ticket',
                     name: 'Ticket',

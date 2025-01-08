@@ -1,71 +1,36 @@
 <script setup>
 import { useLayout } from '@/layout/composables/layout';
 import { computed, onMounted, onUnmounted, ref } from 'vue';
-import { HeartIcon } from 'lucide-vue-next'; // Assuming you're using Lucide icons
+import { HeartIcon } from 'lucide-vue-next';
 import { useFavoriteStore } from '@/stores/favorite';
+import { eventService } from '@/service/EventService';
 
 const logoSrc = computed(() => (isDarkTheme.value ? '/logo_dark.png' : '/logo_light.png'));
 const categoriesContainer = ref(null);
 const email = ref('');
-const events = ref([
-    {
-        id: 1,
-        image: 'concert.png',
-        title: 'Thriller',
-        date: '24/5/2025',
-        description: 'Dewan Tuanku Syed Putra, USM',
-        price: 235,
-        isFavorite: false
-    },
-    {
-        id: 2,
-        image: 'concert.png',
-        title: 'Thriller',
-        date: '24/5/2025',
-        description: 'Dewan Tuanku Syed Putra, USM',
-        price: 320,
-        isFavorite: false
-    },
-    {
-        id: 3,
-        image: 'concert.png',
-        title: 'Thriller',
-        date: '24/5/2025',
-        description: 'Dewan Tuanku Syed Putra, USM',
-        price: 450,
-        isFavorite: false
-    },
-    {
-        id: 4,
-        image: 'concert.png',
-        title: 'Thriller',
-        date: '24/5/2025',
-        description: 'Dewan Tuanku Syed Putra, USM',
-        price: 235,
-        isFavorite: false
-    },
-    {
-        id: 5,
-        image: 'concert.png',
-        title: 'Thriller',
-        date: '24/5/2025',
-        description: 'Dewan Tuanku Syed Putra, USM',
-        price: 320,
-        isFavorite: false
-    },
-    {
-        id: 6,
-        image: 'concert.png',
-        title: 'Thriller',
-        date: '24/5/2025',
-        description: 'Dewan Tuanku Syed Putra, USM',
-        price: 450,
-        isFavorite: false
-    }
-]);
+const events = ref([]);
+const loading = ref(true);
+const error = ref(null);
+
 let scrollInterval = null;
 
 const favoriteStore = useFavoriteStore();
+
+const fetchEvents = async () => {
+    try {
+        loading.value = true;
+        const data = await eventService.getEvents();
+        events.value = data.map(event => ({
+            ...event,
+            isFavorite: favoriteStore.isFavorite(event._id)
+        }));
+    } catch (err) {
+        error.value = 'Failed to load events. Please try again later.';
+        console.error('Error:', err);
+    } finally {
+        loading.value = false;
+    }
+};
 
 const toggleFavorite = (event) => {
     if (favoriteStore.isFavorite(event.id)) {
@@ -121,17 +86,14 @@ const { onMenuToggle, toggleDarkMode, isDarkTheme } = useLayout();
 
 onMounted(() => {
     startAutoScroll();
-});
-
-onUnmounted(() => {
-    stopAutoScroll();
+    fetchEvents();
 });
 </script>
 
 <template>
     <div class="bg-surface-0 dark:bg-surface-900 min-h-screen flex flex-col mt-14">
         <div class="mx-auto py-6">
-            <div class="flex flex-col md:flex-row w-full ">
+            <div class="flex flex-col md:flex-row w-full">
                 <!-- Sidebar -->
                 <div class="sm:w-auto mx-3 h-max p-4 rounded-lg dark:bg-surface-800 mt-2">
                     <h2 class="text-lg font-semibold mb-4 dark:text-white">Locations</h2>
@@ -143,9 +105,19 @@ onUnmounted(() => {
                     </div>
                 </div>
 
+                <!-- Loading State -->
+                <div v-if="loading" class="w-full flex justify-center items-center min-h-[200px]">
+                    <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
+                </div>
+
+                <!-- Error State -->
+                <div v-else-if="error" class="w-full flex justify-center items-center min-h-[200px]">
+                    <div class="text-red-500">{{ error }}</div>
+                </div>
+
                 <!-- Event Cards -->
-                <div class="flex flex-wrap gap-2 w-full mt-2">
-                    <div v-for="event in events" :key="event.id" class="ml-2 dark:bg-surface-800 p-6 bg-white shadow-lg rounded-lg sm:w-1/3 relative">
+                <div v-else class="flex flex-wrap gap-2 w-full mt-2">
+                    <div v-for="event in events" :key="event._id" class="ml-2 dark:bg-surface-800 p-6 bg-white shadow-lg rounded-lg sm:w-1/3 relative">
                         <div class="relative">
                             <img :src="event.image" alt="Event Image" class="w-full h-48 object-cover rounded-lg" />
                         </div>
@@ -156,24 +128,30 @@ onUnmounted(() => {
                                 class="focus:outline-none right-5 absolute"
                             >
                                 <HeartIcon 
-                                    :fill="favoriteStore.isFavorite(event.id) ? 'red' : 'none'" 
-                                    :stroke="favoriteStore.isFavorite(event.id) ? 'red' : 'currentColor'" 
+                                    :fill="event.isFavorite ? 'red' : 'none'" 
+                                    :stroke="event.isFavorite ? 'red' : 'currentColor'" 
                                     class="w-6 h-6 hover:scale-110 transition-transform"
                                 />
                             </button>
                         </div>
                         <p class="text-gray-500 dark:text-white">{{ event.description }}</p>
-                        <p class="text-gray-700 dark:text-white font-bold">{{ event.date }}</p>
+                        <p class="text-gray-700 dark:text-white font-bold">{{ event.date }} {{ event.time }}</p>
                         <div class="flex flex-wrap mt-2 space-x-2">
-                            <span class="bg-gray-200 dark:text-black text-sm py-1 px-2 rounded">Music</span>
+                            <span class="bg-gray-200 dark:text-black text-sm py-1 px-2 rounded">{{ event.type }}</span>
+                            <span :class="`text-sm py-1 px-2 rounded ${
+                                event.status === 'Pending' ? 'bg-yellow-200 text-yellow-800' : 
+                                event.status === 'Approved' ? 'bg-green-200 text-green-800' :
+                                'bg-gray-200 dark:text-black'}`"
+                            >
+                                {{ event.status }}
+                            </span>
                         </div>
                         <div class="flex justify-between items-center mt-4">
                             <span class="text-lg font-bold">RM{{ event.price }}</span>
-                            <Button as="router-link" to="/booking" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Buy now</Button>
+                            <Button as="router-link" :to="'/booking/' + event._id" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Buy now</Button>
                         </div>
                     </div>
                 </div>
-                
             </div>
         </div>
     </div>
