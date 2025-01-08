@@ -1,11 +1,12 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useToast } from 'primevue/usetoast';
+import axios from 'axios';
 
 // Add props definition
 const props = defineProps({
-  id: String
+    id: String
 });
 
 const route = useRoute();
@@ -14,28 +15,20 @@ const toast = useToast();
 
 // Get data from state or create default object
 const EventRequest = ref({
-    id: props.id || route.params.id,
-    title: 'REBEL 3.0: Because of You',
-    date: '13th January 2025',
-    time: '3:00 PM - 4:00 PM',
-    audience: '1500 pax',
-    type: 'Paid Entry',
+    id: route.params.id,
+    title: '',
+    date: '',
+    time: '',
+    audience: '',
+    type: '',
     status: 'Pending',
-    performers: [
-        'Taylor Swift', 
-        'Beyonce', 
-        'Justin Bieber', 
-        'Harry Styles', 
-        'Eminem', 
-        'Drake', 
-        'Post Malone'
-    ],
-    genre: 'Rock',
-    standardSeatPrice: 80,
-    goldSeatPrice: 120,
-    platinumSeatPrice: 190,
-    refundPolicy: 'No ticket refund 2 weeks before the event date.',
-    securityPolicy: 'Bag check at the entrance to avoid any weapons or drugs enter the concert.'
+    performers: [],
+    genre: '',
+    standardSeatPrice: 0,
+    goldSeatPrice: 0,
+    platinumSeatPrice: 0,
+    refundPolicy: '',
+    securityPolicy: ''
 });
 
 // New refs for editing
@@ -59,7 +52,7 @@ const getStatusSeverity = (status) => {
 const handleInventory = () => {
     console.log('handleInventory called');
     router.push({
-        name: 'EventInventory',  // Use the named route
+        name: 'EventInventory' // Use the named route
         // params: {
         //     id: EventRequest.value.id
         // },
@@ -70,7 +63,7 @@ const handleInventory = () => {
 const handleAudiences = () => {
     console.log('handleAudiences called');
     router.push({
-        name: 'EventAudiences',  // Use the named route
+        name: 'EventAudiences' // Use the named route
         // params: {
         //     id: EventRequest.value.id
         // },
@@ -104,25 +97,108 @@ const removePerformer = (index) => {
     EventRequest.value.performers.splice(index, 1);
 };
 
-const saveEvent = () => {
+const saveEvent = async () => {
     submitted.value = true;
 
     // Basic validation for required fields
-    if (EventRequest.value.title?.trim() && 
-        EventRequest.value.date?.trim() && 
-        EventRequest.value.time?.trim()) {
-        
-        toast.add({ 
-            severity: 'success', 
-            summary: 'Successful', 
-            detail: 'Event Details Updated', 
-            life: 3000 
-        });
+    if (EventRequest.value.title?.trim() && EventRequest.value.date?.trim() && EventRequest.value.time?.trim()) {
+        try {
+            // Extract start and end time from the combined time string
+            const [startTime, endTime] = EventRequest.value.time.split(' - ');
 
-        eventDialog.value = false;
-        submitted.value = false;
+            // Parse the date string correctly
+            // First split the date string into components (assuming format: MM/DD/YYYY)
+            const [month, day, year] = EventRequest.value.date.split('/');
+            // Create a new Date object with the components
+            const calendarValue = new Date(year, month - 1, day).toISOString();
+
+            // Convert the frontend data structure back to backend format
+            const eventData = {
+                concertTitle: EventRequest.value.title,
+                calendarValue: calendarValue,
+                startTime: startTime,
+                endTime: endTime,
+                performers: EventRequest.value.performers,
+                genre: EventRequest.value.genre,
+                standardPrice: EventRequest.value.standardSeatPrice,
+                vipPrice: EventRequest.value.goldSeatPrice,
+                economyPrice: EventRequest.value.platinumSeatPrice,
+                eventPolicies: EventRequest.value.refundPolicy,
+                status: EventRequest.value.status
+            };
+
+            console.log('Sending update with data:', eventData); // Debug log
+
+            // Send PUT request to update the event
+            const response = await axios.put(`http://localhost:5001/api/events/${EventRequest.value.id}`, eventData);
+
+            if (response.status === 200) {
+                toast.add({
+                    severity: 'success',
+                    summary: 'Successful',
+                    detail: 'Event Details Updated',
+                    life: 3000
+                });
+
+                // Refresh the event details to show updated data
+                await fetchEventDetails();
+            }
+
+            eventDialog.value = false;
+            submitted.value = false;
+        } catch (error) {
+            console.error('Error updating event:', error);
+            // Add more detailed error information
+            console.log('Current date value:', EventRequest.value.date);
+            console.log('Current time value:', EventRequest.value.time);
+
+            toast.add({
+                severity: 'error',
+                summary: 'Error',
+                detail: 'Failed to update event details',
+                life: 3000
+            });
+        }
     }
 };
+
+const fetchEventDetails = async () => {
+    try {
+        const response = await axios.get(`http://localhost:5001/api/events/${route.params.id}`);
+        const event = response.data;
+
+        // Map the backend data to our frontend structure
+        EventRequest.value = {
+            id: event._id,
+            title: event.concertTitle,
+            date: new Date(event.calendarValue).toLocaleDateString(),
+            time: `${event.startTime} - ${event.endTime}`,
+            audience: '1500 pax',
+            type: 'Paid Entry',
+            status: event.status,
+            performers: event.performers,
+            genre: event.genre,
+            standardSeatPrice: event.standardPrice,
+            goldSeatPrice: event.vipPrice,
+            platinumSeatPrice: event.economyPrice,
+            refundPolicy: event.eventPolicies,
+            securityPolicy: event.eventPolicies
+        };
+    } catch (error) {
+        console.error('Error fetching event details:', error);
+        toast.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: 'Failed to load event details',
+            life: 3000
+        });
+    }
+};
+
+onMounted(() => {
+    fetchEventDetails();
+});
+
 // For debugging
 // console.log('Props:', props);
 // console.log('Route params:', route.params);
@@ -135,26 +211,23 @@ const saveEvent = () => {
 // function handleDecline() {
 //     alert(`You have declined the request for event: ${EventRequest.value.title}`);
 // }
-
 </script>
 
 <template>
-    <div class="p-4">  <!-- Added padding -->
-        <button 
-                @click="handleBack"
-                class="flex items-center text-blue-600 hover:text-blue-700 pb-4"
-            >
-                <span class="mr-2">←</span> Back to All Concerts
-            </button>
+    <div class="p-4">
+        <!-- Added padding -->
+        <button @click="handleBack" class="flex items-center text-blue-600 hover:text-blue-700 pb-4"><span class="mr-2">←</span> Back to All Concerts</button>
 
-        <div class="card p-6 bg-white shadow rounded">  <!-- Added background and shadow -->
+        <div class="card p-6 bg-surface-0 dark:bg-surface-900 dark:text-surface-0 text-shadow rounded">
+            <!-- Added background and shadow -->
             <div class="flex items-center justify-between mb-4">
                 <h2 class="text-xl font-semibold">ID: {{ EventRequest.id }}</h2>
                 <Tag :severity="getStatusSeverity(EventRequest.status)" :value="EventRequest.status" />
             </div>
-            
+
             <div class="space-y-4">
-                <div class="flex justify-between border-b pb-2">  <!-- Added bottom border and padding -->
+                <div class="flex justify-between border-b pb-2">
+                    <!-- Added bottom border and padding -->
                     <p class="text-sm font-semibold">Concert Title:</p>
                     <p class="text-sm">{{ EventRequest.title }}</p>
                 </div>
@@ -170,7 +243,9 @@ const saveEvent = () => {
                     <p class="text-sm font-semibold">Performer(s)/Band(s):</p>
                     <div class="text-sm flex flex-col">
                         <ul v-for="(performer, index) in EventRequest.performers" :key="index">
-                            {{ performer }}
+                            {{
+                                performer
+                            }}
                         </ul>
                     </div>
                 </div>
@@ -206,30 +281,13 @@ const saveEvent = () => {
                         <p class="text-sm font-bold">Bag Checks & Security:</p>
                         <p class="text-sm">{{ EventRequest.securityPolicy }}</p>
                     </div>
-                    
                 </div>
             </div>
 
             <div class="flex justify-end space-x-4 mt-6">
-                <button
-                    class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition"
-                    @click="openEditDialog"
-                >
-                    Edit
-                </button>
-                <button
-                    class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition"
-                    @click="handleInventory"
-                >
-                    Inventory
-                </button>
-                <button
-                    class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition"
-                    @click="handleAudiences"
-                >
-                    View Audience
-                </button>
-                
+                <button class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition" @click="openEditDialog">Edit</button>
+                <button class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition" @click="handleInventory">Inventory</button>
+                <button class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition" @click="handleAudiences">View Audience</button>
             </div>
         </div>
 
@@ -240,149 +298,71 @@ const saveEvent = () => {
                 <div class="grid grid-cols-2 gap-4">
                     <div>
                         <label for="title" class="block font-bold mb-3">Concert Title</label>
-                        <InputText 
-                            id="title" 
-                            v-model.trim="EventRequest.title" 
-                            required="true" 
-                            autofocus 
-                            :invalid="submitted && !EventRequest.title" 
-                            fluid 
-                            class="w-full"
-                        />
+                        <InputText id="title" v-model.trim="EventRequest.title" required="true" autofocus :invalid="submitted && !EventRequest.title" fluid class="w-full" />
                         <small v-if="submitted && !EventRequest.title" class="text-red-500">Title is required.</small>
                     </div>
                     <div>
                         <label for="genre" class="block font-bold mb-3">Genre</label>
-                        <InputText 
-                            id="genre" 
-                            v-model="EventRequest.genre" 
-                            fluid 
-                            class="w-full"
-                        />
+                        <InputText id="genre" v-model="EventRequest.genre" fluid class="w-full" />
                     </div>
                 </div>
 
                 <div class="grid grid-cols-2 gap-4">
                     <div>
                         <label for="date" class="block font-bold mb-3">Date</label>
-                        <InputText 
-                            id="date" 
-                            v-model="EventRequest.date" 
-                            fluid 
-                            class="w-full"
-                        />
+                        <InputText id="date" v-model="EventRequest.date" fluid class="w-full" />
                     </div>
                     <div>
                         <label for="time" class="block font-bold mb-3">Time</label>
-                        <InputText 
-                            id="time" 
-                            v-model="EventRequest.time" 
-                            fluid 
-                            class="w-full"
-                        />
+                        <InputText id="time" v-model="EventRequest.time" fluid class="w-full" />
                     </div>
                 </div>
 
                 <div>
                     <label class="block font-bold mb-3">Performers</label>
                     <div class="flex mb-3">
-                        <InputText 
-                            v-model="performerInput" 
-                            placeholder="Add performer" 
-                            class="w-full mr-2"
-                        />
-                        <Button 
-                            label="Add" 
-                            @click="addPerformer" 
-                            class="p-button-secondary"
-                        />
+                        <InputText v-model="performerInput" placeholder="Add performer" class="w-full mr-2" />
+                        <Button label="Add" @click="addPerformer" class="p-button-secondary" />
                     </div>
                     <div class="flex flex-wrap gap-2">
-                        <Chip 
-                            v-for="(performer, index) in EventRequest.performers" 
-                            :key="index" 
-                            :label="performer" 
-                            removable 
-                            @remove="removePerformer(index)"
-                        />
+                        <Chip v-for="(performer, index) in EventRequest.performers" :key="index" :label="performer" removable @remove="removePerformer(index)" />
                     </div>
                 </div>
 
                 <div class="grid grid-cols-3 gap-4">
                     <div>
                         <label for="standardSeatPrice" class="block font-bold mb-3">Standard Seat Price (RM)</label>
-                        <InputNumber 
-                            id="standardSeatPrice" 
-                            v-model="EventRequest.standardSeatPrice" 
-                            mode="currency" 
-                            currency="MYR" 
-                            fluid 
-                            class="w-full"
-                        />
+                        <InputNumber id="standardSeatPrice" v-model="EventRequest.standardSeatPrice" mode="currency" currency="MYR" fluid class="w-full" />
                     </div>
                     <div>
                         <label for="goldSeatPrice" class="block font-bold mb-3">Gold Seat Price (RM)</label>
-                        <InputNumber 
-                            id="goldSeatPrice" 
-                            v-model="EventRequest.goldSeatPrice" 
-                            mode="currency" 
-                            currency="MYR" 
-                            fluid 
-                            class="w-full"
-                        />
+                        <InputNumber id="goldSeatPrice" v-model="EventRequest.goldSeatPrice" mode="currency" currency="MYR" fluid class="w-full" />
                     </div>
                     <div>
                         <label for="platinumSeatPrice" class="block font-bold mb-3">Platinum Seat Price (RM)</label>
-                        <InputNumber 
-                            id="platinumSeatPrice" 
-                            v-model="EventRequest.platinumSeatPrice" 
-                            mode="currency" 
-                            currency="MYR" 
-                            fluid 
-                            class="w-full"
-                        />
+                        <InputNumber id="platinumSeatPrice" v-model="EventRequest.platinumSeatPrice" mode="currency" currency="MYR" fluid class="w-full" />
                     </div>
                 </div>
 
                 <div class="grid grid-cols-2 gap-4">
                     <div>
                         <label for="audience" class="block font-bold mb-3">Audience</label>
-                        <InputText 
-                            id="audience" 
-                            v-model="EventRequest.audience" 
-                            fluid 
-                            class="w-full"
-                        />
+                        <InputText id="audience" v-model="EventRequest.audience" fluid class="w-full" />
                     </div>
                     <div>
                         <label for="type" class="block font-bold mb-3">Type of Entry</label>
-                        <InputText 
-                            id="type" 
-                            v-model="EventRequest.type" 
-                            fluid 
-                            class="w-full"
-                        />
+                        <InputText id="type" v-model="EventRequest.type" fluid class="w-full" />
                     </div>
                 </div>
 
                 <div>
                     <label for="refundPolicy" class="block font-bold mb-3">Refund Policy</label>
-                    <Textarea 
-                        id="refundPolicy" 
-                        v-model="EventRequest.refundPolicy" 
-                        rows="3" 
-                        class="w-full"
-                    />
+                    <Textarea id="refundPolicy" v-model="EventRequest.refundPolicy" rows="3" class="w-full" />
                 </div>
 
                 <div>
                     <label for="securityPolicy" class="block font-bold mb-3">Security Policy</label>
-                    <Textarea 
-                        id="securityPolicy" 
-                        v-model="EventRequest.securityPolicy" 
-                        rows="3" 
-                        class="w-full"
-                    />
+                    <Textarea id="securityPolicy" v-model="EventRequest.securityPolicy" rows="3" class="w-full" />
                 </div>
             </div>
 

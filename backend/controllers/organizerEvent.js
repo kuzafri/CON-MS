@@ -4,10 +4,10 @@ const Event = require('../models/organizerEvent');
 exports.createEvent = async (req, res) => {
     const {
         concertTitle, calendarValue, startTime, endTime,
-        performers, genre, regularPrice, goldPrice, platinumPrice, eventPolicies
+        performers, genre, economyPrice, standardPrice, vipPrice, eventPolicies
     } = req.body;
 
-    if (!concertTitle || !calendarValue || !startTime || !endTime || !performers.length || !genre || !regularPrice || !goldPrice || !platinumPrice || !eventPolicies) {
+    if (!concertTitle || !calendarValue || !startTime || !endTime || !performers.length || !genre || !economyPrice || !standardPrice || !vipPrice || !eventPolicies) {
         return res.status(400).json({ error: 'All fields are required.' });
     }
 
@@ -21,9 +21,9 @@ exports.createEvent = async (req, res) => {
             endTime,
             performers,
             genre,
-            regularPrice,
-            goldPrice,
-            platinumPrice,
+            economyPrice,
+            standardPrice,
+            vipPrice,
             eventPolicies,
         });
 

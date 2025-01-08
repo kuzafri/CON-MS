@@ -3,56 +3,44 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 require('dotenv').config();
 
+// Initial
 const app = express();
 
-// Improved CORS configuration
+// Middleware
 app.use(cors({
-    origin: ['http://localhost:5173', 'http://localhost:3000'], // Add any other frontend URLs
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
-    credentials: true
+    origin: 'http://localhost:5173',
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    allowedHeaders: ['Content-Type']
 }));
-
 app.use(express.json());
 
-// MongoDB Connection with better error handling
-mongoose.connect(process.env.MONGO_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-    family: 4
-})
-.then(() => {
-    console.log('Successfully connected to MongoDB.');
-})
-.catch((error) => {
-    console.error('MongoDB connection error:', error);
-    process.exit(1);
+const dns = require('dns');
+dns.resolve('conms.i2dnl.mongodb.net', (err, records) => {
+    console.log('DNS Resolution:', err || records);
 });
 
-// Basic health check route
-app.get('/api/health', (req, res) => {
-    res.status(200).json({ status: 'OK', message: 'Server is running' });
-});
+// Connect to MongoDB
+mongoose.connect(process.env.MONGO_URI, {
+  family: 4,
+  retryWrites: true,
+})
+  .then(() => console.log('Connected to MongoDB'))
+  .catch((err) => console.error('Could not connect to MongoDB:', err));
 
 // Routes
 const userRoutes = require('./routes/userRoutes');
-const eventRoutes = require('./routes/organizerEvent');
-
 app.use('/api/users', userRoutes);
+
+// Routes (organizer)
+const eventRoutes = require('./routes/organizerEvent');
 app.use('/api', eventRoutes);
 
-// Error handling middleware
-// app.use((err, req, res, next) => {
-//     console.error(err.stack);
-//     res.status(500).json({ 
-//         status: 'error',
-//         message: 'Something went wrong!',
-//         error: process.env.NODE_ENV === 'development' ? err.message : {}
-//     });
-// });
+// Routes (inventory)
+const inventoryRoutes = require('./routes/organizerEventInventory');
+app.use('/api', inventoryRoutes);
 
-// const PORT = process.env.PORT || 5001;
-// app.listen(PORT, () => {
-//     console.log(`Server is running on port ${PORT}`);
-//     console.log(`API is available at http://localhost:${PORT}/api`);
-// });
+// Start server
+const PORT = process.env.PORT || 5001;
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
+});
