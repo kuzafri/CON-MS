@@ -2,9 +2,11 @@ const Event = require('../models/eventModel');
 
 const getAllEvents = async (req, res) => {
     try {
-        const events = await Event.find();
+        const events = await Event.find()
+            .select('_id concertTitle calendarValue startTime genre regularPrice image');
         res.json(events);
     } catch (err) {
+        console.error('Error:', err);
         res.status(500).json({ message: err.message });
     }
 };
@@ -21,17 +23,14 @@ const getEventById = async (req, res) => {
     }
 };
 
-const getFeaturedEvents = async (req, res) => {
+exports.getFeaturedEvents = async (req, res) => {
     try {
-        const events = await Event.aggregate([
-            { $sample: { size: 2 } }
-        ]);
-        console.log('Found events:', events); // Debug log
-        res.json(events);
-    } catch (err) {
-        console.error('Error:', err);
-        res.status(500).json({ message: err.message });
+      const events = await Event.find({ status: 'featured' });
+      res.status(200).json(events);
+    } catch (error) {
+      res.status(500).json({ message: error.message });
     }
-};
+  };
 
-module.exports = { getAllEvents, getEventById };
+
+module.exports = { getAllEvents, getEventById, getFeaturedEvents };
