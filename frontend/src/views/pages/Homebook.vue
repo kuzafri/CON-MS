@@ -1,49 +1,99 @@
 <script setup>
-import { onMounted, ref } from 'vue';
+import { ref, onMounted, onUnmounted } from 'vue';
+import { useRouter } from 'vue-router';
+import axios from 'axios';
 
+const router = useRouter();
+const featuredEvents = ref([]);
 const categoriesContainer = ref(null);
 let scrollInterval = null;
-const featuredEvent = ref(null);
+
+const fetchRandomFeaturedEvents = async () => {
+    try {
+        const response = await axios.get('http://localhost:5001/api/events');
+        console.log('Response:', response.data);
+
+        if (!response.data || !Array.isArray(response.data)) {
+            console.error('Invalid response data:', response.data);
+            return;
+        }
+
+        // Randomly shuffle the array and take first 2 events
+        const shuffledEvents = response.data.sort(() => Math.random() - 0.5).slice(0, 2);
+
+        featuredEvents.value = shuffledEvents.map((event) => ({
+            _id: event._id,
+            title: event.concertTitle,
+            venue: 'DTSP USM',
+            image: '/concert.png',
+            price: event.economyPrice,
+            date: new Date(event.calendarValue).toLocaleDateString(),
+            startTime: event.startTime,
+            genre: event.genre,
+            performers: event.performers
+        }));
+    } catch (error) {
+        console.error('Full error:', error);
+        featuredEvents.value = [];
+    }
+};
 
 const startAutoScroll = () => {
-    if (!categoriesContainer.value) return;
+    stopAutoScroll(); // Clear any existing interval first
 
-    scrollInterval = setInterval(() => {
+    const initScroll = () => {
         const container = categoriesContainer.value;
-        if (container.scrollLeft + container.clientWidth >= container.scrollWidth) {
-            container.scrollLeft = 0;
-        } else {
-            container.scrollLeft += 1;
+        if (!container) {
+            console.log('Container not ready, retrying...');
+            return false; // Container not ready
         }
-    }, 30);
+
+        scrollInterval = setInterval(() => {
+            if (container.scrollLeft + container.clientWidth >= container.scrollWidth) {
+                container.scrollLeft = 0;
+            } else {
+                container.scrollLeft += 1;
+            }
+        }, 30);
+
+        return true; // Successfully initialized
+    };
+
+    // Try to initialize scroll, and if it fails, retry after a delay
+    if (!initScroll()) {
+        setTimeout(() => {
+            if (!initScroll()) {
+                console.error('Failed to initialize auto-scroll after retry');
+            }
+        }, 500);
+    }
 };
 
 const stopAutoScroll = () => {
     if (scrollInterval) {
         clearInterval(scrollInterval);
-    }
-};
-
-const fetchFeaturedEvent = async () => {
-    try {
-        const response = await fetch('your-api-endpoint');
-        const data = await response.json();
-        featuredEvent.value = data;
-    } catch (error) {
-        console.error('Error fetching featured event:', error);
+        scrollInterval = null;
     }
 };
 
 onMounted(() => {
-    startAutoScroll();
-    fetchFeaturedEvent();
+    fetchRandomFeaturedEvents();
+    // Wait for next tick and try to start auto-scroll
+    setTimeout(startAutoScroll, 100);
+});
+
+onUnmounted(() => {
+    stopAutoScroll();
 });
 
 function smoothScroll(id) {
     document.body.click();
-    document.querySelector(id).scrollIntoView({
-        behavior: 'smooth'
-    });
+    const element = document.querySelector(id);
+    if (element) {
+        element.scrollIntoView({
+            behavior: 'smooth'
+        });
+    }
 }
 </script>
 
@@ -86,25 +136,38 @@ function smoothScroll(id) {
                     <div class="col-span-2 bg-surface-0 dark:bg-surface-900 rounded-lg shadow md:p-6 sm:p-3">
                         <h2 class="text-3xl font-semibold mb-4 text-surface-900 dark:text-surface-0">Featured Events</h2>
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                            <a v-if="featuredEvent" :href="`#${featuredEvent._id}`" class="bg-surface-100 dark:bg-surface-800 rounded-lg overflow-hidden hover:bg-surface-200 dark:hover:bg-surface-700">
-                                <img :src="featuredEvent.imageUrl" alt="Featured Event" class="w-full h-48 object-cover" />
+                            <router-link
+                                v-for="event in featuredEvents"
+                                :key="event._id"
+                                :to="{ name: 'EventDetails', params: { id: event._id } }"
+                                class="bg-surface-100 dark:bg-surface-800 rounded-lg overflow-hidden hover:bg-surface-200 dark:hover:bg-surface-700"
+                            >
+                                <img :src="event.image" :alt="event.title" class="w-full h-48 object-cover" />
                                 <div class="p-4">
-                                    <h3 class="text-lg font-semibold text-surface-900 dark:text-surface-0">{{ featuredEvent.concertTitle }}</h3>
-                                    <p class="text-surface-600 dark:text-surface-400">{{ featuredEvent.performers.join(', ') }}</p>
+                                    <h3 class="text-lg font-semibold text-surface-900 dark:text-surface-0">{{ event.title }}</h3>
+                                    <p class="text-surface-600 dark:text-surface-400">{{ event.venue }}</p>
+                                    <p class="text-surface-600 dark:text-surface-400">{{ event.genre }}</p>
+                                    <p class="text-surface-600 dark:text-surface-400">{{ event.performers.join(', ') }}</p>
                                     <div class="flex flex-row mt-4">
-                                        <div class="font-bold"><span class="text-sm">Starting from </span>RM{{ featuredEvent.regularPrice }}</div>
-                                        <div class="bottom-0 right-0 ml-auto flex sm:flex-row">
-                                            <Button label="See Detail" as="router-link" :to="`/eventdetail/${featuredEvent._id}`" rounded class="seedetail flex mr-4"></Button>
-                                            <Button label="Book Now" as="router-link" :to="`/booking/${featuredEvent._id}`" rounded></Button>
+                                        <div class="font-bold">
+                                            <span class="text-sm">Starting from </span>
+                                            RM{{ event.price }}
+                                        </div>
+                                        <div class="bottom-0 right-0 ml-auto">
+                                            <Button label="Book Now" as="router-link" :to="{ name: 'Booking', params: { id: event._id } }" rounded></Button>
                                         </div>
                                     </div>
                                 </div>
-                            </a>
+                            </router-link>
+
+                            <!-- Placeholder when no events are loaded -->
+                            <div v-if="featuredEvents.length === 0" class="bg-surface-100 dark:bg-surface-800 rounded-lg p-4 text-center">
+                                <p class="text-surface-600 dark:text-surface-400">Loading featured events...</p>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-
             <div class="flex-1 max-w-7xl mx-auto px-4">
                 <div class="grid grid-cols-12 gap-4 justify-center">
                     <div class="col-span-12 mt-20">
