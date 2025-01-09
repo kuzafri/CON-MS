@@ -126,7 +126,7 @@ onMounted(() => {
                 <!-- Event Cards -->
                 <div v-if="allEvents.length > 0" class="flex flex-wrap gap-2 w-full mt-2">
                     <div v-for="event in allEvents" :key="event._id" class="ml-2 dark:bg-surface-800 p-6 bg-white shadow-lg rounded-lg sm:w-1/3 relative">
-                        <router-link :to="{ name: 'EventDetails', params: { id: event._id } }" class="block">
+                        <router-link :to="{ name: 'EventDetail', params: { id: event._id } }" class="block">
                             <div class="relative">
                                 <img :src="event.image" alt="Event Image" class="w-full h-48 object-cover rounded-lg" />
                             </div>

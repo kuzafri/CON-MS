@@ -154,6 +154,9 @@ function smoothScroll(id) {
                                             RM{{ event.price }}
                                         </div>
                                         <div class="bottom-0 right-0 ml-auto">
+                                            <Button class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600" as="router-link" :to="{ name: 'EventDetails',  params: { id: event._id } }">
+                                                See Detail
+                                            </Button>
                                             <Button label="Book Now" as="router-link" :to="{ name: 'Booking', params: { id: event._id } }" rounded></Button>
                                         </div>
                                     </div>

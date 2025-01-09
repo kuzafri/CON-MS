@@ -2,9 +2,9 @@
 import { useLayout } from '@/layout/composables/layout';
 import { onMounted, onUnmounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
-import { useEvents } from '@/composables/useEvents';
+import { useEvent } from '@/composables/useEvent';
 const route = useRoute();
-const { event, loading, error, fetchEventById } = useEvents();
+const { event, loading, error, fetchEventById } = useEvent();
 
 // Target event date
 const eventDate = new Date('2024-12-25T00:00:00'); // Replace with your event date
@@ -100,12 +100,12 @@ const { onMenuToggle, toggleDarkMode, isDarkTheme } = useLayout();
                     </div>
                     <div class="p-4">
                         <!-- Event Details -->
-                        <h1 class="text-2xl font-bold text-gray-900 dark:text-white">REBEL 3.0: Because of you</h1>
+                        <h1 class="text-2xl font-bold text-gray-900 dark:text-white">{{ event.title }}</h1>
                         <p class="text-gray-600 dark:text-gray-300">
-                            <span class="block">Dewan Tuanku Syed Putra, USM</span>
-                            <span>May 16-17, 2020 | Open Gate at 10:00 AM</span>
+                            <span class="block">{{ event.venue }}</span>
+                            <span>{{ event.date }} | Open Gate at {{ event.startTime }}</span>
                         </p>
-                        <p class="mt-2 text-gray-600 dark:text-gray-300">100+ Artists</p>
+                        <p class="mt-2 text-gray-600 dark:text-gray-300">{{ event.performers.join(', ') }}</p>
                     </div>
 
                     <div class="mt-8 flex flex-col items-center">

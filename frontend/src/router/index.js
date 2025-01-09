@@ -239,18 +239,20 @@ const router = createRouter({
                 {
                     path: '/eventdetail/:id',
                     name: 'EventDetail',
-                    component: () => import('@/views/pages/EventDetail.vue')
+                    component: () => import('@/views/pages/EventDetail.vue'),
+                    props: true
                 },
+                // {
+                //     path: '/event-detail/:id',
+                //     name: 'EventDetail',
+                //     component: () => import('@/views/pages/EventDetail.vue'),
+                //     props: true
+                // },
                 {
                     path: '/payment',
                     name: 'Payment',
                     component: () => import('@/views/pages/Payment.vue')
                 },
-                // {
-                //     path: '/event',
-                //     name: 'Event',
-                //     component: () => import('@/views/pages/Event.vue')
-                // },
                 {
                     path: '/ticket',
                     name: 'Ticket',

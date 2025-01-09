@@ -2,7 +2,7 @@
 import { ref } from 'vue';
 import axios from 'axios';
 
-export function useEvents() {
+export function useEvent() {
     const events = ref([]);
     const event = ref(null);
     const loading = ref(false);
@@ -20,10 +20,24 @@ export function useEvents() {
         }
     };
 
+    const fetchEventById = async (id) => {
+        loading.value = true;
+        try {
+            const response = await axios.get(`/api/events/${id}`);
+            event.value = response.data;
+        } catch (err) {
+            error.value = err.message;
+        } finally {
+            loading.value = false;
+        }
+    };
+
     return {
         events,
+        event,
         loading,
         error,
-        fetchEvents
+        fetchEvents,
+        fetchEventById
     };
 }
