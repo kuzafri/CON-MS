@@ -1,6 +1,6 @@
 <script setup>
 import { useLayout } from '@/layout/composables/layout';
-import { computed, onMounted, ref } from 'vue';
+import { computed, onMounted, ref, onUnmounted } from 'vue';
 
 function smoothScroll(id) {
     document.body.click();
@@ -9,20 +9,20 @@ function smoothScroll(id) {
     });
 }
 
-const categoriesContainer = ref(null);
+const scrollContainer = ref(null);
 let scrollInterval = null;
 
 const startAutoScroll = () => {
-    if (!categoriesContainer.value) return;
+    if (!scrollContainer.value) return;
 
     scrollInterval = setInterval(() => {
-        const container = categoriesContainer.value;
-        if (container.scrollLeft + container.clientWidth >= container.scrollWidth) {
-            container.scrollLeft = 0;
-        } else {
-            container.scrollLeft += 1;
+        if (scrollContainer.value) {
+            scrollContainer.value.scrollLeft += 1;
+            if (scrollContainer.value.scrollLeft >= scrollContainer.value.scrollWidth - scrollContainer.value.clientWidth) {
+                scrollContainer.value.scrollLeft = 0;
+            }
         }
-    }, 30);
+    }, 50);
 };
 
 const stopAutoScroll = () => {
@@ -32,7 +32,13 @@ const stopAutoScroll = () => {
 };
 
 onMounted(() => {
-    startAutoScroll();
+    setTimeout(() => {
+        startAutoScroll();
+    }, 100);
+});
+
+onUnmounted(() => {
+    stopAutoScroll();
 });
 
 const logoSrc = computed(() => (isDarkTheme.value ? '/logo_dark.png' : '/logo_light.png'));
@@ -79,7 +85,12 @@ const { onMenuToggle, toggleDarkMode, isDarkTheme } = useLayout();
                     <div class="grid grid-cols-1 gap-8">
                         <div class="bg-surface-0 dark:bg-surface-900 rounded-lg shadow p-6 border-surface-0">
                             <h2 class="text-3xl font-semibold mb-4 text-surface-900 dark:text-surface-0">Categories</h2>
-                            <div ref="categoriesContainer" class="overflow-x-auto scrollbar-hide" @mouseenter="stopAutoScroll" @mouseleave="startAutoScroll">
+                            <div 
+                                ref="scrollContainer" 
+                                class="overflow-x-auto scrollbar-hide"
+                                @mouseenter="stopAutoScroll"
+                                @mouseleave="startAutoScroll"
+                            >
                                 <div class="flex gap-4 md:gap-8 min-w-max pb-4">
                                     <a
                                         v-for="(category, index) in ['Ballad', 'RnB', 'Rock', 'Indie', 'Pop', 'Jazz', 'Classical', 'Electronic', 'K-Pop', 'Hip-Hop', 'Malay Pop', 'Chill', 'Folk', 'Punk', 'Instrumental', 'Afro', 'Classical']"

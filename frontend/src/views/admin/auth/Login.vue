@@ -1,10 +1,31 @@
 <script setup>
 import FloatingConfigurator from '@/components/FloatingConfigurator.vue';
 import { ref } from 'vue';
+import { useRouter } from 'vue-router';
+import axios from 'axios';
 
 const email = ref('');
 const password = ref('');
 const checked = ref(false);
+const errorMessage = ref('');
+const router = useRouter();
+
+const handleLogin = async () => {
+   try {
+       const response = await axios.post('http://localhost:5001/api/users/login', {
+           email: email.value,
+           password: password.value,
+           role: 'admin'  // Specify role for admin login
+       });
+       
+       localStorage.setItem('token', response.data.token);
+       localStorage.setItem('user', JSON.stringify(response.data.user));
+       
+       router.push('/admin/dashboard');
+   } catch (error) {
+       errorMessage.value = error.response?.data?.message || 'Login failed';
+   }
+};
 </script>
 
 <template>
