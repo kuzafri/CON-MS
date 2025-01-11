@@ -18,22 +18,33 @@ const register = async () => {
         return;
     }
     try {
-        const response = await axios.post('/api/users/register', {
-            name: name.value,
-            email: email.value,
-            password: password.value,
-            role: 'audience'  // Specify audience role
-        });
+        const response = await axios.post(
+            'http://localhost:5001/api/users/register',
+            {
+                name: name.value,
+                email: email.value,
+                password: password.value,
+                role: 'audience'
+            },
+            {
+                timeout: 5000,
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            }
+        );
 
-        // If registration is successful, redirect to audience login page
         if (response.status === 201) {
             router.push('/auth/login');
         }
     } catch (error) {
-        if (error.response) {
+        console.error('Registration error:', error);
+        if (error.code === 'ERR_NETWORK') {
+            errorMessage.value = 'Unable to connect to the server. Please make sure the server is running.';
+        } else if (error.response) {
             errorMessage.value = error.response.data.message;
         } else {
-            errorMessage.value = 'An error occurred during registration';
+            errorMessage.value = 'An error occurred during registration. Please try again.';
         }
     }
 };

@@ -10,9 +10,9 @@ const app = express();
 
 // Middleware
 app.use(cors({
-    origin: 'http://localhost:5174',
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    allowedHeaders: ['Content-Type']
+    origin: ['http://localhost:5173', 'http://localhost:5174'],
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS']
 }));
 app.use(express.json());
 
@@ -40,6 +40,12 @@ app.use('/api', eventRoutes);
 // Routes (inventory)
 const inventoryRoutes = require('./routes/organizerEventInventory');
 app.use('/api', inventoryRoutes);
+
+// Basic error handling
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).json({ message: 'Something went wrong!' });
+});
 
 // Start server
 const PORT = process.env.PORT || 5001;
