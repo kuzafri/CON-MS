@@ -1,7 +1,10 @@
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useLayout } from '@/layout/composables/layout';
+
+import axios from 'axios';
+import { useToast } from 'primevue/usetoast';
 
 const { toggleDarkMode, isDarkTheme } = useLayout();
 
@@ -91,26 +94,7 @@ const generateSections = () => {
 const sections = generateSections();
 
 // Ticket Rates
-const ticketRates = ref([
-    {
-        type: 'VIP',
-        price: 'RM 150',
-        seats: '250 seat(s)',
-        color: 'bg-gray-200'
-    },
-    {
-        type: 'Standard',
-        price: 'RM 100',
-        seats: '500 seat(s)',
-        color: 'bg-yellow-400'
-    },
-    {
-        type: 'Economy',
-        price: 'RM 80',
-        seats: '750 seat(s)',
-        color: 'bg-blue-500'
-    }
-]);
+const ticketRates = ref(JSON.parse(route.query.ticketRates || '[]'));
 
 // Dummy disputes data
 const disputes = ref([
@@ -141,16 +125,36 @@ const handleDeclineRequest = () => {
     alert(`Event request "${eventInfo.value.title}" has been declined`);
 };
 
+// For inventoiry
+const toast = useToast();
+const products = ref([]);
+
 const handleInventory = () => {
     console.log('handleInventory called');
     router.push({
-        name: 'adminEventInventory',  // Use the named route
-        // params: {
-        //     id: EventRequest.value.id
-        // },
-        // state: EventRequest.value  // Pass full event data in state
+        name: 'adminEventInventory',
+        params: {
+            id: eventInfo.value.id
+        }
     });
 };
+
+// Fetch inventory data when component mounts
+onMounted(async () => {
+    try {
+        const eventId = route.params.id;
+        const response = await axios.get(`http://localhost:5001/api/events/${eventId}/inventory`);
+        products.value = response.data;
+    } catch (error) {
+        console.error('Error fetching inventory:', error);
+        toast.add({ 
+            severity: 'error', 
+            summary: 'Error', 
+            detail: 'Failed to load inventory', 
+            life: 3000 
+        });
+    }
+});
 
 const handleViewDisputes = () => {
     router.push({
