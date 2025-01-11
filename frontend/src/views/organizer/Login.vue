@@ -8,23 +8,29 @@ const email = ref('');
 const password = ref('');
 const checked = ref(false);
 const errorMessage = ref('');
+const loading = ref(false);
+
+const router = useRouter();
 
 const handleLogin = async () => {
    try {
-       const response = await axios.post('http://localhost:YOUR_BACKEND_PORT/api/users/login', {
+       loading.value = true;
+       const response = await axios.post('http://localhost:5001/api/users/login', {
            email: email.value,
-           password: password.value
+           password: password.value,
+           role: 'organizer'
        });
-        // Store the token in localStorage or your preferred storage method
-       localStorage.setItem('token', response.data.token);
        
-       // Navigate to the dashboard
+       localStorage.setItem('token', response.data.token);
+       localStorage.setItem('user', JSON.stringify(response.data.user));
+       
        router.push('/organizer/event');
    } catch (error) {
        errorMessage.value = error.response?.data?.message || 'Login failed';
+   } finally {
+       loading.value = false;
    }
-;
-}
+};
 </script>
 
 <template>
@@ -56,6 +62,7 @@ const handleLogin = async () => {
                 class="w-full" 
                 @click="handleLogin"
                 :loading="loading"
+                :disabled="loading"
             />                
 
    <small class="text-red-500 block mt-2" v-if="errorMessage">{{ errorMessage }}</small>

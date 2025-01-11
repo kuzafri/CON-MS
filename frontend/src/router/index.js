@@ -308,6 +308,11 @@ const router = createRouter({
             path: '/organizer/login',
             name: 'organizerLogin',
             component: () => import('@/views/organizer/Login.vue')
+        },
+        {
+            path: '/organizer/register',
+            name: 'organizerRegister',
+            component: () => import('@/views/organizer/Register.vue')
         }
     ]
 });

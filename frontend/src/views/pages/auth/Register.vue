@@ -18,9 +18,14 @@ const register = async () => {
         return;
     }
     try {
-        const response = await axios.post('/api/users/register', { name: name.value, email: email.value, password: password.value });
+        const response = await axios.post('/api/users/register', {
+            name: name.value,
+            email: email.value,
+            password: password.value,
+            role: 'audience'  // Specify audience role
+        });
 
-        // If registration is successful, redirect to login page
+        // If registration is successful, redirect to audience login page
         if (response.status === 201) {
             router.push('/auth/login');
         }

@@ -22,12 +22,12 @@ const register = async () => {
             name: name.value,
             email: email.value,
             password: password.value,
-            role: 'admin'  // Specify admin role
+            role: 'organizer'  // Specify organizer role
         });
 
-        // If registration is successful, redirect to admin login page
+        // If registration is successful, redirect to organizer login page
         if (response.status === 201) {
-            router.push('/admin/auth/login');
+            router.push('/organizer/login');
         }
     } catch (error) {
         if (error.response) {
@@ -59,7 +59,7 @@ const register = async () => {
                     <label for="password1" class="block text-surface-900 dark:text-surface-0 font-medium text-xl mb-2">Password</label>
                     <Password id="password1" v-model="password" placeholder="Password" :toggleMask="true" class="mb-4" fluid :feedback="false"></Password>
 
-                    <label for="password1" class="block text-surface-900 dark:text-surface-0 font-medium text-xl mb-2">Confirm Password</label>
+                    <label for="cpassword1" class="block text-surface-900 dark:text-surface-0 font-medium text-xl mb-2">Confirm Password</label>
                     <Password id="cpassword1" v-model="cpassword" placeholder="Confirm Password" :toggleMask="true" class="mb-4" fluid :feedback="false"></Password>
 
                     <div class="flex items-center justify-between mt-2 mb-8 gap-8">
@@ -71,6 +71,10 @@ const register = async () => {
                     <Button label="Register Account" class="w-full" @click="register"></Button>
                     <div v-if="errorMessage" class="text-red-500 mt-2">{{ errorMessage }}</div>
                 </div>
+            </div>
+            <div class="mt-4 text-center">
+                Already have an account? 
+                <router-link to="/organizer/login" class="text-primary">Login here</router-link>
             </div>
         </div>
     </div>
@@ -86,4 +90,4 @@ const register = async () => {
     transform: scale(1.6);
     margin-right: 1rem;
 }
-</style>
+</style> 
