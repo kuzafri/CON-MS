@@ -1,20 +1,23 @@
 const express = require('express');
 const { getUsers, registerUser, loginUser } = require('../controllers/userController');
+const { protectRoute } = require('../middleware/authMiddleware');
 const router = express.Router();
 
-// New endpoint to test the connection
+// Public routes
 router.get('/test', (req, res) => {
     res.json({ message: 'API works' });
 });
 
+router.post('/register', registerUser);
+router.post('/login', loginUser);
 router.get('/', getUsers);
 
-// New endpoint for user registration
-router.post('/register', registerUser);
-
-// New endpoint for user login
-router.post('/login', loginUser);
-
-// router.post('/submit-concert-booking', submitData);
+// Protected routes
+// Comment these out for now until you have the controllers ready
+/*
+router.get('/admin-data', protectRoute(['admin']), adminController.getData);
+router.get('/organizer-data', protectRoute(['organizer']), organizerController.getData);
+router.get('/audience-data', protectRoute(['audience']), audienceController.getData);
+*/
 
 module.exports = router;

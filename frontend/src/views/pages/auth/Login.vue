@@ -10,34 +10,20 @@ const checked = ref(false);
 const errorMessage = ref('');
 const router = useRouter();
 
-const login = async () => {
+const handleLogin = async () => {
     try {
-        const response = await axios.post('http://localhost:5001/api/users/login', { email: email.value, password: password.value });
-        console.log('Login response:', response);
-        // Check the response status
-        console.log('Response status:', response.status);
-        // Handle successful login (e.g., redirect to home)
-        if (response.status === 200) {
-            console.log('Redirecting to /homebook');
-            router.push('/homebook');
-        }
+        const response = await axios.post('http://localhost:5001/api/users/login', {
+            email: email.value,
+            password: password.value,
+            role: 'audience'  // Specify role for audience login
+        });
+        
+        localStorage.setItem('token', response.data.token);
+        localStorage.setItem('user', JSON.stringify(response.data.user));
+        
+        router.push('/homebook');
     } catch (error) {
-        console.error('Login error:', error);
-        // Enhanced error handling
-        if (error.response) {
-            // The request was made and the server responded with a status code
-            console.error('Error data:', error.response.data);
-            console.error('Error status:', error.response.status);
-            errorMessage.value = error.response.data.message || 'An error occurred';
-        } else if (error.request) {
-            // The request was made but no response was received
-            console.error('No response received:', error.request);
-            errorMessage.value = 'No response from the server. Please try again later.';
-        } else {
-            // Something happened in setting up the request that triggered an Error
-            console.error('Error message:', error.message);
-            errorMessage.value = 'An unexpected error occurred. Please try again.';
-        }
+        errorMessage.value = error.response?.data?.message || 'Login failed';
     }
 };
 
@@ -70,7 +56,7 @@ const handleRegistrationSuccess = () => {
                             </div>
                             <span class="font-medium no-underline ml-2 text-right cursor-pointer text-primary">Forgot password?</span>
                         </div>
-                        <Button label="Sign In" class="w-full" @click="login"></Button>
+                        <Button label="Sign In" class="w-full" @click="handleLogin"></Button>
                         <div v-if="errorMessage">{{ errorMessage }}</div>
                     </div>
                 </form>

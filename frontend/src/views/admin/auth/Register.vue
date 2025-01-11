@@ -1,12 +1,42 @@
 <script setup>
 import FloatingConfigurator from '@/components/FloatingConfigurator.vue';
 import { ref } from 'vue';
+import axios from 'axios';
+import { useRouter } from 'vue-router';
 
+const router = useRouter();
 const name = ref('');
 const email = ref('');
 const password = ref('');
 const cpassword = ref('');
 const checked = ref(false);
+const errorMessage = ref('');
+
+const register = async () => {
+    if (password.value !== cpassword.value) {
+        errorMessage.value = 'Passwords do not match!';
+        return;
+    }
+    try {
+        const response = await axios.post('http://localhost:5001/api/users/register', {
+            name: name.value,
+            email: email.value,
+            password: password.value,
+            role: 'admin'  // Specify admin role
+        });
+
+        // If registration is successful, redirect to admin login page
+        if (response.status === 201) {
+            router.push('/admin/auth/login');
+        }
+    } catch (error) {
+        if (error.response) {
+            errorMessage.value = error.response.data.message;
+        } else {
+            errorMessage.value = 'An error occurred during registration';
+        }
+    }
+};
 </script>
 
 <template>
@@ -38,7 +68,8 @@ const checked = ref(false);
                             <label for="rememberme1">Remember me</label>
                         </div>
                     </div>
-                    <Button label="Register Account" class="w-full" as="router-link" to="/Booking"></Button>
+                    <Button label="Register Account" class="w-full" @click="register"></Button>
+                    <div v-if="errorMessage" class="text-red-500 mt-2">{{ errorMessage }}</div>
                 </div>
             </div>
         </div>

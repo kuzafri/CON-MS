@@ -14,17 +14,31 @@ const getUsers = async (req, res) => {
 
 // Register a new user
 const registerUser = async (req, res) => {
-    console.log('Received registration request:', req.body);
-    const { name, email, password } = req.body;
+    const { name, email, password, role } = req.body;
+    
+    if (!role) {
+        return res.status(400).json({ message: 'Role is required!' });
+    }
+
     try {
+        // Check if role is valid
+        if (!['audience', 'organizer', 'admin'].includes(role)) {
+            return res.status(400).json({ message: 'Invalid role specified!' });
+        }
+
         const hashedPassword = await bcrypt.hash(password, 10);
-        const newUser = new User({ name, email, password: hashedPassword });
-        console.log('Attempting to save user:', newUser);
+        const newUser = new User({ 
+            name, 
+            email, 
+            password: hashedPassword,
+            role 
+        });
         await newUser.save();
-        console.log('User saved successfully');
-        res.status(201).json({ message: 'User registered successfully!', redirect: 'auth/login' });
+        res.status(201).json({ 
+            message: 'User registered successfully!',
+            redirect: '/auth/login'
+        });
     } catch (err) {
-        console.error('Registration error:', err);
         res.status(400).json({ message: err.message });
     }
 };

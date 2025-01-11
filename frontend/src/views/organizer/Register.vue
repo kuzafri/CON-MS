@@ -18,43 +18,30 @@ const register = async () => {
         return;
     }
     try {
-        const response = await axios.post(
-            'http://localhost:5001/api/users/register',
-            {
-                name: name.value,
-                email: email.value,
-                password: password.value,
-                role: 'audience'
-            },
-            {
-                timeout: 5000,
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            }
-        );
+        const response = await axios.post('http://localhost:5001/api/users/register', {
+            name: name.value,
+            email: email.value,
+            password: password.value,
+            role: 'organizer'  // Specify organizer role
+        });
 
+        // If registration is successful, redirect to organizer login page
         if (response.status === 201) {
-            router.push('/auth/login');
+            router.push('/organizer/login');
         }
     } catch (error) {
-        console.error('Registration error:', error);
-        if (error.code === 'ERR_NETWORK') {
-            errorMessage.value = 'Unable to connect to the server. Please make sure the server is running.';
-        } else if (error.response) {
+        if (error.response) {
             errorMessage.value = error.response.data.message;
         } else {
-            errorMessage.value = 'An error occurred during registration. Please try again.';
+            errorMessage.value = 'An error occurred during registration';
         }
     }
 };
-
-axios.defaults.baseURL = 'http://localhost:5001';
 </script>
 
 <template>
+    <FloatingConfigurator />
     <div class="bg-surface-50 dark:bg-surface-950 flex items-center justify-center min-h-screen min-w-[100vw] overflow-hidden">
-        <FloatingConfigurator />
         <div class="flex flex-col items-center justify-center">
             <div class="w-full border-2 border-surface-2 bg-surface-0 dark:bg-surface-900 py-20 px-8 sm:px-20" style="border-radius: 53px">
                 <div class="text-center mb-8">
@@ -72,7 +59,7 @@ axios.defaults.baseURL = 'http://localhost:5001';
                     <label for="password1" class="block text-surface-900 dark:text-surface-0 font-medium text-xl mb-2">Password</label>
                     <Password id="password1" v-model="password" placeholder="Password" :toggleMask="true" class="mb-4" fluid :feedback="false"></Password>
 
-                    <label for="password1" class="block text-surface-900 dark:text-surface-0 font-medium text-xl mb-2">Confirm Password</label>
+                    <label for="cpassword1" class="block text-surface-900 dark:text-surface-0 font-medium text-xl mb-2">Confirm Password</label>
                     <Password id="cpassword1" v-model="cpassword" placeholder="Confirm Password" :toggleMask="true" class="mb-4" fluid :feedback="false"></Password>
 
                     <div class="flex items-center justify-between mt-2 mb-8 gap-8">
@@ -82,8 +69,12 @@ axios.defaults.baseURL = 'http://localhost:5001';
                         </div>
                     </div>
                     <Button label="Register Account" class="w-full" @click="register"></Button>
-                    <div v-if="errorMessage">{{ errorMessage }}</div>
+                    <div v-if="errorMessage" class="text-red-500 mt-2">{{ errorMessage }}</div>
                 </div>
+            </div>
+            <div class="mt-4 text-center">
+                Already have an account? 
+                <router-link to="/organizer/login" class="text-primary">Login here</router-link>
             </div>
         </div>
     </div>
@@ -99,4 +90,4 @@ axios.defaults.baseURL = 'http://localhost:5001';
     transform: scale(1.6);
     margin-right: 1rem;
 }
-</style>
+</style> 
