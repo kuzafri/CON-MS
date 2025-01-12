@@ -1,102 +1,49 @@
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 
-const users = ref([
-    // Original Audience users
-    {
-        id: 1,
-        image: 'https://via.placeholder.com/150',
-        name: 'Irshad',
-        userID: 'CFY-A-2907762-T',
-        role: 'Audience',
-        email: 'irshad@student.usm.my',
-        contact: '019-514 0014',
-        lastActive: '2024-09-30 23:59:59',
-        status: 'Active',
-    },
-    {
-        id: 2,
-        image: 'https://via.placeholder.com/150',
-        name: 'Ku Muhammad Zafri',
-        userID: 'CFY-A-2907763-T',
-        role: 'Audience',
-        email: 'zaf@student.usm.my',
-        contact: '019-555 1234',
-        lastActive: '2024-09-29 14:30:00',
-        status: 'Active',
-    },
-    {
-        id: 3,
-        image: 'https://via.placeholder.com/150',
-        name: 'Muhammad Al Hakim',
-        userID: 'CFY-A-2907764-T',
-        role: 'Audience',
-        email: 'hakim@student.usm.my',
-        contact: '019-666 5678',
-        lastActive: '2024-09-28 09:15:00',
-        status: 'Inactive',
-    },
-    // Additional Organiser users
-    {
-        id: 4,
-        image: 'https://via.placeholder.com/150',
-        name: 'Danish Irfan',
-        userID: 'CFY-O-1234567-T',
-        role: 'Organiser',
-        email: 'danish@usm.my',
-        contact: '019-777 8899',
-        lastActive: '2024-09-30 22:45:00',
-        status: 'Active',
-    },
-    {
-        id: 5,
-        image: 'https://via.placeholder.com/150',
-        name: 'Prof. Ali Hassan',
-        userID: 'CFY-O-1234568-T',
-        role: 'Organiser',
-        email: 'ali.hassan@usm.my',
-        contact: '019-888 9900',
-        lastActive: '2024-09-30 20:30:00',
-        status: 'Active',
-    },
-    {
-        id: 6,
-        image: 'https://via.placeholder.com/150',
-        name: 'Dr. Linda Tan',
-        userID: 'CFY-O-1234569-T',
-        role: 'Organiser',
-        email: 'linda.tan@usm.my',
-        contact: '019-999 0011',
-        lastActive: '2024-09-29 18:15:00',
-        status: 'Active',
-    },
-    {
-        id: 7,
-        image: 'https://via.placeholder.com/150',
-        name: 'Prof. Kamal Ibrahim',
-        userID: 'CFY-O-1234570-T',
-        role: 'Organiser',
-        email: 'kamal.ibrahim@usm.my',
-        contact: '019-000 1122',
-        lastActive: '2024-09-28 16:00:00',
-        status: 'Inactive',
-    },
-    {
-        id: 8,
-        image: 'https://via.placeholder.com/150',
-        name: 'Dr. Chen Wei',
-        userID: 'CFY-O-1234571-T',
-        role: 'Organiser',
-        email: 'chen.wei@usm.my',
-        contact: '019-111 2233',
-        lastActive: '2024-09-27 14:45:00',
-        status: 'Active',
-    }
-]);
-
+const users = ref([]);
 const loading = ref(false);
 const activeTab = ref('Audience');
 const searchQuery = ref('');
+
+// Fetch users when component mounts
+onMounted(async () => {
+    try {
+        loading.value = true;
+        const response = await fetch('http://localhost:5001/api/users');
+        if (!response.ok) throw new Error('Failed to fetch users');
+        
+        const data = await response.json();
+        // Transform data to ensure all users have a role and normalize role names
+        users.value = data.map(user => ({
+            id: user._id,
+            image: user.image || 'https://via.placeholder.com/150',
+            name: user.name,
+            userID: user._id,
+            // Normalize role names and set default to 'Audience'
+            role: normalizeRole(user.role || 'Audience'),
+            email: user.email,
+            contact: user.contact || 'N/A',
+            lastActive: user.lastActive || user.updatedAt || user.createdAt,
+            status: user.status || 'Active',
+        }));
+    } catch (error) {
+        console.error('Error fetching users:', error);
+    } finally {
+        loading.value = false;
+    }
+});
+
+// Function to normalize role names
+function normalizeRole(role) {
+    const roleMap = {
+        'audience': 'Audience',
+        'organizer': 'Organiser',
+        'organiser': 'Organiser',
+        'admin': 'Admin'
+    };
+    return roleMap[role.toLowerCase()] || 'Audience';
+}
 
 const filteredUsers = computed(() => {
     return users.value
@@ -138,6 +85,13 @@ function getStatusClass(status) {
                     >
                         Organiser
                     </button>
+                    <button
+                        class="btn"
+                        :class="{ 'btn-primary': activeTab === 'Admin' }"
+                        @click="activeTab = 'Admin'"
+                    >
+                        Admin
+                    </button>
                 </div>
             </div>
 
@@ -151,7 +105,6 @@ function getStatusClass(status) {
                     />
                     <i class="pi pi-search search-icon"></i>
                 </div>
-                <!-- <button class="btn btn-primary">+ Create New User</button> -->
             </div>
         </div>
 
