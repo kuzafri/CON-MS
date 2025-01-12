@@ -87,3 +87,27 @@ exports.deleteEvent = async (req, res) => {
         res.status(500).json({ error: 'Failed to delete the event.' });
     }
 };
+
+// Update event status
+exports.updateEventStatus = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { status } = req.body;
+
+        const updatedEvent = await Event.findByIdAndUpdate(
+            id,
+            { status: status },
+            { new: true } 
+        );
+
+        if (!updatedEvent) {
+            return res.status(404).json({ message: 'Event not found' });
+        }
+
+        res.json(updatedEvent);
+    } catch (err) {
+        console.error('Error updating event status:', err);
+        console.log(`PATCH request received for ID: ${req.params.id} with status: ${req.body.status}`);
+        res.status(500).json({ message: err.message });
+    }
+};

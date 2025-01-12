@@ -117,12 +117,78 @@ const disputes = ref([
     }
 ]);
 
-const handleAcceptRequest = () => {
-    alert(`Event request "${eventInfo.value.title}" has been accepted`);
+const handleAcceptRequest = async () => {
+    try {
+        const response = await axios.patch(
+            `http://localhost:5001/api/events/${eventInfo.value.id}`, 
+            { status: 'approved' },
+            {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            }
+        );
+        
+        if (response.data) {
+            toast.add({ 
+                severity: 'success', 
+                summary: 'Success', 
+                detail: `Event "${eventInfo.value.title}" has been approved`, 
+                life: 3000 
+            });
+            
+            // Update local state
+            eventInfo.value = {
+                ...eventInfo.value,
+                type: 'Approved'
+            };
+        }
+    } catch (error) {
+        console.error('Error approving event:', error);
+        toast.add({ 
+            severity: 'error', 
+            summary: 'Error', 
+            detail: error.response?.data?.message || 'Failed to approve event', 
+            life: 3000 
+        });
+    }
 };
 
-const handleDeclineRequest = () => {
-    alert(`Event request "${eventInfo.value.title}" has been declined`);
+const handleDeclineRequest = async () => {
+    try {
+        const response = await axios.patch(
+            `http://localhost:5001/api/events/${eventInfo.value.id}`,
+            { status: 'rejected' },
+            {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            }
+        );
+        
+        if (response.data) {
+            toast.add({ 
+                severity: 'success', 
+                summary: 'Success', 
+                detail: `Event "${eventInfo.value.title}" has been rejected`, 
+                life: 3000 
+            });
+            
+            // Update local state
+            eventInfo.value = {
+                ...eventInfo.value,
+                type: 'Rejected'
+            };
+        }
+    } catch (error) {
+        console.error('Error rejecting event:', error);
+        toast.add({ 
+            severity: 'error', 
+            summary: 'Error', 
+            detail: error.response?.data?.message || 'Failed to reject event', 
+            life: 3000 
+        });
+    }
 };
 
 // For inventoiry

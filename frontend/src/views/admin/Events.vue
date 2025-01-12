@@ -80,11 +80,11 @@ onMounted(() => {
 
 function getStatusClass(status) {
     switch (status) {
-        case 'Pending':
+        case 'pending':
             return 'badge-warning';
-        case 'Approved':
+        case 'approved':
             return 'badge-success';
-        case 'Rejected':
+        case 'rejected':
             return 'badge-danger';
         default:
             return 'badge-secondary';
