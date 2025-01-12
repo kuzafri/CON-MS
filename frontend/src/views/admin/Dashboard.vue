@@ -226,36 +226,57 @@ const handleViewDetails = (event) => {
     });
 }
 
-onMounted(() => {
-    fetchEventRequests();
-});
-
 // Handle sort change
 const handleSortChange = (event) => {
     sortBy.value = event.target.value;
 };
 
-const Organiser = ref({
-    name: "USM Jazz Band",
-    id: "OH461B18UMJSN",
-    email: "usmjazzband@student.usm.my",
-    phone: "019-514-0014",
-});
+// Organiser Details
+const organisers = ref([]);
 
-const handleViewRequestOrganiser = () => {
-    console.log('handleViewRequestOrganiser called');
+const fetchOrganisers = async () => {
+    try {
+        const response = await axios.get('http://localhost:5001/api/users');
+        organisers.value = response.data
+            .filter(user => 
+                user.role?.toLowerCase() === 'organizer' || 
+                user.role?.toLowerCase() === 'organiser'
+            )
+            .map(user => ({
+                ...user,
+                contact: user.contact || '012-3456789' 
+            }));
+    } catch (error) {
+        console.error('Error fetching organisers:', error);
+    }
+};
+
+const handleViewRequestOrganiser = (organiser) => {
     router.push({
         name: 'OrganiserDetails',
         params: { 
-            id: Organiser.value.id
+            id: organiser._id
         },
         query: {
-            name: Organiser.value.name,
-            email: Organiser.value.email,
-            phone: Organiser.value.phone
+            name: organiser.name,
+            email: organiser.email,
+            phone: organiser.contact || '012-3456789',
+            // Including additional details that match OrganiserDetails.vue's expectations
+            department: "School of Arts", // Default value
+            role: "Student Organisation", // Default value
+            joinDate: new Date(organiser.createdAt).toLocaleDateString('en-US', {
+                day: '2-digit',
+                month: 'long',
+                year: 'numeric'
+            })
         }
     });
 };
+
+onMounted(() => {
+    fetchEventRequests();
+    fetchOrganisers();
+});
 </script>
 
 <template>
@@ -384,8 +405,8 @@ const handleViewRequestOrganiser = () => {
                     <!-- Organisers Grid -->
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div
-                            v-for="i in 12"
-                            :key="i"
+                            v-for="organiser in organisers"
+                            :key="organiser._id"
                             class="border border-gray-300 rounded p-4 flex flex-col justify-between"
                         >
                             <!-- Organiser Details -->
@@ -394,16 +415,16 @@ const handleViewRequestOrganiser = () => {
                                     <i class="text-gray-600 text-2xl">👤</i>
                                 </div>
                                 <div>
-                                    <p class="text-lg font-bold">{{ Organiser.name }}</p>
-                                    <p class="text-sm text-gray-400">{{ Organiser.id }}</p>
+                                    <p class="text-lg font-bold">{{ organiser.name }}</p>
+                                    <p class="text-sm text-gray-400">{{ organiser._id }}</p>
                                 </div>
                             </div>
                             <div class="text-sm mt-4">
-                                <p>{{ Organiser.email }}</p>
+                                <p>{{ organiser.email }}</p>
                                 <div class="flex justify-between items-center">
-                                    <p>{{ Organiser.phone }}</p>
+                                    <p>{{ organiser.contact || 'N/A' }}</p>
                                     <button 
-                                        @click="handleViewRequestOrganiser"
+                                        @click="handleViewRequestOrganiser(organiser)"
                                         type="button"
                                         class="text-blue-600 text-sm font-semibold cursor-pointer hover:text-blue-800"
                                     >
