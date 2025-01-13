@@ -1,10 +1,11 @@
 <script setup>
 import { useLayout } from '@/layout/composables/layout';
 import { computed, onMounted, onUnmounted, ref } from 'vue';
-import { HeartIcon } from 'lucide-vue-next';
+import HeartIcon from 'lucide-vue-next/dist/esm/icons/heart';
 import { useFavoriteStore } from '@/stores/favorite';
 import { eventService } from '@/service/EventService';
 import axios from 'axios';
+import Button from 'primevue/button';
 
 const logoSrc = computed(() => (isDarkTheme.value ? '/logo_dark.png' : '/logo_light.png'));
 const categoriesContainer = ref(null);
@@ -132,26 +133,15 @@ onMounted(() => {
                             </div>
                             <div class="flex flex-row mt-4">
                                 <h2 class="text-xl font-semibold mt-4">{{ event.title }}</h2>
-                                <button 
-                                    @click.stop="toggleFavorite(event)" 
-                                    class="focus:outline-none right-5 absolute"
-                                >
-                                    <HeartIcon 
-                                        :fill="event.isFavorite ? 'red' : 'none'" 
-                                        :stroke="event.isFavorite ? 'red' : 'currentColor'" 
-                                        class="w-6 h-6 hover:scale-110 transition-transform"
-                                    />
+                                <button @click.stop="toggleFavorite(event)" class="focus:outline-none right-5 absolute">
+                                    <HeartIcon :fill="event.isFavorite ? 'red' : 'none'" :stroke="event.isFavorite ? 'red' : 'currentColor'" class="w-6 h-6 hover:scale-110 transition-transform" />
                                 </button>
                             </div>
                             <p class="text-gray-500 dark:text-white">{{ event.description }}</p>
                             <p class="text-gray-700 dark:text-white font-bold">{{ event.date }} {{ event.startTime }}</p>
                             <div class="flex flex-wrap mt-2 space-x-2">
                                 <span class="bg-gray-200 dark:text-black text-sm py-1 px-2 rounded">{{ event.genre }}</span>
-                                <span :class="`text-sm py-1 px-2 rounded ${
-                                    event.status === 'Pending' ? 'bg-yellow-200 text-yellow-800' : 
-                                    event.status === 'Approved' ? 'bg-green-200 text-green-800' :
-                                    'bg-gray-200 dark:text-black'}`"
-                                >
+                                <span :class="`text-sm py-1 px-2 rounded ${event.status === 'Pending' ? 'bg-yellow-200 text-yellow-800' : event.status === 'Approved' ? 'bg-green-200 text-green-800' : 'bg-gray-200 dark:text-black'}`">
                                     {{ event.status }}
                                 </span>
                             </div>
@@ -172,7 +162,6 @@ onMounted(() => {
                 <div v-else-if="error" class="w-full flex justify-center items-center min-h-[200px]">
                     <div class="text-red-500">{{ error }}</div>
                 </div>
-
             </div>
         </div>
     </div>
