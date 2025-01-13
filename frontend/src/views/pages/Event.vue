@@ -127,7 +127,7 @@ onMounted(() => {
                 <!-- Event Cards -->
                 <div v-if="allEvents.length > 0" class="flex flex-wrap gap-2 w-full mt-2">
                     <div v-for="event in allEvents" :key="event._id" class="ml-2 dark:bg-surface-800 p-6 bg-white shadow-lg rounded-lg sm:w-1/3 relative">
-                        <router-link :to="{ name: 'EventDetails', params: { id: event._id } }" class="block">
+                        <div :to="{ name: 'EventDetails', params: { id: event._id } }" class="block">
                             <div class="relative">
                                 <img :src="event.image" alt="Event Image" class="w-full h-48 object-cover rounded-lg" />
                             </div>
@@ -147,9 +147,9 @@ onMounted(() => {
                             </div>
                             <div class="flex justify-between items-center mt-4">
                                 <span class="text-lg font-bold">RM{{ event.price }}</span>
-                                <Button class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Buy now</Button>
+                                <Button class="button_buy right-0 absolute" label="Buy Now" as="router-link" :to="{ name: 'Booking', params: { id: event._id } }" rounded></Button>
                             </div>
-                        </router-link>
+                        </div>
                     </div>
                 </div>
 
