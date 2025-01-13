@@ -1,76 +1,101 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
+import axios from 'axios';
 
 const router = useRouter();
 const events = ref([]);
 const loading = ref(true);
 
-onMounted(() => {
-    events.value = [
+// Event Creation Request Data
+const eventRequests = ref([]);
+const sortBy = ref('today');
+
+// Fetch event requests
+const fetchEvents = async () => {
+    try {
+        const response = await axios.get('http://localhost:5001/api/events');
+        events.value = response.data.map(event => ({
+            poster: event.poster || '', 
+            eventID: event._id,
+            title: event.concertTitle,
+            organiser: event.organizer,
+            date: new Date(event.calendarValue).toLocaleDateString(),
+            time: `${event.startTime} - ${event.endTime}`,
+            type: event.paymentType || 'Paid Entry',
+            createdAt: new Date(event.createdAt).toLocaleDateString(),
+            status: event.status,
+            fullEvent: event
+        }));
+        loading.value = false;
+    } catch (error) {
+        console.error('Error fetching events:', error);
+        loading.value = false;
+    }
+};
+
+const handleViewDetails = (eventData) => {
+    const event = eventData.fullEvent;
+    const ticketRates = [
         {
-            id: 1,
-            poster: 'https://via.placeholder.com/150',
-            eventID: '#280924-PLT-B04-A0087',
-            title: 'REBEL 3.0: Because of You',
-            organiser: 'USM Jazz Band',
-            date: '2025-01-13',
-            time: '3:00 PM - 4:00 PM',
-            type: 'Paid Entry',
-            createdAt: '2024-09-30 23:59:59',
-            status: 'Pending',
+            type: 'VIP',
+            price: `RM ${event.platinumPrice}`,
+            seats: '250 seat(s)',
+            color: 'bg-gray-200'
         },
-        ...Array(9).fill({
-            id: 1,
-            poster: 'https://via.placeholder.com/150',
-            eventID: '#280924-PLT-B04-A0087',
-            title: 'REBEL 3.0: Because of You',
-            organiser: 'USM Jazz Band',
-            date: '2025-01-13',
-            time: '3:00 PM - 4:00 PM',
-            type: 'Paid Entry',
-            createdAt: '2024-09-30 23:59:59',
-            status: 'Pending',
-        }),
+        {
+            type: 'Standard',
+            price: `RM ${event.goldPrice}`,
+            seats: '500 seat(s)',
+            color: 'bg-yellow-400'
+        },
+        {
+            type: 'Economy',
+            price: `RM ${event.regularPrice}`,
+            seats: '750 seat(s)',
+            color: 'bg-blue-500'
+        }
     ];
-    loading.value = false;
+
+    router.push({
+        name: 'EventsDetails',
+        params: {
+            id: event._id
+        },
+        query: {
+            title: event.concertTitle,
+            date: new Date(event.calendarValue).toLocaleDateString(),
+            time: `${event.startTime} - ${event.endTime}`,
+            audience: `${event.maxAttendees} pax`,
+            type: event.paymentType || 'Paid Entry',
+            submittedBy: event.organizer,
+            ticketRates: JSON.stringify(ticketRates)
+        }
+    });
+};
+
+onMounted(() => {
+    fetchEvents();
 });
 
 function getStatusClass(status) {
     switch (status) {
-        case 'Pending':
+        case 'pending':
             return 'badge-warning';
-        case 'Approved':
+        case 'approved':
             return 'badge-success';
-        case 'Rejected':
+        case 'rejected':
             return 'badge-danger';
         default:
             return 'badge-secondary';
     }
 }
-
-const handleViewRequest = (event) => {
-    console.log('handleViewRequest called with event:', event);
-    router.push({
-        name: 'EventsDetails',
-        params: { id: event.eventID },
-        query: {
-            title: event.title,
-            date: event.date,
-            time: event.time,
-            audience: '1500 pax',
-            type: event.type,
-            submittedBy: event.organiser
-        }
-    });
-};
 </script>
 
 <template>
     <div class="card">
         <div class="flex justify-between items-center mb-4">
             <h2 class="text-2xl font-bold">Events</h2>
-            <!-- <button class="btn btn-primary">+ Create New Entry</button> -->
         </div>
 
         <DataTable :value="events" :loading="loading" :rows="10" paginator sortField="eventID" sortOrder="1">
@@ -86,8 +111,8 @@ const handleViewRequest = (event) => {
             <Column field="eventID" header="Event ID" sortable>
                 <template #body="slotProps">
                     <a
-                                href="#"
-                        @click.prevent="handleViewRequest(slotProps.data)"
+                        href="#"
+                        @click.prevent="handleViewDetails(slotProps.data)"
                         class="text-blue-600 hover:underline truncate-ellipsis"
                     >
                         {{ slotProps.data.eventID }}

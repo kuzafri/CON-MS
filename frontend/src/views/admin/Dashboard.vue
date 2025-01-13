@@ -5,6 +5,8 @@ import { Chart as ChartJS, ArcElement, Tooltip, Legend, CategoryScale, LinearSca
 import { useRouter } from 'vue-router';
 const router = useRouter();
 
+import axios from 'axios';
+
 // Register the required Chart.js components
 ChartJS.register(
     ArcElement,
@@ -172,53 +174,109 @@ watch(
 );
 
 // Event Creation Request Data
-const EventRequest = ref({
-    id: "R-KL-58/43",
-    title: "REBEL 4.0: Because of You",
-    date: "13th January 2025",
-    time: "3:00 PM - 4:00 PM",
-    audience: "1500 pax",
-    type: "Paid Entry",
-    submittedBy: "USM Jazz Band",
-});
+const eventRequests = ref([]);
+const sortBy = ref('today');
 
-const Organiser = ref({
-    name: "USM Jazz Band",
-    id: "OH461B18UMJSN",
-    email: "usmjazzband@student.usm.my",
-    phone: "019-514-0014",
-});
-
-const handleViewRequest = () => {
-    console.log('handleViewRequest called');
-    router.push({
-        name: 'EventsDetails',
-        params: { id: EventRequest.value.id },
-        query: {
-            title: EventRequest.value.title,
-            date: EventRequest.value.date,
-            time: EventRequest.value.time,
-            audience: EventRequest.value.audience,
-            type: EventRequest.value.type,
-            submittedBy: EventRequest.value.submittedBy
-        }
-    });
+// Fetch event requests
+const fetchEventRequests = async () => {
+    try {
+        const response = await axios.get('http://localhost:5001/api/events');
+        eventRequests.value = response.data;
+    } catch (error) {
+        console.error('Error fetching event requests:', error);
+    }
 };
 
-const handleViewRequestOrganiser = () => {
-    console.log('handleViewRequestOrganiser called');
+const handleViewDetails = (event) => {
+    const ticketRates = [
+        {
+            type: 'VIP',
+            price: `RM ${event.platinumPrice}`,
+            seats: '250 seat(s)',
+            color: 'bg-gray-200'
+        },
+        {
+            type: 'Standard',
+            price: `RM ${event.goldPrice}`,
+            seats: '500 seat(s)',
+            color: 'bg-yellow-400'
+        },
+        {
+            type: 'Economy',
+            price: `RM ${event.regularPrice}`,
+            seats: '750 seat(s)',
+            color: 'bg-blue-500'
+        }
+    ];
+
+    router.push({
+        name: 'EventsDetails',
+        params: {
+            id: event._id
+        },
+        query: {
+            title: event.concertTitle,
+            date: new Date(event.calendarValue).toLocaleDateString(),
+            time: `${event.startTime} - ${event.endTime}`,
+            audience: `${event.maxAttendees} pax`,
+            type: event.paymentType || 'Paid Entry',
+            submittedBy: event.organizer,
+            ticketRates: JSON.stringify(ticketRates)
+        }
+    });
+}
+
+// Handle sort change
+const handleSortChange = (event) => {
+    sortBy.value = event.target.value;
+};
+
+// Organiser Details
+const organisers = ref([]);
+
+const fetchOrganisers = async () => {
+    try {
+        const response = await axios.get('http://localhost:5001/api/users');
+        organisers.value = response.data
+            .filter(user => 
+                user.role?.toLowerCase() === 'organizer' || 
+                user.role?.toLowerCase() === 'organiser'
+            )
+            .map(user => ({
+                ...user,
+                contact: user.contact || '012-3456789' 
+            }));
+    } catch (error) {
+        console.error('Error fetching organisers:', error);
+    }
+};
+
+const handleViewRequestOrganiser = (organiser) => {
     router.push({
         name: 'OrganiserDetails',
         params: { 
-            id: Organiser.value.id
+            id: organiser._id
         },
         query: {
-            name: Organiser.value.name,
-            email: Organiser.value.email,
-            phone: Organiser.value.phone
+            name: organiser.name,
+            email: organiser.email,
+            phone: organiser.contact || '012-3456789',
+            // Including additional details that match OrganiserDetails.vue's expectations
+            department: "School of Arts", // Default value
+            role: "Student Organisation", // Default value
+            joinDate: new Date(organiser.createdAt).toLocaleDateString('en-US', {
+                day: '2-digit',
+                month: 'long',
+                year: 'numeric'
+            })
         }
     });
 };
+
+onMounted(() => {
+    fetchEventRequests();
+    fetchOrganisers();
+});
 </script>
 
 <template>
@@ -267,7 +325,11 @@ const handleViewRequestOrganiser = () => {
                     <!-- Header Section -->
                     <div class="flex justify-between items-center mb-4">
                         <h2 class="font-semibold text-lg">Event Creation Request</h2>
-                        <select class="border border-gray-300 rounded px-2 py-1 text-sm">
+                        <select 
+                            v-model="sortBy"
+                            @change="handleSortChange"
+                            class="border border-gray-300 rounded px-2 py-1 text-sm"
+                        >
                             <option value="today">Sort By: Today</option>
                             <option value="week">Sort By: This Week</option>
                             <option value="month">Sort By: This Month</option>
@@ -277,46 +339,46 @@ const handleViewRequestOrganiser = () => {
                     <!-- Event Request Cards -->
                     <div class="space-y-4">
                         <div
-                            v-for="i in 4"
-                            :key="i"
+                            v-for="event in eventRequests"
+                            :key="event._id"
                             class="border border-gray-300 rounded p-4 flex flex-col justify-between h-full"
                         >
                             <div class="flex justify-between items-center mb-3">
                                 <div class="mb-4">
                                     <p class="text-sm font-semibold">Event ID:</p>
-                                    <p class="text-sm mb-2">{{ EventRequest.id }}</p>
+                                    <p class="text-sm mb-2">{{ event._id }}</p>
                                     <p class="text-sm font-semibold">Title:</p>
-                                    <p class="text-sm">{{ EventRequest.title }}</p>
+                                    <p class="text-sm">{{ event.concertTitle }}</p>
                                 </div>
                                 <div class="flex items-center space-x-2">
                                     <div class="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center">
                                         <i class="text-sm text-black">👤</i>
                                     </div>
-                                    <p class="text-sm font-semibold">{{ EventRequest.submittedBy }}</p>
+                                    <p class="text-sm font-semibold">{{ event.organizer }}</p>
                                 </div>
                             </div>
 
                             <div class="flex justify-between text-sm">
                                 <div class="flex flex-col items-start">
                                     <p class="font-semibold">Date</p>
-                                    <p>{{ EventRequest.date }}</p>
+                                    <p>{{ new Date(event.calendarValue).toLocaleDateString() }}</p>
                                 </div>
                                 <div class="flex flex-col items-start">
                                     <p class="font-semibold">Time</p>
-                                    <p>{{ EventRequest.time }}</p>
+                                    <p>{{ event.startTime }} - {{ event.endTime }}</p>
                                 </div>
                                 <div class="flex flex-col items-start">
                                     <p class="font-semibold">Audience</p>
-                                    <p>{{ EventRequest.audience }}</p>
+                                    <p>{{ event.maxAttendees }} pax</p>
                                 </div>
                                 <div class="flex flex-col items-start">
                                     <p class="font-semibold">Type</p>
-                                    <p>{{ EventRequest.type }}</p>
+                                    <p>{{ event.genre }}</p>
                                 </div>
                                 <div class="flex justify-end mt-5">
                                     <button
                                         class="text-blue-600 text-sm font-semibold cursor-pointer"
-                                        @click="handleViewRequest"
+                                        @click="handleViewDetails(event)"
                                     >
                                         View >>
                                     </button>
@@ -343,8 +405,8 @@ const handleViewRequestOrganiser = () => {
                     <!-- Organisers Grid -->
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div
-                            v-for="i in 12"
-                            :key="i"
+                            v-for="organiser in organisers"
+                            :key="organiser._id"
                             class="border border-gray-300 rounded p-4 flex flex-col justify-between"
                         >
                             <!-- Organiser Details -->
@@ -353,16 +415,16 @@ const handleViewRequestOrganiser = () => {
                                     <i class="text-gray-600 text-2xl">👤</i>
                                 </div>
                                 <div>
-                                    <p class="text-lg font-bold">{{ Organiser.name }}</p>
-                                    <p class="text-sm text-gray-400">{{ Organiser.id }}</p>
+                                    <p class="text-lg font-bold">{{ organiser.name }}</p>
+                                    <p class="text-sm text-gray-400">{{ organiser._id }}</p>
                                 </div>
                             </div>
                             <div class="text-sm mt-4">
-                                <p>{{ Organiser.email }}</p>
+                                <p>{{ organiser.email }}</p>
                                 <div class="flex justify-between items-center">
-                                    <p>{{ Organiser.phone }}</p>
+                                    <p>{{ organiser.contact || 'N/A' }}</p>
                                     <button 
-                                        @click="handleViewRequestOrganiser"
+                                        @click="handleViewRequestOrganiser(organiser)"
                                         type="button"
                                         class="text-blue-600 text-sm font-semibold cursor-pointer hover:text-blue-800"
                                     >

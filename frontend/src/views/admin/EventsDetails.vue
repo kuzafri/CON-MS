@@ -1,7 +1,10 @@
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useLayout } from '@/layout/composables/layout';
+
+import axios from 'axios';
+import { useToast } from 'primevue/usetoast';
 
 const { toggleDarkMode, isDarkTheme } = useLayout();
 
@@ -91,26 +94,7 @@ const generateSections = () => {
 const sections = generateSections();
 
 // Ticket Rates
-const ticketRates = ref([
-    {
-        type: 'VIP',
-        price: 'RM 150',
-        seats: '250 seat(s)',
-        color: 'bg-gray-200'
-    },
-    {
-        type: 'Standard',
-        price: 'RM 100',
-        seats: '500 seat(s)',
-        color: 'bg-yellow-400'
-    },
-    {
-        type: 'Economy',
-        price: 'RM 80',
-        seats: '750 seat(s)',
-        color: 'bg-blue-500'
-    }
-]);
+const ticketRates = ref(JSON.parse(route.query.ticketRates || '[]'));
 
 // Dummy disputes data
 const disputes = ref([
@@ -133,24 +117,110 @@ const disputes = ref([
     }
 ]);
 
-const handleAcceptRequest = () => {
-    alert(`Event request "${eventInfo.value.title}" has been accepted`);
+const handleAcceptRequest = async () => {
+    try {
+        const response = await axios.patch(
+            `http://localhost:5001/api/events/${eventInfo.value.id}`, 
+            { status: 'approved' },
+            {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            }
+        );
+        
+        if (response.data) {
+            toast.add({ 
+                severity: 'success', 
+                summary: 'Success', 
+                detail: `Event "${eventInfo.value.title}" has been approved`, 
+                life: 3000 
+            });
+            
+            // Update local state
+            eventInfo.value = {
+                ...eventInfo.value,
+                type: 'Approved'
+            };
+        }
+    } catch (error) {
+        console.error('Error approving event:', error);
+        toast.add({ 
+            severity: 'error', 
+            summary: 'Error', 
+            detail: error.response?.data?.message || 'Failed to approve event', 
+            life: 3000 
+        });
+    }
 };
 
-const handleDeclineRequest = () => {
-    alert(`Event request "${eventInfo.value.title}" has been declined`);
+const handleDeclineRequest = async () => {
+    try {
+        const response = await axios.patch(
+            `http://localhost:5001/api/events/${eventInfo.value.id}`,
+            { status: 'rejected' },
+            {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            }
+        );
+        
+        if (response.data) {
+            toast.add({ 
+                severity: 'success', 
+                summary: 'Success', 
+                detail: `Event "${eventInfo.value.title}" has been rejected`, 
+                life: 3000 
+            });
+            
+            // Update local state
+            eventInfo.value = {
+                ...eventInfo.value,
+                type: 'Rejected'
+            };
+        }
+    } catch (error) {
+        console.error('Error rejecting event:', error);
+        toast.add({ 
+            severity: 'error', 
+            summary: 'Error', 
+            detail: error.response?.data?.message || 'Failed to reject event', 
+            life: 3000 
+        });
+    }
 };
+
+// For inventoiry
+const toast = useToast();
+const products = ref([]);
 
 const handleInventory = () => {
     console.log('handleInventory called');
     router.push({
-        name: 'adminEventInventory',  // Use the named route
-        // params: {
-        //     id: EventRequest.value.id
-        // },
-        // state: EventRequest.value  // Pass full event data in state
+        name: 'adminEventInventory',
+        params: {
+            id: eventInfo.value.id
+        }
     });
 };
+
+// Fetch inventory data when component mounts
+onMounted(async () => {
+    try {
+        const eventId = route.params.id;
+        const response = await axios.get(`http://localhost:5001/api/events/${eventId}/inventory`);
+        products.value = response.data;
+    } catch (error) {
+        console.error('Error fetching inventory:', error);
+        toast.add({ 
+            severity: 'error', 
+            summary: 'Error', 
+            detail: 'Failed to load inventory', 
+            life: 3000 
+        });
+    }
+});
 
 const handleViewDisputes = () => {
     router.push({
