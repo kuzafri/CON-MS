@@ -3,6 +3,7 @@ import AppLayoutCustomer from '@/layout/AppLayoutCustomer.vue';
 import AppLayoutAdmin from '@/views/admin/AppLayout.vue';
 import AppLayoutOrganizer from '@/views/organizer/AppLayout.vue';
 import { createRouter, createWebHistory } from 'vue-router';
+import EventDetail from '@/views/pages/EventDetail.vue'
 
 const router = createRouter({
     history: createWebHistory(),
@@ -226,32 +227,31 @@ const router = createRouter({
             path: '/',
             component: AppLayoutCustomer,
             children: [
+                // {
+                //     path: '/event/',
+                //     name: 'Event',
+                //     component: () => import('@/views/pages/Event.vue')
+                // },
                 {
-                    path: '/event/',
+                    path: '/event',
                     name: 'Event',
                     component: () => import('@/views/pages/Event.vue')
-                },
+                  },
                 {
                     path: '/booking/:id',
                     name: 'Booking',
                     component: () => import('@/views/pages/Booking.vue')
                 },
                 {
-                    path: '/eventdetail/:id',
-                    name: 'EventDetail',
-                    component: () => import('@/views/pages/EventDetail.vue'),
-                    props: true
-                },
-                // {
-                //     path: '/event-detail/:id',
-                //     name: 'EventDetail',
-                //     component: () => import('@/views/pages/EventDetail.vue'),
-                //     props: true
-                // },
-                {
                     path: '/payment',
                     name: 'Payment',
                     component: () => import('@/views/pages/Payment.vue')
+                },
+                {
+                    path: '/eventdetail/:id',
+                    name: 'EventDetail',
+                    component: EventDetail,
+                    props: true
                 },
                 {
                     path: '/ticket',
@@ -315,7 +315,8 @@ const router = createRouter({
             path: '/organizer/register',
             name: 'organizerRegister',
             component: () => import('@/views/organizer/Register.vue')
-        }
+        },
+
     ]
 });
 

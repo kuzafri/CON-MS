@@ -1,24 +1,27 @@
 <script setup>
+import { computed, ref, onMounted } from 'vue';
 import { useLayout } from '@/layout/composables/layout';
-import { computed, ref } from 'vue';
-import { useRouter } from 'vue-router';
+import { useRouter, useRoute } from 'vue-router';
+import { useEvent } from '@/composables/useEvent';
 
 const { onMenuToggle, toggleDarkMode, isDarkTheme } = useLayout();
 const router = useRouter();
+const route = useRoute();
+const { event, loading, error, fetchEventById } = useEvent();
 const logoSrc = computed(() => (isDarkTheme.value ? '/logo_dark.png' : '/logo_light.png'));
 
 // State
 const selectedSeats = ref([]);
-const seatPrices = {
-    VIP: 150, // Rows A-B (first 2 rows)
-    Standard: 100, // Rows C-E (middle 3 rows)
-    Economy: 80 // Rows F-H (last 3 rows)
-};
+const seatPrices = computed(() => ({
+    VIP: event.value?.vipPrice || 0,
+    Standard: event.value?.standardPrice || 0,
+    Economy: event.value?.economyPrice || 0
+}));
 
 // Computed total price
 const totalPrice = computed(() => {
     return selectedSeats.value.reduce((total, seat) => {
-        return total + seatPrices[seat.tier];
+        return total + seatPrices.value[seat.tier];
     }, 0);
 });
 
@@ -84,7 +87,7 @@ const handleSeatClick = (seat) => {
             seatNumber: seat.seatNumber,
             group: seat.group,
             tier: seat.tier,
-            price: seatPrices[seat.tier]
+            price: seatPrices.value[seat.tier]
         });
     } else {
         selectedSeats.value.splice(seatIndex, 1);
@@ -179,18 +182,33 @@ const handleSubmit = async () => {
         alert('Error');
     }
 };
+
+onMounted(async () => {
+    await fetchEventById(route.params.id);
+});
 </script>
 
 <template>
     <div class="min-h-screen bg-surface-0 dark:bg-surface-900">
         <header class="bg-surface-50 dark:bg-surface-800 shadow-sm mt-14">
             <div class="max-w-7xl mx-auto px-4 py-4">
-                <div class="flex items-center">
-                    <img src="/concert.png" alt="CONMs" class="h-8" />
+                <!-- Show loading state -->
+                <div v-if="loading" class="text-center py-4">
+                    <p class="text-surface-600 dark:text-surface-400">Loading event details...</p>
+                </div>
+
+                <!-- Show error state -->
+                <div v-else-if="error" class="text-center py-4">
+                    <p class="text-red-600">{{ error }}</p>
+                </div>
+
+                <!-- Show event details -->
+                <div v-else-if="event" class="flex items-center">
+                    <img :src="event.image || '/concert.png'" :alt="event.concertTitle" class="h-8" />
                     <div class="ml-6">
-                        <h1 class="text-2xl font-bold text-surface-900 dark:text-surface-0">REBEL 3.0: Because of you</h1>
-                        <p class="text-surface-600 dark:text-surface-400">Wed 2025-01-13 3.00 PM - 4.00 PM</p>
-                        <p class="text-surface-600 dark:text-surface-400">Dewan Tuanku Syed Putra, USM</p>
+                        <h1 class="text-2xl font-bold text-surface-900 dark:text-surface-0">{{ event.concertTitle }}</h1>
+                        <p class="text-surface-600 dark:text-surface-400">{{ new Date(event.calendarValue).toLocaleDateString() }} {{ event.startTime }}</p>
+                        <p class="text-surface-600 dark:text-surface-400">{{ event.venue || 'Dewan Tuanku Syed Putra, USM' }}</p>
                     </div>
                 </div>
             </div>
@@ -244,15 +262,15 @@ const handleSubmit = async () => {
                         <div class="bottom-1 right-1 bg-surface-0 dark:bg-surface-900 p-3 rounded shadow z-10">
                             <div class="flex items-center mb-2">
                                 <div class="w-4 h-4 bg-orange-400 rounded mr-2"></div>
-                                <span class="text-surface-900 dark:text-surface-0">VIP (RM150)</span>
+                                <span class="text-surface-900 dark:text-surface-0">VIP (RM{{ seatPrices.VIP }})</span>
                             </div>
                             <div class="flex items-center mb-2">
                                 <div class="w-4 h-4 bg-yellow-500 rounded mr-2"></div>
-                                <span class="text-surface-900 dark:text-surface-0">Standard (RM100)</span>
+                                <span class="text-surface-900 dark:text-surface-0">Standard (RM{{ seatPrices.Standard }})</span>
                             </div>
                             <div class="flex items-center mb-2">
                                 <div class="w-4 h-4 bg-green-500 rounded mr-2"></div>
-                                <span class="text-surface-900 dark:text-surface-0">Economy (RM80)</span>
+                                <span class="text-surface-900 dark:text-surface-0">Economy (RM{{ seatPrices.Economy }})</span>
                             </div>
                             <div class="flex items-center mb-2">
                                 <div class="w-4 h-4 bg-red-500 rounded mr-2"></div>

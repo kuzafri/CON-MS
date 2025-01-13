@@ -1,17 +1,13 @@
 <script setup>
-import { ProductService } from '@/service/ProductService'; //all the product template stored here
 import { FilterMatchMode } from '@primevue/core/api';
 import { useToast } from 'primevue/usetoast';
 import { onMounted, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-
-onMounted(() => {
-    ProductService.getProducts().then((data) => (products.value = data));
-});
+import axios from 'axios';
 
 const toast = useToast();
 const dt = ref();
-const products = ref();
+const products = ref([]);
 const productDialog = ref(false);
 const deleteProductDialog = ref(false);
 const deleteProductsDialog = ref(false);
@@ -21,22 +17,10 @@ const filters = ref({
     global: { value: null, matchMode: FilterMatchMode.CONTAINS }
 });
 const submitted = ref(false);
-// const statuses = ref([
-//     { label: 'INSTOCK', value: 'instock' },
-//     { label: 'LOWSTOCK', value: 'lowstock' },
-//     { label: 'OUTOFSTOCK', value: 'outofstock' }
-// ]);
-
-// function formatCurrency(value) {
-//     if (value) return value.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
-//     return;
-// }
 
 function changeQuantity(product, change) {
-    // Ensure quantity doesn't go below 0
     product.quantity = Math.max(0, (product.quantity || 0) + change);
     
-    // Optional: Add a toast notification for quantity change
     if (change > 0) {
         toast.add({ severity: 'info', summary: 'Quantity Increased', detail: `${product.name} quantity updated`, life: 2000 });
     } else if (change < 0) {
@@ -130,7 +114,7 @@ function deleteSelectedProducts() {
     toast.add({ severity: 'success', summary: 'Successful', detail: 'Products Deleted', life: 3000 });
 }
 
-// Add props definition
+// Props definition
 const props = defineProps({
   id: String
 });
@@ -138,20 +122,93 @@ const props = defineProps({
 const route = useRoute();
 const router = useRouter();
 
+// Event Creation Request Data
+const eventRequests = ref([]);
+const currentEvent = ref(null);
+
+// Fetch event details
+const fetchEventDetails = async () => {
+    try {
+        const response = await axios.get(`http://localhost:5001/api/events`);
+        eventRequests.value = response.data;
+        // Find the current event from the fetched data
+        currentEvent.value = eventRequests.value.find(event => event._id === route.params.id);
+    } catch (error) {
+        console.error('Error fetching event details:', error);
+    }
+};
+
 const EventRequest = ref({
     id: props.id || route.params.id,
-    // title: 'REBEL 3.0: Because of You',
-    // date: '13th January 2025',
-    // time: '3:00 PM - 4:00 PM',
-    // audience: '1500 pax',
-    // type: 'Paid Entry',
-    // status: 'Pending'
+    title: route.query.title,
+    date: route.query.date,
+    time: route.query.time,
+    audience: route.query.audience,
+    type: route.query.type,
+    submittedBy: route.query.submittedBy
+});
+
+// Fetch inventory data when component mounts
+onMounted(async () => {
+    await fetchEventDetails();
+    try {
+        const eventId = route.params.id;
+        const response = await axios.get(`http://localhost:5001/api/events/${eventId}/inventory`);
+        products.value = response.data || [];
+    } catch (error) {
+        console.error('Error fetching inventory:', error);
+        toast.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: 'Failed to load inventory',
+            life: 3000
+        });
+    }
 });
 
 const handleBack = () => {
-    // Encode the ID to properly handle special characters like '/'
-    const encodedId = encodeURIComponent(EventRequest.value.id);
-    router.push(`/admin/event-details/${encodedId}`);
+    if (!currentEvent.value) {
+        console.error('No event data found');
+        return;
+    }
+
+    const event = currentEvent.value;
+    const ticketRates = [
+        {
+            type: 'VIP',
+            price: `RM ${event.platinumPrice}`,
+            seats: '250 seat(s)',
+            color: 'bg-gray-200'
+        },
+        {
+            type: 'Standard',
+            price: `RM ${event.goldPrice}`,
+            seats: '500 seat(s)',
+            color: 'bg-yellow-400'
+        },
+        {
+            type: 'Economy',
+            price: `RM ${event.regularPrice}`,
+            seats: '750 seat(s)',
+            color: 'bg-blue-500'
+        }
+    ];
+
+    router.push({
+        name: 'EventsDetails',
+        params: {
+            id: event._id
+        },
+        query: {
+            title: event.concertTitle,
+            date: new Date(event.calendarValue).toLocaleDateString(),
+            time: `${event.startTime} - ${event.endTime}`,
+            audience: `${event.maxAttendees} pax`,
+            type: event.paymentType || 'Paid Entry',
+            submittedBy: event.organizer,
+            ticketRates: JSON.stringify(ticketRates)
+        }
+    });
 };
 
 // function getStatusLabel(status) {

@@ -4,16 +4,25 @@ const mongoose = require('mongoose');
 
 // Event Schema
 const eventSchema = new mongoose.Schema({
-    title: String,
+    concertTitle: String,
     image: String,
-    date: String,
-    time: String,
+    calendarValue: Date,
+    startTime: String,
+    endTime: String,
     description: String,
-    price: Number,
-    type: String,
+    regularPrice: Number,
+    goldPrice: Number,
+    platinumPrice: Number,
+    paymentType: String,
     eventID: String,
-    status: String,
-    organiser: String
+    status: {
+        type: String,
+        enum: ['pending', 'approved', 'rejected'],
+        default: 'pending'
+    },
+    organizer: String,
+    maxAttendees: Number,
+    genre: String
 }, { timestamps: true });
 
 const Event = mongoose.model('Event', eventSchema);

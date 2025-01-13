@@ -6,8 +6,8 @@ import { useEvent } from '@/composables/useEvent';
 const route = useRoute();
 const { event, loading, error, fetchEventById } = useEvent();
 
-// Target event date
-const eventDate = new Date('2024-12-25T00:00:00'); // Replace with your event date
+// Update eventDate to use the actual event date from the API
+const eventDate = ref(new Date());
 const activeTab = ref('about');
 
 const days = ref(0);
@@ -19,7 +19,7 @@ let countdownInterval = null;
 
 const updateCountdown = () => {
     const now = new Date();
-    const timeDiff = eventDate - now;
+    const timeDiff = eventDate.value - now;
 
     if (timeDiff <= 0) {
         clearInterval(countdownInterval);
@@ -36,13 +36,18 @@ const updateCountdown = () => {
     seconds.value = Math.floor((timeDiff / 1000) % 60);
 };
 
-onMounted(() => {
+onMounted(async () => {
+    // Start countdown
     updateCountdown();
     countdownInterval = setInterval(updateCountdown, 1000);
-});
 
-onMounted(async () => {
+    // Fetch event data
     await fetchEventById(route.params.id);
+
+    // Update countdown date when event data is loaded
+    if (event.value) {
+        eventDate.value = new Date(event.value.calendarValue);
+    }
 });
 
 onUnmounted(() => {
@@ -88,24 +93,31 @@ const { onMenuToggle, toggleDarkMode, isDarkTheme } = useLayout();
 </script>
 
 <template>
-    <!-- <div class="min-h-screen bg-gray-100 flex flex-col"> -->
     <div class="bg-surface-0 dark:bg-surface-900 min-h-screen flex flex-col mt-14">
-
         <div>
             <div class="flex-1 max-w-7xl mx-auto px-4 mt-4">
-                <div class="max-w-2xl mx-auto rounded-lg shadow-lg overflow-hidden bg-surface-0 dark:bg-surface-900">
-                    <!-- Event Header -->
+                <!-- Show loading state -->
+                <div v-if="loading" class="text-center py-8">
+                    <p class="text-gray-600 dark:text-gray-300">Loading event details...</p>
+                </div>
+
+                <!-- Show error state -->
+                <div v-else-if="error" class="text-center py-8">
+                    <p class="text-red-600">{{ error }}</p>
+                </div>
+
+                <!-- Show event details -->
+                <div v-else-if="event" class="max-w-2xl mx-auto rounded-lg shadow-lg overflow-hidden bg-surface-0 dark:bg-surface-900">
                     <div>
-                        <img src="/concert.png" alt="Hammersonic Festival" class="w-full h-56 object-cover" />
+                        <img :src="event.image || '/concert.png'" :alt="event.concertTitle" class="w-full h-56 object-cover" />
                     </div>
                     <div class="p-4">
-                        <!-- Event Details -->
-                        <h1 class="text-2xl font-bold text-gray-900 dark:text-white">{{ event.title }}</h1>
+                        <h1 class="text-2xl font-bold text-gray-900 dark:text-white">{{ event.concertTitle }}</h1>
                         <p class="text-gray-600 dark:text-gray-300">
-                            <span class="block">{{ event.venue }}</span>
-                            <span>{{ event.date }} | Open Gate at {{ event.startTime }}</span>
+                            <span class="block">{{ event.venue || 'DTSP USM' }}</span>
+                            <span>{{ new Date(event.calendarValue).toLocaleDateString() }} | Open Gate at {{ event.startTime }}</span>
                         </p>
-                        <p class="mt-2 text-gray-600 dark:text-gray-300">{{ event.performers.join(', ') }}</p>
+                        <p class="mt-2 text-gray-600 dark:text-gray-300">{{ event.performers?.length || 0 }}+ Artists</p>
                     </div>
 
                     <div class="mt-8 flex flex-col items-center">
@@ -156,12 +168,32 @@ const { onMenuToggle, toggleDarkMode, isDarkTheme } = useLayout();
                         </div>
                         <div v-if="activeTab === 'about'" class="mt-4">
                             <p class="text-gray-600 dark:text-gray-300">
-                                Tickets for USM Jazz Band's 26th Annual Charity Concert are now available for purchase, shadowed by the intriguing theme of 𝗧𝗛𝗥𝗜𝗟𝗟𝗘𝗥, offering you the chance to experience a pulse-pounding melodic adventure.
+                                {{ event.description || 'No description available.' }}
                             </p>
+                            <div class="mt-4">
+                                <h3 class="font-semibold text-gray-800 dark:text-white">Genre:</h3>
+                                <p class="text-gray-600 dark:text-gray-300">{{ event.genre }}</p>
+                            </div>
+                            <div class="mt-4">
+                                <h3 class="font-semibold text-gray-800 dark:text-white">Performers:</h3>
+                                <ul class="list-disc pl-5">
+                                    <li v-for="performer in event.performers" :key="performer" class="text-gray-600 dark:text-gray-300">
+                                        {{ performer }}
+                                    </li>
+                                </ul>
+                            </div>
                         </div>
+
                         <div v-if="activeTab === 'buyTicket'" class="mt-4 relative">
-                            <!-- <p class="text-gray-600 dark:text-gray-300">Ticket purchase functionality coming soon!</p> -->
-                            <Button class="button_buy right-0 absolute" label="Book Now" as="router-link" to="/booking" rounded></Button>
+                            <div class="mb-8">
+                                <h3 class="font-semibold text-gray-800 dark:text-white mb-2">Ticket Prices:</h3>
+                                <ul class="space-y-2">
+                                    <li class="text-gray-600 dark:text-gray-300">Regular: RM{{ event.regularPrice }}</li>
+                                    <li class="text-gray-600 dark:text-gray-300">Economy: RM{{ event.economyPrice }}</li>
+                                    <li class="text-gray-600 dark:text-gray-300">VIP: RM{{ event.vipPrice }}</li>
+                                </ul>
+                            </div>
+                            <Button class="button_buy right-0 absolute" label="Book Now" as="router-link" :to="{ name: 'Booking', params: { id: event._id } }" rounded></Button>
                         </div>
                     </div>
 
