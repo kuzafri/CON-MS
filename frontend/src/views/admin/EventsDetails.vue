@@ -30,6 +30,7 @@ const eventInfo = ref({
     time: route.query.time || '', 
     audience: route.query.audience || '',
     type: route.query.type || '',
+    status: route.query.status || 'pending',  
     submittedBy: route.query.submittedBy || ''
 });
 
@@ -117,6 +118,19 @@ const disputes = ref([
     }
 ]);
 
+const getStatusClass = computed(() => {
+    const status = (eventInfo.value?.status || 'pending').toLowerCase();
+    switch (status) {
+        case 'approved':
+            return 'bg-green-100 dark:bg-green-700 text-green-800 dark:text-green-100';
+        case 'rejected':
+            return 'bg-red-100 dark:bg-red-700 text-red-800 dark:text-red-100';
+        case 'pending':
+        default:
+            return 'bg-yellow-100 dark:bg-yellow-700 text-yellow-800 dark:text-yellow-100';
+    }
+});
+
 const handleAcceptRequest = async () => {
     try {
         const response = await axios.patch(
@@ -137,11 +151,7 @@ const handleAcceptRequest = async () => {
                 life: 3000 
             });
             
-            // Update local state
-            eventInfo.value = {
-                ...eventInfo.value,
-                type: 'Approved'
-            };
+            eventInfo.value.status = 'approved';
         }
     } catch (error) {
         console.error('Error approving event:', error);
@@ -174,11 +184,7 @@ const handleDeclineRequest = async () => {
                 life: 3000 
             });
             
-            // Update local state
-            eventInfo.value = {
-                ...eventInfo.value,
-                type: 'Rejected'
-            };
+            eventInfo.value.status = 'rejected';
         }
     } catch (error) {
         console.error('Error rejecting event:', error);
@@ -190,6 +196,10 @@ const handleDeclineRequest = async () => {
         });
     }
 };
+
+const showActionButtons = computed(() => {
+    return (eventInfo.value?.status || 'pending').toLowerCase() === 'pending';
+});
 
 // For inventoiry
 const toast = useToast();
@@ -236,34 +246,32 @@ const handleViewDisputes = () => {
 
 <template>
     <div class="min-h-screen bg-surface-0 dark:bg-surface-900">
-        <!-- Header with event status -->
         <div class="bg-white dark:bg-surface-800 shadow">
             <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
                 <h1 class="text-xl font-bold text-surface-900 dark:text-white">{{ eventInfo.title }}</h1>
                 <div class="flex items-center gap-3">
-                    <button 
-                        @click="handleAcceptRequest"
-                        class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition-colors"
-                    >
-                        Accept Request
-                    </button>
-                    <button 
-                        @click="handleDeclineRequest"
-                        class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition-colors"
-                    >
-                        Decline Request
-                    </button>
-                    <!-- <button class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors">
-                        Edit
-                    </button> -->
+                    <template v-if="showActionButtons">
+                        <button 
+                            @click="handleAcceptRequest"
+                            class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition-colors"
+                        >
+                            Accept Request
+                        </button>
+                        <button 
+                            @click="handleDeclineRequest"
+                            class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition-colors"
+                        >
+                            Decline Request
+                        </button>
+                    </template>
                     <button
                         class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition"
                         @click="handleInventory"
                     >
                         Inventory
                     </button>
-                    <span class="px-3 py-1 bg-green-100 dark:bg-green-700 text-green-800 dark:text-green-100 rounded-full text-sm">
-                        {{ eventInfo.type }}
+                    <span :class="`px-3 py-1 rounded-full text-sm ${getStatusClass}`">
+                        {{ eventInfo.status }}
                     </span>
                 </div>
             </div>

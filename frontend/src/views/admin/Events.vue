@@ -67,6 +67,7 @@ const handleViewDetails = (eventData) => {
             date: new Date(event.calendarValue).toLocaleDateString(),
             time: `${event.startTime} - ${event.endTime}`,
             audience: `${event.maxAttendees} pax`,
+            status: event.status,
             type: event.paymentType || 'Paid Entry',
             submittedBy: event.organizer,
             ticketRates: JSON.stringify(ticketRates)
