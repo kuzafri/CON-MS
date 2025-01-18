@@ -23,7 +23,7 @@ onMounted(async () => {
             // Normalize role names and set default to 'Audience'
             role: normalizeRole(user.role || 'Audience'),
             email: user.email,
-            contact: user.contact || 'N/A',
+            contact: user.contact || '012-345 6789',
             lastActive: user.lastActive || user.updatedAt || user.createdAt,
             status: user.status || 'Active',
         }));
@@ -110,9 +110,9 @@ function getStatusClass(status) {
 
         <DataTable :value="filteredUsers" :loading="loading" :rows="10" paginator>
             <Column field="image" header="#">
-                <template #body="slotProps">
+                <template #body>
                     <img
-                        :src="slotProps.data.image"
+                        src="/male.png"
                         alt="User Avatar"
                         class="w-12 h-12 rounded-full object-cover"
                     />

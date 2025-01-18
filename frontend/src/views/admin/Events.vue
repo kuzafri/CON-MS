@@ -101,9 +101,9 @@ function getStatusClass(status) {
 
         <DataTable :value="events" :loading="loading" :rows="10" paginator sortField="eventID" sortOrder="1">
             <Column field="poster" header="#">
-                <template #body="slotProps">
+                <template #body>
                     <img
-                        :src="slotProps.data.poster"
+                        src="/concert.png"
                         alt="Event Poster"
                         class="w-12 h-12 object-cover"
                     />
@@ -126,8 +126,8 @@ function getStatusClass(status) {
                 </template>
             </Column>
             <Column field="organiser" header="Organiser" sortable>
-                <template #body="slotProps">
-                    <span class="truncate-ellipsis">{{ slotProps.data.organiser }}</span>
+                <template #body>
+                    <span class="truncate-ellipsis">USM Jazz Band</span>
                 </template>
             </Column>
             <Column header="Date & Time" sortable>
