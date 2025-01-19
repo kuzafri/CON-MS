@@ -1,7 +1,7 @@
 <script setup>
 
 import FloatingConfigurator from '@/components/FloatingConfigurator.vue';
-import axios from 'axios'; // Make sure axios is installed
+import api from '@/utils/axios';
 import { useRouter } from 'vue-router';
 import { ref } from 'vue';
 const email = ref('');
@@ -15,7 +15,7 @@ const router = useRouter();
 const handleLogin = async () => {
    try {
        loading.value = true;
-       const response = await axios.post('http://localhost:5001/api/users/login', {
+       const response = await api.post('/users/login', {
            email: email.value,
            password: password.value,
            role: 'organizer'
