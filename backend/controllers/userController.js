@@ -1,5 +1,6 @@
 const User = require('../models/userModel');
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
 // Get all users
 const getUsers = async (req, res) => {
@@ -51,11 +52,33 @@ const loginUser = async (req, res) => {
         if (!user) {
             return res.status(400).json({ message: 'User not found!' });
         }
+        
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) {
             return res.status(400).json({ message: 'Invalid credentials!' });
         }
-        res.json({ message: 'Login successful!' });
+
+        // Generate JWT token
+        const token = jwt.sign(
+            { 
+                id: user._id,
+                role: user.role 
+            }, 
+            process.env.JWT_SECRET,
+            { expiresIn: '24h' }
+        );
+
+        // Send response with token and user data
+        res.json({ 
+            message: 'Login successful!',
+            token,
+            user: {
+                id: user._id,
+                name: user.name,
+                email: user.email,
+                role: user.role
+            }
+        });
     } catch (err) {
         res.status(500).json({ message: err.message });
     }

@@ -136,7 +136,7 @@ function smoothScroll(id) {
                     <div class="col-span-2 bg-surface-0 dark:bg-surface-900 rounded-lg shadow md:p-6 sm:p-3">
                         <h2 class="text-3xl font-semibold mb-4 text-surface-900 dark:text-surface-0">Featured Events</h2>
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                            <router-link
+                            <div
                                 v-for="event in featuredEvents"
                                 :key="event._id"
                                 :to="{ name: 'EventDetails', params: { id: event._id } }"
@@ -154,11 +154,12 @@ function smoothScroll(id) {
                                             RM{{ event.price }}
                                         </div>
                                         <div class="bottom-0 right-0 ml-auto">
+                                            <Button label="See Detail" as="router-link" :to="{ name: 'EventDetail', params: { id: event._id } }" rounded class="seedetail flex mr-4"></Button>
                                             <Button label="Book Now" as="router-link" :to="{ name: 'Booking', params: { id: event._id } }" rounded></Button>
                                         </div>
                                     </div>
                                 </div>
-                            </router-link>
+                            </div>
 
                             <!-- Placeholder when no events are loaded -->
                             <div v-if="featuredEvents.length === 0" class="bg-surface-100 dark:bg-surface-800 rounded-lg p-4 text-center">
