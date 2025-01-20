@@ -20,6 +20,9 @@ const customerUser = ref({
 });
 
 const handleLogout = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+
     router.push('/auth/login');
 };
 </script>
