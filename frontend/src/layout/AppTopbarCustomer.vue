@@ -1,7 +1,9 @@
 <script setup>
 import { useLayout } from '@/layout/composables/layout';
 import { computed, ref } from 'vue';
+import { useRouter } from 'vue-router';
 
+const router = useRouter();
 const { onMenuToggle, toggleDarkMode, isDarkTheme } = useLayout();
 
 const customerUser = ref({
@@ -13,6 +15,13 @@ const isMenuOpen = ref(false);
 
 const toggleMenu = () => {
     isMenuOpen.value = !isMenuOpen.value;
+};
+
+const handleLogout = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    
+    router.push('/auth/login');
 };
 
 const logoSrc = computed(() => (isDarkTheme.value ? '/logo_dark.png' : '/logo_light.png'));
@@ -136,7 +145,10 @@ const logoSrc = computed(() => (isDarkTheme.value ? '/logo_dark.png' : '/logo_li
                                 <i class="pi pi-user-edit mr-2"></i>
                                 <span>View Profile</span>
                             </router-link>
-                            <button to="/auth/login" class="w-full px-4 py-2 text-left text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors">
+                            <button 
+                                @click="handleLogout" 
+                                class="w-full px-4 py-2 text-left text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors"
+                            >
                                 <i class="pi pi-power-off mr-2"></i>
                                 Logout
                             </button>

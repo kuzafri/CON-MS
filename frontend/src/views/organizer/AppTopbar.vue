@@ -8,7 +8,9 @@ const route = useRoute();
 const router = useRouter();
 
 function handleLogout() {
-    // Add any logout logic here (e.g., clearing tokens, user session)
+    // Clear all auth data
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
 
     // Navigate to login page
     router.push('/organizer/login');
