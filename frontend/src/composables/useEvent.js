@@ -1,6 +1,6 @@
 // src/composables/useEvents.js
 import { ref } from 'vue';
-import axios from '@/utils/axios';
+import axios from 'axios';
 
 export function useEvent() {
     const event = ref(null);
@@ -12,7 +12,7 @@ export function useEvent() {
         error.value = null;
         
         try {
-            const response = await axios.get(`/events/${id}`);
+            const response = await axios.get(`http://localhost:5001/api/events/${id}`);
             event.value = response.data;
         } catch (err) {
             error.value = err.message || 'Failed to fetch event';

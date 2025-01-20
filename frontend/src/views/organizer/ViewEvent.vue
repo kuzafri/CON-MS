@@ -2,7 +2,7 @@
 import { useLayout } from '@/layout/composables/layout';
 import { onMounted, ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
-import axios from '@/utils/axios';
+import axios from 'axios';
 
 const router = useRouter();
 const events = ref([]);
@@ -10,7 +10,7 @@ const events = ref([]);
 // Updated function to use axios
 const fetchEvents = async () => {
     try {
-        const response = await axios.get('/events');
+        const response = await axios.get('http://localhost:5001/api/events');
         events.value = response.data;
     } catch (error) {
         console.error('Error fetching events:', error);

@@ -1,7 +1,7 @@
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue';
 import { useRouter } from 'vue-router';
-import axios from '@/utils/axios';
+import axios from 'axios';
 
 const router = useRouter();
 const featuredEvents = ref([]);
@@ -10,7 +10,7 @@ let scrollInterval = null;
 
 const fetchRandomFeaturedEvents = async () => {
     try {
-        const response = await axios.get('/events');
+        const response = await axios.get('http://localhost:5001/api/events');
         console.log('Response:', response.data);
 
         if (!response.data || !Array.isArray(response.data)) {

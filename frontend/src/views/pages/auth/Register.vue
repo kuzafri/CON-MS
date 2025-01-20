@@ -1,7 +1,7 @@
 <script setup>
 import FloatingConfigurator from '@/components/FloatingConfigurator.vue';
 import { ref } from 'vue';
-import axios from '@/utils/axios';
+import axios from 'axios';
 import { useRouter } from 'vue-router';
 
 const router = useRouter();
@@ -19,7 +19,7 @@ const register = async () => {
     }
     try {
         const response = await axios.post(
-            '/users/register',
+            'http://localhost:5001/api/users/register',
             {
                 name: name.value,
                 email: email.value,
@@ -48,6 +48,8 @@ const register = async () => {
         }
     }
 };
+
+axios.defaults.baseURL = 'http://localhost:5001';
 </script>
 
 <template>

@@ -5,7 +5,7 @@ import { Chart as ChartJS, ArcElement, Tooltip, Legend, CategoryScale, LinearSca
 import { useRouter } from 'vue-router';
 const router = useRouter();
 
-import axiosInstance from '@/utils/axios';
+import axios from 'axios';
 
 // Register the required Chart.js components
 ChartJS.register(
@@ -180,7 +180,7 @@ const sortBy = ref('today');
 // Fetch event requests
 const fetchEventRequests = async () => {
     try {
-        const response = await axiosInstance.get('/events');
+        const response = await axios.get('http://localhost:5001/api/events');
         eventRequests.value = response.data;
     } catch (error) {
         console.error('Error fetching event requests:', error);
@@ -236,7 +236,7 @@ const organisers = ref([]);
 
 const fetchOrganisers = async () => {
     try {
-        const response = await axiosInstance.get('/users');
+        const response = await axios.get('http://localhost:5001/api/users');
         organisers.value = response.data
             .filter(user => 
                 user.role?.toLowerCase() === 'organizer' || 

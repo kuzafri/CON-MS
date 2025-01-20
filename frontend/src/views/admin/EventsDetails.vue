@@ -3,7 +3,7 @@ import { ref, computed, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useLayout } from '@/layout/composables/layout';
 
-import axios from '@/utils/axios';
+import axios from 'axios';
 import { useToast } from 'primevue/usetoast';
 
 const { toggleDarkMode, isDarkTheme } = useLayout();
@@ -120,7 +120,7 @@ const disputes = ref([
 const handleAcceptRequest = async () => {
     try {
         const response = await axios.patch(
-            `/events/${eventInfo.value.id}`, 
+            `http://localhost:5001/api/events/${eventInfo.value.id}`, 
             { status: 'approved' },
             {
                 headers: {
@@ -157,7 +157,7 @@ const handleAcceptRequest = async () => {
 const handleDeclineRequest = async () => {
     try {
         const response = await axios.patch(
-            `/events/${eventInfo.value.id}`,
+            `http://localhost:5001/api/events/${eventInfo.value.id}`,
             { status: 'rejected' },
             {
                 headers: {
@@ -209,7 +209,7 @@ const handleInventory = () => {
 onMounted(async () => {
     try {
         const eventId = route.params.id;
-        const response = await axios.get(`/events/${eventId}/inventory`);
+        const response = await axios.get(`http://localhost:5001/api/events/${eventId}/inventory`);
         products.value = response.data;
     } catch (error) {
         console.error('Error fetching inventory:', error);
