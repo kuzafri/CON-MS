@@ -1,0 +1,11 @@
+[build]
+commands = [
+    "cd frontend && npm install && npm run build",
+    "cd backend && npm install"
+]
+install.nodeVersion = "18"
+
+[deploy]
+startCommand = "cd backend && npm start"
+healthcheckPath = "/health"
+restartPolicyType = "ON_FAILURE" 
