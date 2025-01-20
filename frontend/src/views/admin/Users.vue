@@ -1,5 +1,6 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue';
+import axios from '@/utils/axios';
 
 const users = ref([]);
 const loading = ref(false);
@@ -10,10 +11,7 @@ const searchQuery = ref('');
 onMounted(async () => {
     try {
         loading.value = true;
-        const response = await fetch('http://localhost:5001/api/users');
-        if (!response.ok) throw new Error('Failed to fetch users');
-        
-        const data = await response.json();
+        const { data } = await axios.get('/users');
         // Transform data to ensure all users have a role and normalize role names
         users.value = data.map(user => ({
             id: user._id,

@@ -2,7 +2,7 @@
 import { ref, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useToast } from 'primevue/usetoast';
-import axios from 'axios';
+import axios from '@/utils/axios';
 
 // Add props definition
 const props = defineProps({
@@ -130,7 +130,7 @@ const saveEvent = async () => {
             console.log('Sending update with data:', eventData); // Debug log
 
             // Send PUT request to update the event
-            const response = await axios.put(`http://localhost:5001/api/events/${EventRequest.value.id}`, eventData);
+            const response = await axios.put(`/events/${EventRequest.value.id}`, eventData);
 
             if (response.status === 200) {
                 toast.add({
@@ -164,7 +164,7 @@ const saveEvent = async () => {
 
 const fetchEventDetails = async () => {
     try {
-        const response = await axios.get(`http://localhost:5001/api/events/${route.params.id}`);
+        const response = await axios.get(`/events/${route.params.id}`);
         const event = response.data;
 
         // Map the backend data to our frontend structure

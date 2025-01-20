@@ -4,7 +4,7 @@ import { FilterMatchMode } from '@primevue/core/api';
 import { useToast } from 'primevue/usetoast';
 import { onMounted, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import axios from 'axios';
+import axios from '@/utils/axios';
 
 // Initialize route and router first
 const route = useRoute();
@@ -33,7 +33,7 @@ onMounted(async () => {
 
 const fetchInventory = async () => {
     try {
-        const response = await axios.get(`http://localhost:5001/api/events/${eventId}/inventory`);
+        const response = await axios.get(`/events/${eventId}/inventory`);
         products.value = response.data;
     } catch (error) {
         console.error('Error fetching inventory:', error);
@@ -82,12 +82,12 @@ async function saveProduct() {
         try {
             if (product.value._id) {
                 // Update existing item
-                const response = await axios.put(`http://localhost:5001/api/events/${eventId}/inventory/${product.value._id}`, product.value);
+                const response = await axios.put(`/events/${eventId}/inventory/${product.value._id}`, product.value);
                 products.value[findIndexById(product.value._id)] = response.data;
                 toast.add({ severity: 'success', summary: 'Successful', detail: 'Product Updated', life: 3000 });
             } else {
                 // Create new item
-                const response = await axios.post(`http://localhost:5001/api/events/${eventId}/inventory`, product.value);
+                const response = await axios.post(`/events/${eventId}/inventory`, product.value);
                 products.value.push(response.data);
                 toast.add({ severity: 'success', summary: 'Successful', detail: 'Product Created', life: 3000 });
             }
@@ -113,7 +113,7 @@ function confirmDeleteProduct(prod) {
 
 async function deleteProduct() {
     try {
-        await axios.delete(`http://localhost:5001/api/events/${eventId}/inventory/${product.value._id}`);
+        await axios.delete(`/events/${eventId}/inventory/${product.value._id}`);
         await fetchInventory();
         deleteProductDialog.value = false;
         product.value = {};
@@ -154,7 +154,7 @@ function confirmDeleteSelected() {
 async function deleteSelectedProducts() {
     try {
         const itemIds = selectedProducts.value.map((p) => p._id);
-        await axios.post(`http://localhost:5001/api/events/${eventId}/inventory/delete-multiple`, {
+        await axios.post(`/events/${eventId}/inventory/delete-multiple`, {
             itemIds: itemIds
         });
         await fetchInventory();

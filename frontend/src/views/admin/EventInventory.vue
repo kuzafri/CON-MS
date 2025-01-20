@@ -3,7 +3,7 @@ import { FilterMatchMode } from '@primevue/core/api';
 import { useToast } from 'primevue/usetoast';
 import { onMounted, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import axios from 'axios';
+import axios from '@/utils/axios';
 
 const toast = useToast();
 const dt = ref();
@@ -129,7 +129,7 @@ const currentEvent = ref(null);
 // Fetch event details
 const fetchEventDetails = async () => {
     try {
-        const response = await axios.get(`http://localhost:5001/api/events`);
+        const response = await axios.get('/events');
         eventRequests.value = response.data;
         // Find the current event from the fetched data
         currentEvent.value = eventRequests.value.find(event => event._id === route.params.id);
@@ -153,7 +153,7 @@ onMounted(async () => {
     await fetchEventDetails();
     try {
         const eventId = route.params.id;
-        const response = await axios.get(`http://localhost:5001/api/events/${eventId}/inventory`);
+        const response = await axios.get(`/events/${eventId}/inventory`);
         products.value = response.data || [];
     } catch (error) {
         console.error('Error fetching inventory:', error);
