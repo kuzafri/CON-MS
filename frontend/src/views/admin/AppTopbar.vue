@@ -4,8 +4,8 @@ import { computed, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import AppConfigurator from './AppConfigurator.vue';
 
-const { onMenuToggle, toggleDarkMode, isDarkTheme } = useLayout();
 const router = useRouter();
+const { onMenuToggle, toggleDarkMode, isDarkTheme } = useLayout();
 
 // Admin user data
 const adminUser = ref({
@@ -15,6 +15,15 @@ const adminUser = ref({
     phone: '+60 12-345-6789',
     role: 'System Administrator'
 });
+
+const handleLogout = () => {
+    // Clear all authentication data
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    
+    // Redirect to admin login page
+    router.push('/admin/auth/login');
+};
 
 const handleViewProfile = () => {
     console.log('handleViewProfile called');
@@ -33,10 +42,6 @@ const handleViewProfile = () => {
 };
 
 const logoSrc = computed(() => (isDarkTheme.value ? '/logo_dark.png' : '/logo_light.png'));
-
-const handleLogout = () => {
-    router.push('/admin/auth/login');
-};
 </script>
 
 <template>
@@ -101,7 +106,10 @@ const handleLogout = () => {
                                 <i class="pi pi-user-edit mr-2"></i>
                                 View Profile
                             </button>
-                            <button @click="handleLogout" class="w-full px-4 py-2 text-left text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors">
+                            <button 
+                                @click="handleLogout" 
+                                class="w-full px-4 py-2 text-left text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors"
+                            >
                                 <i class="pi pi-power-off mr-2"></i>
                                 Logout
                             </button>

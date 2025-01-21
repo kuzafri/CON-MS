@@ -23,6 +23,7 @@ const handleLogin = async () => {
        
        router.push('/admin/dashboard');
    } catch (error) {
+       console.error('Login error:', error);
        errorMessage.value = error.response?.data?.message || 'Login failed';
    }
 };
@@ -52,7 +53,11 @@ const handleLogin = async () => {
                         </div>
                         <span class="font-medium no-underline ml-2 text-right cursor-pointer text-primary">Forgot password?</span>
                     </div>
-                    <Button label="Sign In" class="w-full" as="router-link" to="/admin/dashboard"></Button>
+                    <Button 
+                        label="Sign In" 
+                        class="w-full" 
+                        @click="handleLogin"
+                    ></Button>
                 </div>
             </div>
         </div>
