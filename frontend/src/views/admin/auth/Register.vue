@@ -4,6 +4,7 @@ import { ref } from 'vue';
 import axios from '@/utils/axios';
 import { useRouter } from 'vue-router';
 
+
 const router = useRouter();
 const name = ref('');
 const email = ref('');
@@ -18,7 +19,7 @@ const register = async () => {
         return;
     }
     try {
-        const response = await axios.post('/users/register', {
+        const response = await axios.post(`${import.meta.env.VITE_API_URL}/users/register`, {
             name: name.value,
             email: email.value,
             password: password.value,

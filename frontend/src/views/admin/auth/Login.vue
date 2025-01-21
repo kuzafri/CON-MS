@@ -12,7 +12,7 @@ const router = useRouter();
 
 const handleLogin = async () => {
    try {
-       const response = await axios.post('/users/login', {
+       const response = await axios.post(`${import.meta.env.VITE_API_URL}/users/login`, {
            email: email.value,
            password: password.value,
            role: 'admin'  // Specify role for admin login
