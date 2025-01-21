@@ -12,7 +12,7 @@ const router = useRouter();
 
 const handleLogin = async () => {
     try {
-        const response = await axios.post('http://localhost:5001/api/users/login', {
+        const response = await axios.post('/users/login', {
             email: email.value,
             password: password.value,
             role: 'audience'  // Specify role for audience login
