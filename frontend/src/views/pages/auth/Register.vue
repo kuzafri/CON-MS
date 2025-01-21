@@ -19,7 +19,7 @@ const register = async () => {
     }
     try {
         const response = await axios.post(
-            'http://localhost:5001/api/users/register',
+            '/users/register',
             {
                 name: name.value,
                 email: email.value,
