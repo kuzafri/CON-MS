@@ -166,7 +166,7 @@ const router = createRouter({
         },
         {
             path: '/admin/auth/login',
-            name: 'AdminLogin',
+            name: 'adminLogin',
             component: () => import('@/views/admin/auth/Login.vue')
         },
         {
@@ -318,6 +318,67 @@ const router = createRouter({
         },
 
     ]
+});
+
+// Navigation guard
+router.beforeEach((to, from, next) => {
+    const token = localStorage.getItem('token');
+    const user = JSON.parse(localStorage.getItem('user') || '{}');
+    const userRole = user.role;
+
+    // Public routes that don't require authentication
+    const publicRoutes = [
+        '/auth/login',           // Customer login
+        '/auth/register',        // Customer register
+        '/admin/auth/login',     // Admin login
+        '/admin/auth/register',  // Admin register
+        '/organizer/login',      // Organizer login
+        '/organizer/register',   // Organizer register
+        '/',                     // Landing page
+    ];
+
+    // Check if route is public
+    if (publicRoutes.includes(to.path)) {
+        return next();
+    }
+
+    // If no token, redirect based on attempted access path
+    if (!token) {
+        if (to.path.startsWith('/admin')) {
+            return next('/admin/auth/login');
+        }
+        if (to.path.startsWith('/organizer')) {
+            return next('/organizer/login');
+        }
+        return next('/auth/login');
+    }
+
+    // Role-based route protection
+    if (token) {
+        // Admin routes protection
+        if (to.path.startsWith('/admin') && userRole !== 'admin') {
+            return next('/admin/auth/login');
+        }
+
+        // Organizer routes protection
+        if (to.path.startsWith('/organizer') && userRole !== 'organizer') {
+            return next('/organizer/login');
+        }
+
+        // Customer/Audience routes protection
+        if (to.path.startsWith('/event') || 
+            to.path.startsWith('/booking') || 
+            to.path.startsWith('/profile') ||
+            to.path.startsWith('/ticket') ||
+            to.path.startsWith('/homebook')) {
+            if (userRole !== 'audience') {
+                return next('/auth/login');
+            }
+        }
+    }
+
+    // If all checks pass, proceed to route
+    next();
 });
 
 export default router;
