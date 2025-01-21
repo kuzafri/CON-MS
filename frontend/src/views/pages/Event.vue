@@ -4,7 +4,7 @@ import { computed, onMounted, onUnmounted, ref } from 'vue';
 import HeartIcon from 'lucide-vue-next/dist/esm/icons/heart';
 import { useFavoriteStore } from '@/stores/favorite';
 import { eventService } from '@/service/EventService';
-import axios from 'axios';
+import axios from '@/utils/axios';
 import Button from 'primevue/button';
 
 const logoSrc = computed(() => (isDarkTheme.value ? '/logo_dark.png' : '/logo_light.png'));
@@ -22,7 +22,7 @@ const favoriteStore = useFavoriteStore();
 const fetchAllEvents = async () => {
     try {
         loading.value = true;
-        const response = await axios.get('http://localhost:5001/api/events');
+        const response = await axios.get('/events');
         console.log('Response:', response.data);
 
         if (!response.data || !Array.isArray(response.data)) {

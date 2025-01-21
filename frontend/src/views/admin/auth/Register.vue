@@ -1,7 +1,7 @@
 <script setup>
 import FloatingConfigurator from '@/components/FloatingConfigurator.vue';
 import { ref } from 'vue';
-import axios from 'axios';
+import axios from '@/utils/axios';
 import { useRouter } from 'vue-router';
 
 const router = useRouter();

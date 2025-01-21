@@ -12,8 +12,8 @@ const router = useRouter();
 
 const handleLogin = async () => {
    try {
-    const response = await axios.post('/users/login', {
-        email: email.value,
+       const response = await axios.post('/users/login', {
+           email: email.value,
            password: password.value,
            role: 'admin'  // Specify role for admin login
        });

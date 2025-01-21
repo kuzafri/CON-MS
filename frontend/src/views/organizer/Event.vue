@@ -1,13 +1,13 @@
 <script setup>
 import { ref } from 'vue';
 import { PrimeIcons } from '@primevue/core/api';
+import axios from '@/utils/axios';
 
 const dropdownItems = ref([
     { name: 'Option 1', code: 'Option 1' },
     { name: 'Option 2', code: 'Option 2' },
     { name: 'Option 3', code: 'Option 3' }
 ]);
-import axios from 'axios';
 
 const dropdownValue = ref(null);
 const dropdownValues = ref([
@@ -100,7 +100,7 @@ const handleSubmit = async () => {
             vipPrice: vipPrice.value,
             eventPolicies: eventPolicies.value
         };
-        const response = await axios.post('http://localhost:5001/api/events', eventData);
+        const response = await axios.post('/events', eventData);
 
         if (response.status === 201) {
             showModal.value = true;

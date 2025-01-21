@@ -48,8 +48,6 @@ const register = async () => {
         }
     }
 };
-
-axios.defaults.baseURL = 'http://localhost:5001';
 </script>
 
 <template>
