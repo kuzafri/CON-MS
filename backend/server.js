@@ -45,6 +45,10 @@ app.use('/api', eventRoutes);
 const inventoryRoutes = require('./routes/organizerEventInventory');
 app.use('/api', inventoryRoutes);
 
+// Routes (bookings)
+const bookingRoutes = require('./routes/bookingRoutes');
+app.use('/api/bookings', bookingRoutes);
+
 // Basic error handling
 app.use((err, req, res, next) => {
     console.error(err.stack);

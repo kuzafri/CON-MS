@@ -48,7 +48,7 @@ const generateCurvedRow = (rowIndex, centerX, startY, radius, spreadAngle) => {
                 x,
                 y,
                 id: `row-${rowIndex}-seat-${seatIndex}`,
-                isReserved: Math.random() < 0.6,
+                isReserved: false,
                 group: group + 1,
                 tier
             });
@@ -98,14 +98,66 @@ const isSeatSelected = (seatId) => {
     return selectedSeats.value.some((s) => s.id === seatId);
 };
 
-const proceedToCheckout = () => {
-    router.push({
-        path: '/payment',
-        query: {
-            seats: JSON.stringify(selectedSeats.value), //price each seat
+const handleSubmit = async () => {
+    try {
+        // Create booking object with all required details
+        const bookingDetails = {
+            eventId: route.params.id,
+            eventDetails: {
+                concertTitle: event.value?.concertTitle,
+                venue: event.value?.venue,
+                date: event.value?.calendarValue,
+                startTime: event.value?.startTime,
+                organizerId: event.value?.organizerId,
+                organizerName: event.value?.organizerName
+            },
+            seats: selectedSeats.value.map(seat => ({
+                seatId: seat.id,
+                rowLabel: seat.rowLabel,
+                seatNumber: seat.seatNumber,
+                tier: seat.tier,
+                price: seat.price,
+                group: seat.group
+            })),
             totalPrice: totalPrice.value
+        };
+
+        // Remove duplicate /api if it exists in VITE_API_URL
+        const baseUrl = import.meta.env.VITE_API_URL.endsWith('/api') 
+            ? import.meta.env.VITE_API_URL 
+            : `${import.meta.env.VITE_API_URL}`;
+            
+        const response = await fetch(`${baseUrl}/bookings`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+            },
+            body: JSON.stringify(bookingDetails)
+        });
+
+        if (!response.ok) {
+            const errorText = await response.text();
+            console.error('Server response:', errorText);
+            throw new Error(`Server returned ${response.status}: ${errorText}`);
         }
-    });
+
+        const result = await response.json();
+        if (result.success) {
+            router.push({
+                path: '/payment',
+                query: {
+                    bookingId: result.bookingId,
+                    totalPrice: totalPrice.value
+                }
+            });
+        } else {
+            throw new Error(result.message || 'Failed to create booking');
+        }
+    } catch (error) {
+        console.error('Error creating booking:', error);
+        alert(`Failed to create booking: ${error.message}`);
+    }
 };
 
 const viewBox = ref('0 0 800 600');
@@ -138,7 +190,6 @@ const handleMouseUp = () => {
 };
 
 const handleWheel = (event) => {
-    event.preventDefault();
     const scaleFactor = event.deltaY > 0 ? 0.9 : 1.1;
     const newScale = currentTransform.value.scale * scaleFactor;
 
@@ -153,35 +204,6 @@ const svgTransform = computed(() => {
     const { x, y, scale } = currentTransform.value;
     return `translate(${x}px, ${y}px) scale(${scale})`;
 });
-
-const handleSubmit = async () => {
-    try {
-        const response = await fetch('/api/submit-concert-booking', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                userId: currentUserId,
-                concertData: {
-                    selectedSeats: selectedSeats,
-                    totalPrice: totalPrice,
-                    eventDate: new Date('2025-01-13 15:00:00')
-                }
-            })
-        });
-
-        const result = await response.json();
-        if (result.success) {
-            alert('Success');
-        } else {
-            alert('Error:' + result.message);
-        }
-    } catch (error) {
-        console.error('Error:', error);
-        alert('Error');
-    }
-};
 
 onMounted(async () => {
     await fetchEventById(route.params.id);
@@ -224,15 +246,20 @@ onMounted(async () => {
                 <div class="gap-8 flex lg:flex-row flex-col">
                     <!-- Seating Map -->
                     <div class="bg-surface-50 lg:w-2/3 dark:bg-surface-800 rounded-lg shadow-lg p-10">
-                        <div class="relative overflow-hidden" @mousedown="handleMouseDown" @mousemove="handleMouseMove" @mouseup="handleMouseUp" @mouseleave="handleMouseUp" @wheel="handleWheel">
+                        <div class="relative overflow-hidden" 
+                            @mousedown="handleMouseDown" 
+                            @mousemove="handleMouseMove" 
+                            @mouseup="handleMouseUp" 
+                            @mouseleave="handleMouseUp" 
+                            @wheel.passive="handleWheel">
                             <svg viewBox="0 0 950 600" class="w-full cursor-move transform-gpu" :style="{ transform: svgTransform }">
                                 <!-- Stage -->
                                 <path d="M250,550 Q400,520 550,550" fill="none" stroke="currentColor" stroke-width="4" class="text-surface-400 dark:text-surface-500" />
                                 <text x="400" y="560" text-anchor="middle" class="text-sm fill-current text-surface-900 dark:text-surface-0">STAGE</text>
 
                                 <!-- Seating sections -->
-                                <template v-for="(section, sectionIndex) in sections" :key="'section-' + sectionIndex">
-                                    <g v-for="(row, rowIndex) in section.rows" :key="'row-' + rowIndex">
+                                <template v-for="(section, sectionIndex) in sections">
+                                    <g v-for="(row, rowIndex) in section.rows" :key="'section-' + sectionIndex + '-row-' + rowIndex">
                                         <g v-for="(seat, seatIndex) in row.seats" :key="seat.id">
                                             <rect
                                                 :x="seat.x - 6"
@@ -319,7 +346,7 @@ onMounted(async () => {
                                 <Button
                                     to="/payment"
                                     as="router-link"
-                                    @click="proceedToCheckout"
+                                    @click="handleSubmit"
                                     :disabled="selectedSeats.length === 0"
                                     class="w-full bg-primary-600 text-white py-3 rounded-lg font-medium disabled:bg-surface-400 disabled:cursor-not-allowed hover:bg-primary-700 dark:disabled:bg-surface-600"
                                 >
