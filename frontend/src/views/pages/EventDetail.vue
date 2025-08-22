@@ -117,7 +117,7 @@ const { onMenuToggle, toggleDarkMode, isDarkTheme } = useLayout();
                             <span class="block">{{ event.venue || 'DTSP USM' }}</span>
                             <span>{{ new Date(event.calendarValue).toLocaleDateString() }} | Open Gate at {{ event.startTime }}</span>
                         </p>
-                        <p class="mt-2 text-gray-600 dark:text-gray-300">{{ event.performers?.length || 0 }}+ Artists</p>
+                        <p class="mt-2 text-gray-600 dark:text-gray-300">{{ event.performers ? event.performers.length : 0 }}+ Artists</p>
                     </div>
 
                     <div class="mt-8 flex flex-col items-center">
@@ -170,11 +170,11 @@ const { onMenuToggle, toggleDarkMode, isDarkTheme } = useLayout();
                             <p class="text-gray-600 dark:text-gray-300">
                                 {{ event.description || 'No description available.' }}
                             </p>
-                            <div class="mt-4">
+                            <div class="mt-4" v-if="event.genre">
                                 <h3 class="font-semibold text-gray-800 dark:text-white">Genre:</h3>
                                 <p class="text-gray-600 dark:text-gray-300">{{ event.genre }}</p>
                             </div>
-                            <div class="mt-4">
+                            <div class="mt-4" v-if="event.performers && event.performers.length > 0">
                                 <h3 class="font-semibold text-gray-800 dark:text-white">Performers:</h3>
                                 <ul class="list-disc pl-5">
                                     <li v-for="performer in event.performers" :key="performer" class="text-gray-600 dark:text-gray-300">

@@ -1,6 +1,10 @@
 <script setup>
 import { useLayout } from '@/layout/composables/layout';
 import { computed, onMounted, ref, onUnmounted } from 'vue';
+import { useEvent } from '@/composables/useEvent';
+
+const { getFeaturedEvents } = useEvent();
+const featuredEvents = ref([]);
 
 function smoothScroll(id) {
     document.body.click();
@@ -26,12 +30,14 @@ const startAutoScroll = () => {
 };
 
 const stopAutoScroll = () => {
-    if (scrollInterval) {
-        clearInterval(scrollInterval);
-    }
+    if (!scrollContainer.value) return;
+    clearInterval(scrollInterval);
 };
 
-onMounted(() => {
+onMounted(async () => {
+    // Fetch featured events
+    featuredEvents.value = await getFeaturedEvents();
+    
     setTimeout(() => {
         startAutoScroll();
     }, 100);
@@ -112,34 +118,20 @@ const { onMenuToggle, toggleDarkMode, isDarkTheme } = useLayout();
                         <div class="col-span-2 bg-surface-0 dark:bg-surface-900 rounded-lg shadow md:p-6 sm:p-3">
                             <h2 class="text-3xl font-semibold mb-4 text-surface-900 dark:text-surface-0">Featured Events</h2>
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                                <a href="#" class="bg-surface-100 dark:bg-surface-800 rounded-lg overflow-hidden hover:bg-surface-200 dark:hover:bg-surface-700">
-                                    <img src="/concert.jpeg" alt="Happy Holiday Music Concert" class="w-full h-48 object-cover" />
+                                <div v-for="event in featuredEvents" :key="event._id" class="bg-surface-100 dark:bg-surface-800 rounded-lg overflow-hidden hover:bg-surface-200 dark:hover:bg-surface-700">
+                                    <img :src="event.image" :alt="event.concertTitle" class="w-full h-48 object-cover" />
                                     <div class="p-4">
-                                        <h3 class="text-lg font-semibold text-surface-900 dark:text-surface-0">Malam Citra Budaya</h3>
-                                        <p class="text-surface-600 dark:text-surface-400">MPP USM</p>
+                                        <h3 class="text-lg font-semibold text-surface-900 dark:text-surface-0">{{ event.concertTitle }}</h3>
+                                        <p class="text-surface-600 dark:text-surface-400">{{ event.organizerName }}</p>
                                         <div class="flex flex-row mt-4">
-                                            <div class="font-bold"><span class="text-sm">Starting from </span>RM50</div>
+                                            <div class="font-bold"><span class="text-sm">Starting from </span>RM{{ event.economyPrice }}</div>
                                             <div class="bottom-0 right-0 ml-auto flex sm:flex-row">
-                                                <Button label="See Detail" as="router-link" to="/eventdetail" rounded class="seedetail flex mr-4"></Button>
-                                                <Button label="Book Now" as="router-link" to="/booking" rounded></Button>
+                                                <Button label="See Detail" as="router-link" :to="`/eventdetail/${event._id}`" rounded class="seedetail flex mr-4"></Button>
+                                                <Button label="Book Now" as="router-link" :to="`/booking/${event._id}`" rounded></Button>
                                             </div>
                                         </div>
                                     </div>
-                                </a>
-                                <a href="#" class="bg-surface-100 dark:bg-surface-800 rounded-lg overflow-hidden hover:bg-surface-200 dark:hover:bg-surface-700">
-                                    <img src="/concert.png" alt="Suicide Band summer Bali Island" class="w-full h-48 object-cover" />
-                                    <div class="p-4">
-                                        <h3 class="text-lg font-semibold text-surface-900 dark:text-surface-0">REBEL 3.0: Because of you</h3>
-                                        <p class="text-surface-600 dark:text-surface-400">USM Jazz Band</p>
-                                        <div class="flex flex-row mt-4">
-                                            <div class="font-bold"><span class="text-sm">Starting from </span>RM80</div>
-                                            <div class="bottom-0 right-0 ml-auto">
-                                                <Button label="See Detail" as="router-link" to="/eventdetail" rounded class="seedetail mr-4"></Button>
-                                                <Button label="Book Now" as="router-link" to="/booking" rounded></Button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </a>
+                                </div>
                             </div>
                         </div>
                     </div>

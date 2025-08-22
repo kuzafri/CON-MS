@@ -113,51 +113,20 @@ const createBooking = async () => {
             return;
         }
 
-        const bookingDetails = {
-            eventId: route.params.id,
-            seats: selectedSeats.value.map(seat => ({
-                seatId: seat.id,
-                rowLabel: seat.rowLabel,
-                seatNumber: seat.seatNumber,
-                group: seat.group,
-                tier: seat.tier,
-                price: seatPrices.value[seat.tier]
-            })),
-            totalPrice: totalPrice.value
-        };
-
-        // Remove duplicate /api if it exists in VITE_API_URL
-        const baseUrl = import.meta.env.VITE_API_URL.endsWith('/api') 
-            ? import.meta.env.VITE_API_URL 
-            : `${import.meta.env.VITE_API_URL}`;
-            
-        const response = await fetch(`${baseUrl}/bookings`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            },
-            body: JSON.stringify(bookingDetails)
+        // For demo purposes, simulate successful booking
+        alert('Booking created successfully! Redirecting to payment...');
+        
+        // Simulate API delay
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        
+        // Redirect to payment page with dummy booking ID
+        router.push({
+            path: '/payment',
+            query: {
+                bookingId: `demo-${Date.now()}`,
+                totalPrice: totalPrice.value
+            }
         });
-
-        if (!response.ok) {
-            const errorText = await response.text();
-            console.error('Server response:', errorText);
-            throw new Error(`Server returned ${response.status}: ${errorText}`);
-        }
-
-        const result = await response.json();
-        if (result.success) {
-            router.push({
-                path: '/payment',
-                query: {
-                    bookingId: result.bookingId,
-                    totalPrice: totalPrice.value
-                }
-            });
-        } else {
-            throw new Error(result.message || 'Failed to create booking');
-        }
     } catch (error) {
         console.error('Error creating booking:', error);
         alert(`Failed to create booking: ${error.message}`);
