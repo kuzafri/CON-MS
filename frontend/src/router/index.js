@@ -335,10 +335,15 @@ router.beforeEach((to, from, next) => {
         '/organizer/login',      // Organizer login
         '/organizer/register',   // Organizer register
         '/',                     // Landing page
+        '/event',                // Event listing page
+        '/eventdetail',          // Event detail pages (will match /eventdetail/:id)
+        '/booking',              // Booking pages (will match /booking/:id)
     ];
 
     // Check if route is public
-    if (publicRoutes.includes(to.path)) {
+    if (publicRoutes.includes(to.path) || 
+        to.path.startsWith('/eventdetail/') || 
+        to.path.startsWith('/booking/')) {
         return next();
     }
 
@@ -350,7 +355,16 @@ router.beforeEach((to, from, next) => {
         if (to.path.startsWith('/organizer')) {
             return next('/organizer/login');
         }
-        return next('/auth/login');
+        // Only require authentication for protected customer routes
+        if (to.path.startsWith('/profile') ||
+            to.path.startsWith('/ticket') ||
+            to.path.startsWith('/homebook') ||
+            to.path.startsWith('/complaint') ||
+            to.path.startsWith('/favourite')) {
+            return next('/auth/login');
+        }
+        // Allow access to event, booking, and event detail pages without authentication
+        return next();
     }
 
     // Role-based route protection
@@ -365,12 +379,12 @@ router.beforeEach((to, from, next) => {
             return next('/organizer/login');
         }
 
-        // Customer/Audience routes protection
-        if (to.path.startsWith('/event') || 
-            to.path.startsWith('/booking') || 
-            to.path.startsWith('/profile') ||
+        // Customer/Audience routes protection - only for protected routes
+        if (to.path.startsWith('/profile') ||
             to.path.startsWith('/ticket') ||
-            to.path.startsWith('/homebook')) {
+            to.path.startsWith('/homebook') ||
+            to.path.startsWith('/complaint') ||
+            to.path.startsWith('/favourite')) {
             if (userRole !== 'audience') {
                 return next('/auth/login');
             }

@@ -98,26 +98,30 @@ const isSeatSelected = (seatId) => {
     return selectedSeats.value.some((s) => s.id === seatId);
 };
 
-const handleSubmit = async () => {
+const createBooking = async () => {
     try {
-        // Create booking object with all required details
+        // Check if user is authenticated
+        const token = localStorage.getItem('token');
+        if (!token) {
+            // Redirect to login if not authenticated
+            router.push('/auth/login');
+            return;
+        }
+
+        if (selectedSeats.value.length === 0) {
+            alert('Please select at least one seat');
+            return;
+        }
+
         const bookingDetails = {
             eventId: route.params.id,
-            eventDetails: {
-                concertTitle: event.value?.concertTitle,
-                venue: event.value?.venue,
-                date: event.value?.calendarValue,
-                startTime: event.value?.startTime,
-                organizerId: event.value?.organizerId,
-                organizerName: event.value?.organizerName
-            },
             seats: selectedSeats.value.map(seat => ({
                 seatId: seat.id,
                 rowLabel: seat.rowLabel,
                 seatNumber: seat.seatNumber,
+                group: seat.group,
                 tier: seat.tier,
-                price: seat.price,
-                group: seat.group
+                price: seatPrices.value[seat.tier]
             })),
             totalPrice: totalPrice.value
         };
@@ -131,7 +135,7 @@ const handleSubmit = async () => {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${localStorage.getItem('token')}`
+                'Authorization': `Bearer ${token}`
             },
             body: JSON.stringify(bookingDetails)
         });
@@ -346,7 +350,7 @@ onMounted(async () => {
                                 <Button
                                     to="/payment"
                                     as="router-link"
-                                    @click="handleSubmit"
+                                    @click="createBooking"
                                     :disabled="selectedSeats.length === 0"
                                     class="w-full bg-primary-600 text-white py-3 rounded-lg font-medium disabled:bg-surface-400 disabled:cursor-not-allowed hover:bg-primary-700 dark:disabled:bg-surface-600"
                                 >

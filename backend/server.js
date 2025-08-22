@@ -49,6 +49,10 @@ app.use('/api', inventoryRoutes);
 const bookingRoutes = require('./routes/bookingRoutes');
 app.use('/api/bookings', bookingRoutes);
 
+// Public event routes (no authentication required)
+const publicEventRoutes = require('./routes/eventRoutes');
+app.use('/api/events', publicEventRoutes);
+
 // Basic error handling
 app.use((err, req, res, next) => {
     console.error(err.stack);

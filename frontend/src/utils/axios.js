@@ -24,10 +24,14 @@ api.interceptors.response.use(
     (response) => response,
     (error) => {
         if (error.response?.status === 401) {
-            // Handle token expiration
-            localStorage.removeItem('token');
-            localStorage.removeItem('user');
-            window.location.href = '/login';
+            // Only redirect to login if user was previously authenticated
+            const token = localStorage.getItem('token');
+            if (token) {
+                localStorage.removeItem('token');
+                localStorage.removeItem('user');
+                // Don't redirect automatically - let components handle it
+                console.log('Token expired or invalid');
+            }
         }
         return Promise.reject(error);
     }
