@@ -10,11 +10,17 @@ export const appConfig = {
         timeout: 10000
     },
     
+    // Authentication configuration
+    auth: {
+        required: false,
+        enabled: false
+    },
+    
     // App settings
     app: {
         name: 'CON-MS',
         version: '1.0.0',
-        description: 'Concert Management System'
+        description: 'Concert Management System - No Authentication Required'
     }
 };
 

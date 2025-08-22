@@ -1,12 +1,13 @@
-# CON-MS Frontend with Dummy Data
+# CON-MS Frontend with Dummy Data - No Authentication Required
 
-This version of the CON-MS frontend has been configured to work without a backend connection, using dummy data instead.
+This version of the CON-MS frontend has been configured to work without a backend connection and **NO AUTHENTICATION IS REQUIRED** for any features.
 
 ## Features
 
 ✅ **No Backend Required** - App works completely offline
+✅ **No Authentication Required** - All features accessible without login
 ✅ **Dummy Event Data** - 4 sample events with full details
-✅ **Full Navigation** - Homepage → Event Details → Booking
+✅ **Full Navigation** - Homepage → Event Details → Booking → Payment
 ✅ **Responsive Design** - Works on all device sizes
 ✅ **Dark/Light Theme** - Toggle between themes
 
@@ -23,13 +24,15 @@ This version of the CON-MS frontend has been configured to work without a backen
 2. **Events Page** (`/event`) - Browse all events
 3. **Event Details** (`/eventdetail/:id`) - View event information
 4. **Booking Page** (`/booking/:id`) - Select seats and book tickets
+5. **Payment Page** (`/payment`) - Complete payment process
 
 ## How to Use
 
 1. **Start the app**: `npm run dev`
 2. **Navigate from homepage**: Click "See Detail" or "Book Now" on any event
 3. **View event details**: See full event information, countdown, and ticket prices
-4. **Book tickets**: Select seats and proceed to booking (requires login)
+4. **Book tickets**: Select seats and proceed to booking (no login required)
+5. **Complete payment**: Go through payment process (simulated)
 
 ## Configuration
 
@@ -42,6 +45,10 @@ export const appConfig = {
         enabled: false,         // Backend is disabled
         baseUrl: '',            // No backend URL
         timeout: 10000
+    },
+    auth: {
+        required: false,        // No authentication required
+        enabled: false          // Authentication is disabled
     }
 };
 ```
@@ -63,7 +70,13 @@ Each event includes:
 
 ## Notes
 
+- **No authentication required** - All users can access all features
 - All API calls are intercepted when backend is disabled
-- Booking creation shows success message and redirects to payment
-- Authentication is still required for booking creation
+- Booking creation works without login
+- Payment process is simulated
 - Images are served from the `public/` folder
+- Admin and organizer pages are accessible without authentication
+
+## Security Note
+
+⚠️ **This configuration is for development/demo purposes only.** In a production environment, you would want to implement proper authentication and authorization controls.

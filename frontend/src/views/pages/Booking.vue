@@ -100,31 +100,19 @@ const isSeatSelected = (seatId) => {
 
 const createBooking = async () => {
     try {
-        // Check if user is authenticated
-        const token = localStorage.getItem('token');
-        if (!token) {
-            // Redirect to login if not authenticated
-            router.push('/auth/login');
-            return;
-        }
-
         if (selectedSeats.value.length === 0) {
             alert('Please select at least one seat');
             return;
         }
 
-        // For demo purposes, simulate successful booking
-        alert('Booking created successfully! Redirecting to payment...');
-        
-        // Simulate API delay
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        
-        // Redirect to payment page with dummy booking ID
+        // Redirect directly to payment page with booking details
         router.push({
             path: '/payment',
             query: {
                 bookingId: `demo-${Date.now()}`,
-                totalPrice: totalPrice.value
+                totalPrice: totalPrice.value,
+                selectedSeats: JSON.stringify(selectedSeats.value),
+                eventId: route.params.id
             }
         });
     } catch (error) {

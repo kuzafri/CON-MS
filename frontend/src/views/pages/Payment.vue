@@ -10,18 +10,33 @@ const error = ref(null);
 
 const fetchBookingDetails = async () => {
     try {
-        const response = await fetch(`${import.meta.env.VITE_API_URL}/bookings/${route.query.bookingId}`, {
-            headers: {
-                'Authorization': `Bearer ${localStorage.getItem('token')}`
-            }
-        });
-
-        if (!response.ok) {
-            throw new Error('Failed to fetch booking details');
-        }
-
-        const data = await response.json();
-        bookingDetails.value = data;
+        // Simulate API delay
+        await new Promise(resolve => setTimeout(resolve, 500));
+        
+        // Get selected seats from URL query parameters
+        const selectedSeats = route.query.selectedSeats ? JSON.parse(route.query.selectedSeats) : [];
+        const eventId = route.query.eventId;
+        
+        // Create booking details from the actual selected seats
+        const dummyBooking = {
+            _id: route.query.bookingId || 'demo-booking',
+            seatDetails: selectedSeats.map(seat => ({
+                seatId: seat.id,
+                rowLabel: seat.rowLabel || seat.id.split('-')[1] || 'A',
+                seatNumber: seat.seatNumber || seat.id.split('-')[2] || '1',
+                tier: seat.tier,
+                price: seat.price
+            })),
+            eventDetails: {
+                concertTitle: 'Sample Concert',
+                venue: 'Sample Venue',
+                date: new Date().toISOString(),
+                startTime: '19:00'
+            },
+            totalPrice: Number(route.query.totalPrice) || 200
+        };
+        
+        bookingDetails.value = dummyBooking;
         loading.value = false;
     } catch (err) {
         console.error('Error fetching booking details:', err);
@@ -32,43 +47,33 @@ const fetchBookingDetails = async () => {
 
 const handlePayment = async () => {
     try {
-        // Update booking status
-        const response = await fetch(`${import.meta.env.VITE_API_URL}/bookings/${route.query.bookingId}/status`, {
-            method: 'PATCH',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${localStorage.getItem('token')}`
-            },
-            body: JSON.stringify({
-                status: 'confirmed',
-                paymentStatus: 'paid'
-            })
-        });
-
-        if (!response.ok) {
-            throw new Error('Failed to update booking status');
-        }
-
+        // Simulate payment processing
+        loading.value = true;
+        await new Promise(resolve => setTimeout(resolve, 2000));
+        
         // Store ticket details for the next page
         const ticketDetails = {
             bookingId: bookingDetails.value._id,
             seats: bookingDetails.value.seatDetails,
             eventDetails: {
                 ...bookingDetails.value.eventDetails,
-                date: new Date(bookingDetails.value.eventDetails.date).toISOString() // Ensure proper date format
+                date: new Date(bookingDetails.value.eventDetails.date).toISOString()
             },
             totalPrice: Number(route.query.totalPrice) + 5 // Include booking fee
         };
-        console.log('Storing ticket details:', ticketDetails); // Debug log
+        
+        console.log('Storing ticket details:', ticketDetails);
         localStorage.setItem('ticketDetails', JSON.stringify(ticketDetails));
 
-        // Redirect to ticket page
+        // Redirect directly to ticket page without showing alert
         router.push({
             path: '/ticket'
         });
     } catch (error) {
         console.error('Payment error:', error);
         alert('Payment failed. Please try again.');
+    } finally {
+        loading.value = false;
     }
 };
 
@@ -113,7 +118,7 @@ onMounted(() => {
                             <div class="space-y-2">
                                 <div v-for="seat in bookingDetails?.seatDetails" :key="seat.seatId" class="flex justify-between text-sm">
                                     <span class="text-gray-600">
-                                        Row {{ seat.rowLabel }} - Seat {{ seat.seatNumber }}
+                                        {{ seat.rowLabel && seat.seatNumber ? `Row ${seat.rowLabel} - Seat ${seat.seatNumber}` : `Seat ${seat.seatId}` }}
                                         <span class="text-xs ml-2">({{ seat.tier }})</span>
                                     </span>
                                     <span class="text-gray-800 font-semibold">RM {{ seat.price }}</span>

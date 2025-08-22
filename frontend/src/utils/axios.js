@@ -16,10 +16,7 @@ api.interceptors.request.use(
             return Promise.reject(new Error('Backend is disabled - using dummy data'));
         }
         
-        const token = localStorage.getItem('token');
-        if (token) {
-            config.headers.Authorization = `Bearer ${token}`;
-        }
+        // No authentication required - all requests are public
         return config;
     },
     (error) => {
@@ -31,16 +28,8 @@ api.interceptors.request.use(
 api.interceptors.response.use(
     (response) => response,
     (error) => {
-        if (error.response?.status === 401) {
-            // Only redirect to login if user was previously authenticated
-            const token = localStorage.getItem('token');
-            if (token) {
-                localStorage.removeItem('token');
-                localStorage.removeItem('user');
-                // Don't redirect automatically - let components handle it
-                console.log('Token expired or invalid');
-            }
-        }
+        // Handle any errors without authentication requirements
+        console.error('API Error:', error);
         return Promise.reject(error);
     }
 );
